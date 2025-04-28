@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "355140441526",
+    "project_id": "fastcampusmarket-98acf",
+    "storage_bucket": "fastcampusmarket-98acf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355140441526:android:4f8b087c5ccc45cbbe5d17",
+        "android_client_info": {
+          "package_name": "com.example.fastcampusmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355140441526-um3kkg5tc679cj3h4uikn5flvpqv98qq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB4LmLHkXp6IUgF0d63Ge7QWwoG2RSif8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355140441526-um3kkg5tc679cj3h4uikn5flvpqv98qq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "355140441526-7vg7ci90d47b3kdpnpnsvkei2h56d7lq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fastcampusmarket"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
