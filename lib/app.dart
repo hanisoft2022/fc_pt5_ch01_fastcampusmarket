@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'core/common/theme.dart';
-import 'features/count/presentation/s_my_home.dart';
+import 'core/theme/theme.dart';
+import 'features/login/presentation/s_login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: theme,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const LoginScreen(),
     );
   }
 }
