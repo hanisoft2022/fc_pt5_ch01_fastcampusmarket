@@ -1,0 +1,106 @@
+import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+import '../../../core/theme/theme_mode_provider.dart';
+
+ButtonStyle get buttonStyle => ButtonStyle(
+  minimumSize: WidgetStateProperty.all(const Size.fromHeight(50)),
+  shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+);
+
+class SignUpScreen extends HookConsumerWidget {
+  SignUpScreen({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailTextController = useTextEditingController();
+    final pwdTextController = useTextEditingController();
+    final themeMode = ref.watch(themeModeProvider);
+    final isLight = themeMode == ThemeMode.light;
+    final obscure = useState(true);
+
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Switch(
+            value: themeMode == ThemeMode.light,
+            onChanged: (value) {
+              ref.read(themeModeProvider.notifier).state = value ? ThemeMode.light : ThemeMode.dark;
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
+
+              height30,
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: emailTextController,
+                      decoration: const InputDecoration(labelText: '이메일', border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '이메일을 입력해주세요.';
+                        }
+                        return null;
+                      },
+                    ),
+                    height20,
+                    TextFormField(
+                      controller: pwdTextController,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () {
+                            obscure.value = !obscure.value;
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                      obscureText: obscure.value,
+                      keyboardType: TextInputType.visiblePassword,
+                    ),
+                    height20,
+                    ElevatedButton(onPressed: () {}, style: buttonStyle, child: '로그인'.text.make()),
+                    height15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [TextButton(style: TextButton.styleFrom(), onPressed: () {}, child: '계정이 없나요? 회원가입'.text.make())],
+                    ),
+                    height15,
+                    const Divider(),
+                    height15,
+
+                    Image.asset(
+                      isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                      width: 100,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ).p(20),
+        ),
+      ),
+    );
+  }
+}

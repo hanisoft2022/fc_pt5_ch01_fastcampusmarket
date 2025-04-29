@@ -1,22 +1,21 @@
 import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../core/theme/theme_mode_provider.dart';
 
 ButtonStyle get buttonStyle => ButtonStyle(
   minimumSize: WidgetStateProperty.all(const Size.fromHeight(50)),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-  ),
+  shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
 );
 
 class LoginScreen extends HookConsumerWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
 
-  static final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,16 +24,12 @@ class LoginScreen extends HookConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final isLight = themeMode == ThemeMode.light;
     final obscure = useState(true);
-
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
-              ref.read(themeModeProvider.notifier).state =
-                  themeMode == ThemeMode.light
-                      ? ThemeMode.dark
-                      : ThemeMode.light;
+              ref.read(themeModeProvider.notifier).state = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
             },
             icon: Icon(Icons.brightness_6),
           ),
@@ -52,11 +47,7 @@ class LoginScreen extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/logo/indischool/indischool.png',
-                height: 50,
-              ),
-
+              Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
               height30,
               Form(
                 key: _formKey,
@@ -64,10 +55,7 @@ class LoginScreen extends HookConsumerWidget {
                   children: [
                     TextFormField(
                       controller: emailTextController,
-                      decoration: const InputDecoration(
-                        labelText: '이메일',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(labelText: '이메일', border: OutlineInputBorder()),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return '이메일을 입력해주세요.';
@@ -82,11 +70,7 @@ class LoginScreen extends HookConsumerWidget {
                         labelText: '비밀번호',
                         border: OutlineInputBorder(),
                         suffixIcon: IconButton(
-                          icon: Icon(
-                            obscure.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
+                          icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
                           onPressed: () {
                             obscure.value = !obscure.value;
                           },
@@ -103,30 +87,27 @@ class LoginScreen extends HookConsumerWidget {
                     ),
                     height20,
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.goNamed(AppRouteName.home);
+                      },
                       style: buttonStyle,
                       child: '로그인'.text.make(),
                     ),
+
                     height15,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          style: TextButton.styleFrom(),
-                          onPressed: () {},
-                          child: '계정이 없나요? 회원가입'.text.make(),
-                        ),
-                      ],
+                      children: [TextButton(style: TextButton.styleFrom(), onPressed: () {}, child: '계정이 없나요? 회원가입'.text.make())],
                     ),
                     height15,
                     const Divider(),
                     height15,
-
-                    Image.asset(
-                      isLight
-                          ? 'assets/images/logo/google/light/google_light.png'
-                          : 'assets/images/logo/google/dark/google_dark.png',
-                      width: 100,
+                    GestureDetector(
+                      onTap: () {},
+                      child: Image.asset(
+                        isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                        width: 100,
+                      ),
                     ),
                   ],
                 ),
