@@ -1,9 +1,11 @@
 import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/core/router/app_router.dart';
+import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../core/theme/theme_mode_provider.dart';
 
 ButtonStyle get buttonStyle => ButtonStyle(
@@ -41,7 +43,6 @@ class SignUpScreen extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
-
               height30,
               Form(
                 key: _formKey,
@@ -80,19 +81,27 @@ class SignUpScreen extends HookConsumerWidget {
                       keyboardType: TextInputType.visiblePassword,
                     ),
                     height20,
-                    ElevatedButton(onPressed: () {}, style: buttonStyle, child: '로그인'.text.make()),
-                    height15,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [TextButton(style: TextButton.styleFrom(), onPressed: () {}, child: '계정이 없나요? 회원가입'.text.make())],
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          ref.read(isLoggedInProvider.notifier).state = true;
+                          context.goNamed(AppRouteName.home);
+                        }
+                      },
+                      style: buttonStyle,
+                      child: '계정 만들기'.text.make(),
                     ),
-                    height15,
-                    const Divider(),
+
                     height15,
 
-                    Image.asset(
-                      isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
-                      width: 100,
+                    const Divider(),
+                    height15,
+                    GestureDetector(
+                      onTap: () {},
+                      child: Image.asset(
+                        isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                        width: 100,
+                      ),
                     ),
                   ],
                 ),

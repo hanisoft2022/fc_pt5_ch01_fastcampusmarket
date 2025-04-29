@@ -1,5 +1,6 @@
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/app_router.dart';
+import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -33,13 +34,6 @@ class LoginScreen extends HookConsumerWidget {
             },
             icon: Icon(Icons.brightness_6),
           ),
-          // Switch(
-          //   value: themeMode == ThemeMode.light,
-          //   onChanged: (value) {
-          //     ref.read(themeProvider.notifier).state =
-          //         value ? ThemeMode.light : ThemeMode.dark;
-          //   },
-          // ),
         ],
       ),
       body: Center(
@@ -88,7 +82,10 @@ class LoginScreen extends HookConsumerWidget {
                     height20,
                     ElevatedButton(
                       onPressed: () {
-                        context.goNamed(AppRouteName.home);
+                        if (_formKey.currentState!.validate()) {
+                          ref.read(isLoggedInProvider.notifier).state = true;
+                          context.goNamed(AppRouteName.home);
+                        }
                       },
                       style: buttonStyle,
                       child: '로그인'.text.make(),
@@ -97,7 +94,13 @@ class LoginScreen extends HookConsumerWidget {
                     height15,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [TextButton(style: TextButton.styleFrom(), onPressed: () {}, child: '계정이 없나요? 회원가입'.text.make())],
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(),
+                          onPressed: () => context.pushNamed(AppRouteName.signUp),
+                          child: '계정이 없나요? 회원가입'.text.make(),
+                        ),
+                      ],
                     ),
                     height15,
                     const Divider(),
