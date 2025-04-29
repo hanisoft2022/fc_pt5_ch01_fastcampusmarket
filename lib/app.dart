@@ -6,6 +6,8 @@ import 'core/theme/theme_mode_provider.dart';
 import 'features/login/presentation/s_login.dart';
 
 class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode themeMode = ref.watch(themeModeProvider);
