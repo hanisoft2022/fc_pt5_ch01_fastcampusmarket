@@ -1,7 +1,10 @@
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import '../../../core/theme/theme_mode_provider.dart';
 
 ButtonStyle get buttonStyle => ButtonStyle(
   minimumSize: WidgetStateProperty.all(const Size.fromHeight(50)),
@@ -10,31 +13,57 @@ ButtonStyle get buttonStyle => ButtonStyle(
   ),
 );
 
-class LoginScreen extends HookWidget {
+class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
 
   static final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final emailTextController = useTextEditingController();
     final pwdTextController = useTextEditingController();
+    final themeMode = ref.watch(themeModeProvider);
+    final isLight = themeMode == ThemeMode.light;
+    final obscure = useState(true);
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            '인디스쿨'.text.size(40).bold.make(),
-            height20,
-            Form(
-              key: _formKey,
-              child: SingleChildScrollView(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(themeModeProvider.notifier).state =
+                  themeMode == ThemeMode.light
+                      ? ThemeMode.dark
+                      : ThemeMode.light;
+            },
+            icon: Icon(Icons.brightness_6),
+          ),
+          // Switch(
+          //   value: themeMode == ThemeMode.light,
+          //   onChanged: (value) {
+          //     ref.read(themeProvider.notifier).state =
+          //         value ? ThemeMode.light : ThemeMode.dark;
+          //   },
+          // ),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/logo/indischool/indischool.png',
+                height: 50,
+              ),
+
+              height30,
+              Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: emailTextController,
-                      autofocus: true,
                       decoration: const InputDecoration(
                         labelText: '이메일',
                         border: OutlineInputBorder(),
@@ -49,9 +78,19 @@ class LoginScreen extends HookWidget {
                     height20,
                     TextFormField(
                       controller: pwdTextController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: '비밀번호',
                         border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscure.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            obscure.value = !obscure.value;
+                          },
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -59,6 +98,8 @@ class LoginScreen extends HookWidget {
                         }
                         return null;
                       },
+                      obscureText: obscure.value,
+                      keyboardType: TextInputType.visiblePassword,
                     ),
                     height20,
                     ElevatedButton(
@@ -66,18 +107,33 @@ class LoginScreen extends HookWidget {
                       style: buttonStyle,
                       child: '로그인'.text.make(),
                     ),
-                    height10,
-                    TextButton(
-                      style: buttonStyle,
-                      onPressed: () {},
-                      child: '계정이 없나요? 회원가입'.text.make(),
+                    height15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(),
+                          onPressed: () {},
+                          child: '계정이 없나요? 회원가입'.text.make(),
+                        ),
+                      ],
+                    ),
+                    height15,
+                    const Divider(),
+                    height15,
+
+                    Image.asset(
+                      isLight
+                          ? 'assets/images/logo/google/light/google_light.png'
+                          : 'assets/images/logo/google/dark/google_dark.png',
+                      width: 100,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ).p(20),
+            ],
+          ).p(20),
+        ),
       ),
     );
   }
