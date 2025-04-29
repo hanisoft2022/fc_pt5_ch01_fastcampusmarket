@@ -90,29 +90,28 @@ class LoginScreen extends HookConsumerWidget {
                       style: buttonStyle,
                       child: '로그인'.text.make(),
                     ),
-
-                    height15,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          style: TextButton.styleFrom(),
-                          onPressed: () => context.pushNamed(AppRouteName.signUp),
-                          child: '계정이 없나요? 회원가입'.text.make(),
-                        ),
-                      ],
-                    ),
-                    height15,
-                    const Divider(),
-                    height15,
-                    GestureDetector(
-                      onTap: () {},
-                      child: Image.asset(
-                        isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
-                        width: 100,
-                      ),
-                    ),
                   ],
+                ),
+              ),
+              height15,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(),
+                    onPressed: () => context.pushNamed(AppRouteName.signUp),
+                    child: '계정이 없나요? 회원가입'.text.make(),
+                  ),
+                ],
+              ),
+              height15,
+              const Divider(),
+              height15,
+              GestureDetector(
+                onTap: () {},
+                child: Image.asset(
+                  isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                  width: 100,
                 ),
               ),
             ],

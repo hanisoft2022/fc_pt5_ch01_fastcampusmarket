@@ -44,6 +44,8 @@ class SignUpScreen extends HookConsumerWidget {
             children: [
               Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
               height30,
+              '선생님의 회원가입을 환영합니다'.text.size(20).make(),
+              height30,
               Form(
                 key: _formKey,
                 child: Column(
@@ -73,7 +75,7 @@ class SignUpScreen extends HookConsumerWidget {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
+                          return '비밀번호를 입력해 주세요.';
                         }
                         return null;
                       },
@@ -91,19 +93,18 @@ class SignUpScreen extends HookConsumerWidget {
                       style: buttonStyle,
                       child: '계정 만들기'.text.make(),
                     ),
-
-                    height15,
-
-                    const Divider(),
-                    height15,
-                    GestureDetector(
-                      onTap: () {},
-                      child: Image.asset(
-                        isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
-                        width: 100,
-                      ),
-                    ),
                   ],
+                ),
+              ),
+              height15,
+
+              const Divider(),
+              height15,
+              GestureDetector(
+                onTap: () {},
+                child: Image.asset(
+                  isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                  width: 100,
                 ),
               ),
             ],
