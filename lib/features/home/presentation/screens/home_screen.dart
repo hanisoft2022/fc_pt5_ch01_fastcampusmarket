@@ -1,4 +1,5 @@
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
+import 'package:fastcampusmarket/features/home/presentation/screens/feed/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,8 +18,7 @@ class HomeScreen extends HookConsumerWidget {
           title: '쫑알쫑알'.text.make(),
           centerTitle: false,
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+            if (currentIndex.value == 0) IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
             IconButton(
               onPressed: () {
                 ref.watch(themeModeProvider.notifier).toggleTheme();
@@ -31,12 +31,12 @@ class HomeScreen extends HookConsumerWidget {
         body: IndexedStack(
           index: currentIndex.value,
           children: [
-            Container(color: Colors.red),
+            FeedScreen(),
             Container(color: Colors.orange),
             Container(color: Colors.yellow),
             Container(color: Colors.green),
           ],
-        ),
+        ).p(15),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (value) => currentIndex.value = value,
           selectedIndex: currentIndex.value,
@@ -47,6 +47,13 @@ class HomeScreen extends HookConsumerWidget {
             NavigationDestination(icon: Icon(Icons.person), label: '프로필'),
           ],
         ),
+        floatingActionButton: switch (currentIndex.value) {
+          0 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.home)),
+          1 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.message)),
+          2 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
+          3 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.person)),
+          _ => FloatingActionButton(onPressed: () {}, child: Icon(Icons.help)),
+        },
       ),
     );
   }
