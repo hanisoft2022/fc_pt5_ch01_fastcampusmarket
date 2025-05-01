@@ -6,6 +6,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: '임시 홈스크린'.text.make()));
+    return Scaffold(appBar: AppBar(), body: Center(child: '임시 홈스크린'.text.make()));
   }
 }

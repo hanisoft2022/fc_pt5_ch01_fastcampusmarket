@@ -14,24 +14,51 @@ ButtonStyle get buttonStyle => ButtonStyle(
 );
 
 class LoginScreen extends HookConsumerWidget {
-  LoginScreen({super.key});
-
-  final _formKey = GlobalKey<FormState>();
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailTextController = useTextEditingController();
-    final pwdTextController = useTextEditingController();
+    // 테마
     final themeMode = ref.watch(themeModeProvider);
     final isLight = themeMode == ThemeMode.light;
+
+    // 텍스트 컨트롤러
+    final emailTextController = useTextEditingController();
+    final pwdTextController = useTextEditingController();
+
+    // 비밀번호 가리기
     final obscure = useState(true);
+
+    // 에러 메시지
+    final emailError = useState<String?>(null);
+    final passwordError = useState<String?>(null);
+
+    // 이메일 검증
+    String? validateEmail(String? value) {
+      value = value?.trim();
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (value == null || value.isEmpty) return '이메일을 입력해주세요.';
+      if (!emailRegex.hasMatch(value)) return '유효하지 않은 이메일 형식입니다.';
+      return null;
+    }
+
+    // 비밀번호 검증
+    String? validatePassword(String? value) {
+      if (value == null || value.isEmpty) return '비밀번호를 입력해주세요.';
+      return null;
+    }
+
+    void handleEmailChange(String value) => emailError.value = validateEmail(value);
+    void handlePasswordChange(String value) => passwordError.value = validatePassword(value);
+
+    final isAllValid =
+        emailError.value == null && passwordError.value == null && emailTextController.text.isNotEmpty && pwdTextController.text.isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
-              ref.read(themeModeProvider.notifier).state = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-            },
+            onPressed: () => ref.read(themeModeProvider.notifier).state = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
             icon: Icon(Icons.brightness_6),
           ),
         ],
@@ -43,55 +70,44 @@ class LoginScreen extends HookConsumerWidget {
             children: [
               Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
               height30,
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: emailTextController,
-                      decoration: const InputDecoration(labelText: '이메일', border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '이메일을 입력해주세요.';
-                        }
-                        return null;
-                      },
-                    ),
-                    height20,
-                    TextFormField(
-                      controller: pwdTextController,
-                      decoration: InputDecoration(
-                        labelText: '비밀번호',
-                        border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
-                          onPressed: () {
-                            obscure.value = !obscure.value;
-                          },
-                        ),
+              Column(
+                children: [
+                  TextFormField(
+                    controller: emailTextController,
+                    decoration: InputDecoration(labelText: '이메일', border: OutlineInputBorder(), errorText: emailError.value),
+                    onChanged: handleEmailChange,
+                  ),
+                  height20,
+                  TextFormField(
+                    controller: pwdTextController,
+                    decoration: InputDecoration(
+                      labelText: '비밀번호',
+                      border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
+                        onPressed: () {
+                          obscure.value = !obscure.value;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      obscureText: obscure.value,
-                      keyboardType: TextInputType.visiblePassword,
+                      errorText: passwordError.value,
                     ),
-                    height20,
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          ref.read(isLoggedInProvider.notifier).state = true;
-                          context.goNamed(AppRouteName.home);
-                        }
-                      },
-                      style: buttonStyle,
-                      child: '로그인'.text.make(),
-                    ),
-                  ],
-                ),
+                    onChanged: handlePasswordChange,
+                    obscureText: obscure.value,
+                    keyboardType: TextInputType.visiblePassword,
+                  ),
+                  height20,
+                  ElevatedButton(
+                    onPressed:
+                        isAllValid
+                            ? () {
+                              ref.read(isLoggedInProvider.notifier).state = true;
+                              context.goNamed(AppRouteName.home);
+                            }
+                            : null,
+                    style: buttonStyle,
+                    child: '로그인'.text.make(),
+                  ),
+                ],
               ),
               height15,
               Row(

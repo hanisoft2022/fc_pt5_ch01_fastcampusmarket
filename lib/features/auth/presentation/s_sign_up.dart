@@ -38,6 +38,7 @@ class SignUpScreen extends HookConsumerWidget {
 
     // 이메일 검증
     String? validateEmail(String? value) {
+      value = value?.trim();
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (value == null || value.isEmpty) return '이메일을 입력해주세요.';
       if (!emailRegex.hasMatch(value)) return '유효하지 않은 이메일 형식입니다.';
@@ -70,7 +71,7 @@ class SignUpScreen extends HookConsumerWidget {
     void handlePasswordChange(String value) => passwordError.value = validatePassword(value);
     void handleConfirmPasswordChange(String value) => confirmPasswordError.value = validateConfirmPassword(value, pwdTextController.text);
 
-    final isFormValid =
+    final isAllValid =
         emailError.value == null &&
         passwordError.value == null &&
         confirmPasswordError.value == null &&
@@ -134,7 +135,7 @@ class SignUpScreen extends HookConsumerWidget {
                   height20,
                   ElevatedButton(
                     onPressed:
-                        isFormValid
+                        isAllValid
                             ? () {
                               ref.read(isLoggedInProvider.notifier).state = true;
                               context.goNamed(AppRouteName.home);
