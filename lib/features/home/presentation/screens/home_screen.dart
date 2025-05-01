@@ -1,5 +1,6 @@
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
-import 'package:fastcampusmarket/features/home/presentation/screens/feed/feed_screen.dart';
+import 'package:fastcampusmarket/features/home/presentation/screens/feed_screen.dart';
+import 'package:fastcampusmarket/features/home/presentation/screens/seller_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,12 +31,7 @@ class HomeScreen extends HookConsumerWidget {
         ),
         body: IndexedStack(
           index: currentIndex.value,
-          children: [
-            FeedScreen(),
-            Container(color: Colors.orange),
-            Container(color: Colors.yellow),
-            Container(color: Colors.green),
-          ],
+          children: [FeedScreen(), SellerScreen(), Container(color: Colors.yellow), Container(color: Colors.green)],
         ).p(15),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (value) => currentIndex.value = value,
