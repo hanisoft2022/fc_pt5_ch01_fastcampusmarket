@@ -51,9 +51,7 @@ class LoginScreen extends HookConsumerWidget {
     final isAllValid = useState(false);
 
     void validateForm() {
-      final emailValid = validateEmail(emailTextController.text) == null;
-      final pwdValid = validatePassword(pwdTextController.text) == null;
-      isAllValid.value = emailValid && pwdValid && emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
+      isAllValid.value = emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
     }
 
     void handleEmailChange(String value) {
@@ -88,6 +86,8 @@ class LoginScreen extends HookConsumerWidget {
                     controller: emailTextController,
                     decoration: InputDecoration(labelText: '이메일', border: OutlineInputBorder(), errorText: emailError.value),
                     onChanged: handleEmailChange,
+                    textInputAction: TextInputAction.next, // 다음 필드로 포커스 이동
+                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                   ),
                   height20,
                   TextFormField(
@@ -112,6 +112,9 @@ class LoginScreen extends HookConsumerWidget {
                     onPressed:
                         isAllValid.value
                             ? () {
+                              // TODO: 로그인 기능 구현
+                              // final email = emailTextController.text.trim();
+                              // final password = pwdTextController.text;
                               ref.read(isLoggedInProvider.notifier).state = true;
                               context.goNamed(AppRouteName.home);
                             }
