@@ -68,7 +68,10 @@ class LoginScreen extends HookConsumerWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => ref.read(themeModeProvider.notifier).state = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
+            onPressed:
+                () =>
+                    ref.read(themeModeProvider.notifier).state =
+                        themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
             icon: Icon(Icons.brightness_6),
           ),
         ],
@@ -84,7 +87,11 @@ class LoginScreen extends HookConsumerWidget {
                 children: [
                   TextFormField(
                     controller: emailTextController,
-                    decoration: InputDecoration(labelText: '이메일', border: OutlineInputBorder(), errorText: emailError.value),
+                    decoration: InputDecoration(
+                      labelText: '이메일',
+                      border: OutlineInputBorder(),
+                      errorText: emailError.value,
+                    ),
                     onChanged: handleEmailChange,
                     textInputAction: TextInputAction.next, // 다음 필드로 포커스 이동
                     onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -141,7 +148,9 @@ class LoginScreen extends HookConsumerWidget {
               GestureDetector(
                 onTap: () {},
                 child: Image.asset(
-                  isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                  isLight
+                      ? 'assets/images/logo/google/light/google_light.png'
+                      : 'assets/images/logo/google/dark/google_dark.png',
                   width: 100,
                 ),
               ),
