@@ -25,7 +25,6 @@ final appRouterProvider = Provider<GoRouter>(
       if (isLoggedIn && allowedPaths.contains(currentPath)) {
         return AppRoutePath.home;
       }
-
       return null;
     },
   ),

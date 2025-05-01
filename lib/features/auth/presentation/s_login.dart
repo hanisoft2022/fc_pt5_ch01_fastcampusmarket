@@ -48,11 +48,23 @@ class LoginScreen extends HookConsumerWidget {
       return null;
     }
 
-    void handleEmailChange(String value) => emailError.value = validateEmail(value);
-    void handlePasswordChange(String value) => passwordError.value = validatePassword(value);
+    final isAllValid = useState(false);
 
-    final isAllValid =
-        emailError.value == null && passwordError.value == null && emailTextController.text.isNotEmpty && pwdTextController.text.isNotEmpty;
+    void validateForm() {
+      final emailValid = validateEmail(emailTextController.text) == null;
+      final pwdValid = validatePassword(pwdTextController.text) == null;
+      isAllValid.value = emailValid && pwdValid && emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
+    }
+
+    void handleEmailChange(String value) {
+      emailError.value = validateEmail(value);
+      validateForm();
+    }
+
+    void handlePasswordChange(String value) {
+      passwordError.value = validatePassword(value);
+      validateForm();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +110,7 @@ class LoginScreen extends HookConsumerWidget {
                   height20,
                   ElevatedButton(
                     onPressed:
-                        isAllValid
+                        isAllValid.value
                             ? () {
                               ref.read(isLoggedInProvider.notifier).state = true;
                               context.goNamed(AppRouteName.home);
@@ -129,6 +141,13 @@ class LoginScreen extends HookConsumerWidget {
                   isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
                   width: 100,
                 ),
+              ),
+              IconButton(
+                onPressed: () {
+                  ref.read(isLoggedInProvider.notifier).state = true;
+                  context.goNamed(AppRouteName.login);
+                },
+                icon: Icon(Icons.forward),
               ),
             ],
           ).p(20),

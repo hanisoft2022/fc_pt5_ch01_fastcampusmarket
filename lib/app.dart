@@ -15,8 +15,8 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme: MyTheme.lightTheme,
-      darkTheme: MyTheme.darkTheme,
+      theme: ThemeType.light.themeData,
+      darkTheme: ThemeType.dark.themeData,
       themeMode: themeMode,
       routerConfig: router,
     );
