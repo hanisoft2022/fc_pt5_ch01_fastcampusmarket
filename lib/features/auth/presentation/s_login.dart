@@ -68,10 +68,7 @@ class LoginScreen extends HookConsumerWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed:
-                () =>
-                    ref.read(themeModeProvider.notifier).state =
-                        themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light,
+            onPressed: () => ref.read(themeModeProvider.notifier).toggleTheme(),
             icon: Icon(Icons.brightness_6),
           ),
         ],
