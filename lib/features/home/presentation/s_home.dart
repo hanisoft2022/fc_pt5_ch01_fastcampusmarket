@@ -28,7 +28,15 @@ class HomeScreen extends HookConsumerWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
           ],
         ),
-        body: Center(child: '임시 홈스크린'.text.make()),
+        body: IndexedStack(
+          index: currentIndex.value,
+          children: [
+            Container(color: Colors.red),
+            Container(color: Colors.orange),
+            Container(color: Colors.yellow),
+            Container(color: Colors.green),
+          ],
+        ),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (value) => currentIndex.value = value,
           selectedIndex: currentIndex.value,
