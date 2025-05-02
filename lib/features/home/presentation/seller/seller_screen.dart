@@ -59,30 +59,30 @@ class SellerScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 '상품명'.text.make(),
-                                SizedBox(
-                                  width: 50,
-                                  child: MenuAnchor(
-                                    builder: (context, controller, child) {
-                                      return IconButton(
-                                        icon: Icon(Icons.more_vert),
-                                        onPressed: () {
-                                          if (controller.isOpen) {
-                                            controller.close();
-                                          } else {
-                                            controller.open();
-                                          }
-                                        },
-                                      );
-                                    },
-                                    menuChildren: [
-                                      MenuItemButton(child: Text('fffdfdf'), onPressed: () {}),
-                                      MenuItemButton(child: Text('f'), onPressed: () {}),
-                                      MenuItemButton(child: Text('f'), onPressed: () {}),
-                                    ],
-                                  ),
+                                MenuAnchor(
+                                  alignmentOffset: Offset(-50, 0),
+                                  builder: (context, controller, child) {
+                                    return InkWell(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onTap: () {
+                                        if (controller.isOpen) {
+                                          controller.close();
+                                        } else {
+                                          controller.open();
+                                        }
+                                      },
+                                      child: Icon(Icons.more_vert),
+                                    );
+                                  },
+                                  menuChildren: [
+                                    MenuItemButton(child: Text('fffdfdf'), onPressed: () {}),
+                                    MenuItemButton(child: Text('f'), onPressed: () {}),
+                                    MenuItemButton(child: Text('f'), onPressed: () {}),
+                                  ],
                                 ),
                               ],
                             ),
