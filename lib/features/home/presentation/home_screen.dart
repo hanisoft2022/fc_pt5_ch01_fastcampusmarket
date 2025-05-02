@@ -38,7 +38,7 @@ class HomeScreen extends HookConsumerWidget {
           selectedIndex: currentIndex.value,
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: '쫑알쫑알'),
-            NavigationDestination(icon: Icon(Icons.add), label: '계산기'),
+            NavigationDestination(icon: Icon(Icons.sell), label: '판매자'),
             NavigationDestination(icon: Icon(Icons.message), label: '매칭'),
             NavigationDestination(icon: Icon(Icons.person), label: '프로필'),
           ],

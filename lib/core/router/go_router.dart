@@ -3,6 +3,7 @@ import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/features/auth/presentation/login_screen.dart';
 import 'package:fastcampusmarket/features/auth/presentation/sign_up_screen.dart';
 import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/seller_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,7 +13,12 @@ final appRouterProvider = Provider<GoRouter>(
       GoRoute(path: AppRoutePath.root, redirect: (context, state) => AppRoutePath.home),
       GoRoute(name: AppRouteName.login, path: AppRoutePath.login, builder: (context, state) => LoginScreen()),
       GoRoute(name: AppRouteName.signUp, path: AppRoutePath.signUp, builder: (context, state) => SignUpScreen()),
-      GoRoute(name: AppRouteName.home, path: AppRoutePath.home, builder: (context, state) => const HomeScreen()),
+      GoRoute(
+        name: AppRouteName.home,
+        path: AppRoutePath.home,
+        builder: (context, state) => const HomeScreen(),
+        routes: [SellerRoute.route],
+      ),
     ],
     redirect: (context, state) {
       final isLoggedIn = ref.read(isLoggedInProvider);
