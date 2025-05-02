@@ -6,6 +6,6 @@ class AddProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(), body: Center(child: 'Add Product'.text.make()));
+    return Scaffold(appBar: AppBar(title: '상품 추가'.text.make()), body: Center(child: 'Add Product'.text.make()));
   }
 }
