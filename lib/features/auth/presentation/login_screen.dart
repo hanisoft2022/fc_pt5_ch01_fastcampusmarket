@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/router/app_router.dart';
+import 'package:fastcampusmarket/core/router/app_route.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -120,7 +120,7 @@ class LoginScreen extends HookConsumerWidget {
                               // final email = emailTextController.text.trim();
                               // final password = pwdTextController.text;
                               ref.read(isLoggedInProvider.notifier).state = true;
-                              context.goNamed(AppRouteName.home);
+                              context.goNamed(FeedRoute.name);
                             }
                             : null,
                     style: buttonStyle,
@@ -134,7 +134,7 @@ class LoginScreen extends HookConsumerWidget {
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(),
-                    onPressed: () => context.pushNamed(AppRouteName.signUp),
+                    onPressed: () => context.pushNamed(SignUpRoute.name),
                     child: '계정이 없나요? 회원가입'.text.make(),
                   ),
                 ],
@@ -154,7 +154,7 @@ class LoginScreen extends HookConsumerWidget {
               IconButton(
                 onPressed: () {
                   ref.read(isLoggedInProvider.notifier).state = true;
-                  context.goNamed(AppRouteName.login);
+                  context.goNamed(FeedRoute.name);
                 },
                 icon: Icon(Icons.forward),
               ),

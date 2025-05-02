@@ -1,17 +1,19 @@
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed_screen.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/seller_screen.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/add/add_product_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class HomeScreen extends HookConsumerWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends ConsumerWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const HomeScreen({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = useState(0);
+    final currentIndex = navigationShell.currentIndex;
 
     return Material(
       child: Scaffold(
@@ -19,7 +21,7 @@ class HomeScreen extends HookConsumerWidget {
           title: '쫑알쫑알'.text.make(),
           centerTitle: false,
           actions: [
-            if (currentIndex.value == 0) IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+            if (currentIndex == 0) IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
             IconButton(
               onPressed: () {
                 ref.watch(themeModeProvider.notifier).toggleTheme();
@@ -29,26 +31,24 @@ class HomeScreen extends HookConsumerWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
           ],
         ),
-        body: IndexedStack(
-          index: currentIndex.value,
-          children: [FeedScreen(), SellerScreen(), Container(color: Colors.yellow), Container(color: Colors.green)],
-        ).p(15),
+        body: navigationShell.p(10),
         bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (value) => currentIndex.value = value,
-          selectedIndex: currentIndex.value,
+          onDestinationSelected: (value) => navigationShell.goBranch(value),
+          selectedIndex: currentIndex,
           destinations: [
             NavigationDestination(icon: Icon(Icons.home), label: '쫑알쫑알'),
             NavigationDestination(icon: Icon(Icons.sell), label: '판매자'),
-            NavigationDestination(icon: Icon(Icons.message), label: '매칭'),
-            NavigationDestination(icon: Icon(Icons.person), label: '프로필'),
           ],
         ),
-        floatingActionButton: switch (currentIndex.value) {
+        floatingActionButton: switch (currentIndex) {
           0 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.home)),
-          1 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
-          2 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.message)),
-          3 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.person)),
-          _ => FloatingActionButton(onPressed: () {}, child: Icon(Icons.help)),
+          1 => FloatingActionButton(
+            onPressed: () {
+              context.goNamed(AddProductRoute.name);
+            },
+            child: Icon(Icons.add),
+          ),
+          _ => FloatingActionButton(onPressed: () {}, child: null),
         },
       ),
     );

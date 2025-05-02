@@ -28,11 +28,11 @@ class SellerScreen extends StatelessWidget {
           },
         ),
         height15,
-        OverflowBar(
-          alignment: MainAxisAlignment.end,
-
-          children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
             ElevatedButton(onPressed: () {}, child: '카테고리 일괄 등록'.text.make()),
+            width20,
             ElevatedButton(onPressed: () {}, child: '카테고리 등록'.text.make()),
           ],
         ),
@@ -79,7 +79,7 @@ class SellerScreen extends StatelessWidget {
                                     );
                                   },
                                   menuChildren: [
-                                    MenuItemButton(child: Text('fffdfdf'), onPressed: () {}),
+                                    MenuItemButton(child: Text('d'), onPressed: () {}),
                                     MenuItemButton(child: Text('f'), onPressed: () {}),
                                     MenuItemButton(child: Text('f'), onPressed: () {}),
                                   ],

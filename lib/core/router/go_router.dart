@@ -1,35 +1,44 @@
-import 'package:fastcampusmarket/core/router/app_router.dart';
-import 'package:fastcampusmarket/core/router/auth_provider.dart';
-import 'package:fastcampusmarket/features/auth/presentation/login_screen.dart';
-import 'package:fastcampusmarket/features/auth/presentation/sign_up_screen.dart';
-import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/seller_router.dart';
+import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+
+import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
+
+import 'package:fastcampusmarket/core/router/app_route.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:fastcampusmarket/core/router/auth_provider.dart';
+
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+final _feedNavigatorKey = GlobalKey<NavigatorState>();
+final _sellerNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>(
   (ref) => GoRouter(
+    navigatorKey: rootNavigatorKey,
+    initialLocation: '/',
     routes: [
-      GoRoute(path: AppRoutePath.root, redirect: (context, state) => AppRoutePath.home),
-      GoRoute(name: AppRouteName.login, path: AppRoutePath.login, builder: (context, state) => LoginScreen()),
-      GoRoute(name: AppRouteName.signUp, path: AppRoutePath.signUp, builder: (context, state) => SignUpScreen()),
-      GoRoute(
-        name: AppRouteName.home,
-        path: AppRoutePath.home,
-        builder: (context, state) => const HomeScreen(),
-        routes: [SellerRoute.route],
+      GoRoute(path: '/', redirect: (context, state) => FeedRoute.path),
+      LoginRoute.route,
+      SignUpRoute.route,
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => HomeScreen(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(navigatorKey: _feedNavigatorKey, routes: [FeedRoute.route]),
+          StatefulShellBranch(navigatorKey: _sellerNavigatorKey, routes: [SellerRoute.route]),
+        ],
       ),
     ],
     redirect: (context, state) {
       final isLoggedIn = ref.read(isLoggedInProvider);
       final currentPath = state.fullPath;
-      final allowedPaths = [AppRoutePath.login, AppRoutePath.signUp];
+      final allowedPaths = [LoginRoute.path, SignUpRoute.path];
 
       if (!isLoggedIn && !allowedPaths.contains(currentPath)) {
-        return AppRoutePath.login;
+        return LoginRoute.path;
       }
       if (isLoggedIn && allowedPaths.contains(currentPath)) {
-        return AppRoutePath.home;
+        return FeedRoute.path;
       }
       return null;
     },

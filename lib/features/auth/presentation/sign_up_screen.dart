@@ -1,6 +1,7 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/router/app_router.dart';
+import 'package:fastcampusmarket/core/router/app_route.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
+import 'package:fastcampusmarket/features/home/presentation/feed/feed_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -69,7 +70,8 @@ class SignUpScreen extends HookConsumerWidget {
     // 실시간 검증 핸들러
     void handleEmailChange(String value) => emailError.value = validateEmail(value);
     void handlePasswordChange(String value) => passwordError.value = validatePassword(value);
-    void handleConfirmPasswordChange(String value) => confirmPasswordError.value = validateConfirmPassword(value, pwdTextController.text);
+    void handleConfirmPasswordChange(String value) =>
+        confirmPasswordError.value = validateConfirmPassword(value, pwdTextController.text);
 
     final isAllValid =
         emailError.value == null &&
@@ -94,7 +96,11 @@ class SignUpScreen extends HookConsumerWidget {
                 children: [
                   TextFormField(
                     controller: emailTextController,
-                    decoration: InputDecoration(labelText: '이메일', border: OutlineInputBorder(), errorText: emailError.value),
+                    decoration: InputDecoration(
+                      labelText: '이메일',
+                      border: OutlineInputBorder(),
+                      errorText: emailError.value,
+                    ),
                     onChanged: handleEmailChange,
                   ),
                   height20,
@@ -138,7 +144,7 @@ class SignUpScreen extends HookConsumerWidget {
                         isAllValid
                             ? () {
                               ref.read(isLoggedInProvider.notifier).state = true;
-                              context.goNamed(AppRouteName.home);
+                              context.goNamed(FeedRoute.name);
                             }
                             : null,
                     style: buttonStyle,
@@ -152,7 +158,9 @@ class SignUpScreen extends HookConsumerWidget {
               GestureDetector(
                 onTap: () {},
                 child: Image.asset(
-                  isLight ? 'assets/images/logo/google/light/google_light.png' : 'assets/images/logo/google/dark/google_dark.png',
+                  isLight
+                      ? 'assets/images/logo/google/light/google_light.png'
+                      : 'assets/images/logo/google/dark/google_dark.png',
                   width: 100,
                 ),
               ),
