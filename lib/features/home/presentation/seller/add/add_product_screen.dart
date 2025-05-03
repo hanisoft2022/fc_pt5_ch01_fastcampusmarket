@@ -1,10 +1,8 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/common/extensions/context.dart';
-import 'package:fastcampusmarket/core/common/extensions/num_extensions.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -67,7 +65,7 @@ class AddProductScreen extends HookWidget {
                     TextFormField(
                       controller: titleController,
                       decoration: decoration('제품명'),
-                      validator: (value) => requiredValidator(value, '제품명'),
+                      validator: (value) => Validators.requiredValidator(value, '제품명'),
                       textInputAction: TextInputAction.next,
                     ),
                     height15,
@@ -75,7 +73,7 @@ class AddProductScreen extends HookWidget {
                     TextFormField(
                       controller: descriptionController,
                       decoration: decoration('제품 설명').copyWith(alignLabelWithHint: true),
-                      validator: (value) => requiredValidator(value, '제품 설명'),
+                      validator: (value) => Validators.requiredValidator(value, '제품 설명'),
                       minLines: 4,
                       maxLines: null,
                       maxLength: 255,
@@ -88,17 +86,22 @@ class AddProductScreen extends HookWidget {
                       decoration: decoration('1개 가격').copyWith(suffix: '원'.text.make()),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
+                      validator: (value) => Validators.requiredValidator(value, '가격'),
                       inputFormatters: [
-                        CurrencyTextInputFormatter.currency(decimalDigits: 0, symbol: ''),
+                        FilteringTextInputFormatter.digitsOnly,
+                        CommaTextInputFormatter(),
                       ],
                     ),
                     height15,
-                    // 재고
+                    // 수량
                     TextFormField(
                       controller: stockController,
-                      decoration: decoration('재고'),
+                      decoration: decoration(
+                        '수량',
+                      ).copyWith(suffix: '개'.text.make(), hintText: '입고 및 재고 수량'),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     ),
                     height15,
                     // 할인율

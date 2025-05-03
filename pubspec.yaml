@@ -42,7 +42,7 @@ dependencies:
   gap: ^3.0.1
   shared_preferences: ^2.5.3
   timeago: ^3.2.2
-  currency_text_input_formatter: ^2.3.0
+
 
 
 dev_dependencies:
