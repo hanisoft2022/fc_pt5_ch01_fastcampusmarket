@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 extension ContextExtension on BuildContext {
-  double get width => MediaQuery.of(this).size.width;
-  double get height => MediaQuery.of(this).size.height;
+  /// Get MediaQuery Screen Size
+  Size get screenSize => MediaQuery.sizeOf(this);
+
+  double get deviceWidth => screenSize.width;
+  double get deviceHeight => screenSize.height;
+
   ThemeData get theme => Theme.of(this);
 }

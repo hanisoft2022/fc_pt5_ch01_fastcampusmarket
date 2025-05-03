@@ -1,4 +1,5 @@
 import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/core/common/extensions/context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -35,14 +36,17 @@ class AddProductScreen extends HookWidget {
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {},
                 child: Ink(
-                  height: 200,
-                  width: 200,
+                  height: context.deviceWidth * 0.6,
+                  width: context.deviceWidth * 0.6,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.grey.shade300,
                   ),
 
-                  child: Icon(Icons.add),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.add), '제품(상품) 이미지 추가'.text.make()],
+                  ),
                 ),
               ),
               height20,
