@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-final decimalFormat = NumberFormat.decimalPattern("en");
+final decimalFormat = NumberFormat.decimalPattern();
 
 extension IntExt on int {
   static int? safeParse(String? source) {
