@@ -1,4 +1,6 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/core/common/extensions/context.dart';
 import 'package:fastcampusmarket/core/common/extensions/num_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,6 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 final _formKey = GlobalKey<FormState>();
+
+InputDecoration decoration(String name) =>
+    InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요', border: OutlineInputBorder());
 
 class AddProductScreen extends HookWidget {
   const AddProductScreen({super.key});
@@ -58,25 +63,18 @@ class AddProductScreen extends HookWidget {
                   children: [
                     '제품 정보'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                     height25,
+                    // 제품명
                     TextFormField(
                       controller: titleController,
-                      decoration: InputDecoration(
-                        labelText: '제품명',
-                        hintText: '제품명을 입력하세요',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: decoration('제품명'),
                       validator: (value) => requiredValidator(value, '제품명'),
                       textInputAction: TextInputAction.next,
                     ),
                     height15,
+                    // 제품 설명
                     TextFormField(
                       controller: descriptionController,
-                      decoration: InputDecoration(
-                        labelText: '제품 설명',
-                        hintText: '제품 설명을 입력해주세요',
-                        alignLabelWithHint: true,
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: decoration('제품 설명').copyWith(alignLabelWithHint: true),
                       validator: (value) => requiredValidator(value, '제품 설명'),
                       minLines: 4,
                       maxLines: null,
@@ -84,28 +82,29 @@ class AddProductScreen extends HookWidget {
                       keyboardType: TextInputType.multiline,
                     ),
                     height15,
+                    // 가격
                     TextFormField(
                       controller: priceController,
-                      decoration: InputDecoration(
-                        labelText: '가격',
-                        hintText: '1개 가격 입력',
-
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: decoration('1개 가격').copyWith(suffix: '원'.text.make()),
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: [
+                        CurrencyTextInputFormatter.currency(decimalDigits: 0, symbol: ''),
+                      ],
+                    ),
+                    height15,
+                    // 재고
+                    TextFormField(
+                      controller: stockController,
+                      decoration: decoration('재고'),
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                     ),
                     height15,
-                    TextFormField(
-                      controller: stockController,
-                      decoration: InputDecoration(labelText: '재고', border: OutlineInputBorder()),
-                    ),
+                    // 할인율
+                    TextFormField(controller: salePercentController, decoration: decoration('할인율')),
                     height15,
-                    TextFormField(
-                      controller: salePercentController,
-                      decoration: InputDecoration(labelText: '할인율', border: OutlineInputBorder()),
-                    ),
-                    height15,
+                    // 할인여부
                     SwitchListTile.adaptive(
                       title: '할인 여부'.text.make(),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -113,8 +112,7 @@ class AddProductScreen extends HookWidget {
                       onChanged: (value) => isSale.value = value,
                     ),
                     height15,
-                    100.days.toString().text.make(),
-                    100000.toWon().toString().text.make(),
+                    // 제품 추가
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
@@ -125,7 +123,8 @@ class AddProductScreen extends HookWidget {
                         child: '제품 추가'.text.make(),
                       ),
                     ),
-                    Gap(context.screenPadding.bottom),
+                    // Bottom Padding
+                    context.bottomPaddingGap,
                   ],
                 ),
               ),

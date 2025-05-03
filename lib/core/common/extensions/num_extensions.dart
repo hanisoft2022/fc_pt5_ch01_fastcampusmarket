@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 final decimalFormat = NumberFormat.decimalPattern();
 
-extension IntExt on int {
+extension IntExtensions on int {
   static int? safeParse(String? source) {
     if (source == null) return null;
     return int.tryParse(source);
@@ -25,7 +25,7 @@ extension IntExt on int {
   }
 }
 
-extension DoubleExt on double {
+extension DoubleExtensions on double {
   String toComma() {
     return decimalFormat.format(this);
   }
