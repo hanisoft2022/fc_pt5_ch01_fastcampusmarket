@@ -10,4 +10,5 @@ abstract interface class AppColors {
   // Color get imageBoxTextColor;
 
   Color get ratingStarColor;
+  Color get ratingStarEmptyColor;
 }
