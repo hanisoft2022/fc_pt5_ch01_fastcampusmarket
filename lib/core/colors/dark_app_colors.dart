@@ -9,4 +9,7 @@ class DarkAppColors implements AppColors {
 
   @override
   Color get imageBoxBackgroundColor => const Color(0xFF232323);
+
+  @override
+  Color get ratingStarColor => Colors.orangeAccent;
 }

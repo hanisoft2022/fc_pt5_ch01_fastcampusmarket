@@ -8,4 +8,6 @@ abstract interface class AppColors {
   // implement corresponding colors if necessary
   // Color get imageBoxIconColor;
   // Color get imageBoxTextColor;
+
+  Color get ratingStarColor;
 }
