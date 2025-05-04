@@ -13,6 +13,8 @@ final _formKey = GlobalKey<FormState>();
 const int maxPrice = 9999999;
 const int maxCount = 999;
 
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
 InputDecoration decoration(String name) =>
     InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요.', border: OutlineInputBorder());
 
@@ -21,6 +23,8 @@ class AddProductScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dropdownValue = useState<String?>(list.first);
+
     final isSale = useState<bool>(false);
 
     final titleController = useTextEditingController();
@@ -64,6 +68,24 @@ class AddProductScreen extends HookWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    '카테고리 선택'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
+                    height25,
+                    DropdownMenu<String>(
+                      expandedInsets: EdgeInsets.zero,
+                      initialSelection: dropdownValue.value,
+                      onSelected: (String? value) {
+                        dropdownValue.value = value;
+                      },
+                      dropdownMenuEntries:
+                          list
+                              .map(
+                                (String value) =>
+                                    DropdownMenuEntry<String>(value: value, label: value),
+                              )
+                              .toList(),
+                    ),
+                    height25,
+                    // 제품명
                     '제품 정보'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                     height25,
                     // 제품명
@@ -135,15 +157,15 @@ class AddProductScreen extends HookWidget {
                       ),
                     height15,
                     // 제품 추가
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.pop();
-                          }
-                        },
-                        child: '제품 추가'.text.make(),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        minimumSize: Size(double.infinity, 50),
                       ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) context.pop();
+                      },
+                      child: '제품 추가'.text.make(),
                     ),
                     // Bottom Padding
                     context.bottomPaddingGap,
