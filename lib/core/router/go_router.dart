@@ -4,18 +4,20 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
 
-import 'package:fastcampusmarket/core/router/app_route.dart';
+import 'package:fastcampusmarket/core/router/router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-final _feedNavigatorKey = GlobalKey<NavigatorState>();
-final _sellerNavigatorKey = GlobalKey<NavigatorState>();
+abstract class GoRouterKeys {
+  static final rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final feedNavigatorKey = GlobalKey<NavigatorState>();
+  static final sellerNavigatorKey = GlobalKey<NavigatorState>();
+}
 
 final appRouterProvider = Provider<GoRouter>(
   (ref) => GoRouter(
-    navigatorKey: rootNavigatorKey,
+    navigatorKey: GoRouterKeys.rootNavigatorKey,
     initialLocation: '/',
     routes: [
       GoRoute(path: '/', redirect: (context, state) => FeedRoute.path),
@@ -24,8 +26,14 @@ final appRouterProvider = Provider<GoRouter>(
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => HomeScreen(navigationShell: navigationShell),
         branches: [
-          StatefulShellBranch(navigatorKey: _feedNavigatorKey, routes: [FeedRoute.route]),
-          StatefulShellBranch(navigatorKey: _sellerNavigatorKey, routes: [SellerRoute.route]),
+          StatefulShellBranch(
+            navigatorKey: GoRouterKeys.feedNavigatorKey,
+            routes: [FeedRoute.route],
+          ),
+          StatefulShellBranch(
+            navigatorKey: GoRouterKeys.sellerNavigatorKey,
+            routes: [SellerRoute.route],
+          ),
         ],
       ),
     ],

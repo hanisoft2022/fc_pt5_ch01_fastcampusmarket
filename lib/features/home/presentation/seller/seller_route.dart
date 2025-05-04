@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'seller_screen.dart';
-import 'add/add_product_route.dart';
+import 'product add/product_add_route.dart';
 
-class SellerRoute {
+abstract class SellerRoute {
   static const name = 'seller';
   static const path = '/seller';
 
@@ -10,6 +10,6 @@ class SellerRoute {
     name: name,
     path: path,
     builder: (context, state) => SellerScreen(),
-    routes: [AddProductRoute.route],
+    routes: [ProductAddRoute.route],
   );
 }

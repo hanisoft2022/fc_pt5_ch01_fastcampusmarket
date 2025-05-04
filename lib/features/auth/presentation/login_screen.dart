@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/router/app_route.dart';
+import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -51,7 +51,8 @@ class LoginScreen extends HookConsumerWidget {
     final isAllValid = useState(false);
 
     void validateForm() {
-      isAllValid.value = emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
+      isAllValid.value =
+          emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
     }
 
     void handleEmailChange(String value) {

@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/router/app_route.dart';
+import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/features/home/presentation/feed/feed_route.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +130,9 @@ class SignUpScreen extends HookConsumerWidget {
                       labelText: '비밀번호 재확인',
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
-                        icon: Icon(obscurePwdConfirm.value ? Icons.visibility_off : Icons.visibility),
+                        icon: Icon(
+                          obscurePwdConfirm.value ? Icons.visibility_off : Icons.visibility,
+                        ),
                         onPressed: () => obscurePwdConfirm.value = !obscurePwdConfirm.value,
                       ),
                       errorText: confirmPasswordError.value,

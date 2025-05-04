@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/add/add_product_route.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/product%20add/product_add_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
           0 => FloatingActionButton(onPressed: () {}, child: Icon(Icons.home)),
           1 => FloatingActionButton(
             onPressed: () {
-              context.goNamed(AddProductRoute.name);
+              context.goNamed(ProductAddRoute.name);
             },
             child: Icon(Icons.add),
           ),
