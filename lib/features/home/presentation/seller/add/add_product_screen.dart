@@ -50,7 +50,7 @@ class AddProductScreen extends HookWidget {
                   width: context.screenWidth * 0.6,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey.shade300,
+                    color: context.appColors.imageBoxBackgroundColor,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

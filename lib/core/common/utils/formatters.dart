@@ -32,6 +32,7 @@ class AddCommaToIntTextInputFormatter extends TextInputFormatter {
 }
 
 // 최댓값 제한 formatter
+// ! 최댓값 초과 시 입력값이 자동으로 최댓값으로 변경되는 로직 포함
 class SetMaxValueTextInputFormatter extends TextInputFormatter {
   final int maxValue;
 
