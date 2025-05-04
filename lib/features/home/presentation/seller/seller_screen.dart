@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/core/common/const/const.dart';
+import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -21,7 +21,9 @@ class SellerScreen extends StatelessWidget {
                 title: Text(suggestion),
                 onTap: () {
                   controller.closeView(suggestion);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('선택: $suggestion')));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('선택: $suggestion')));
                 },
               );
             }).toList();
@@ -51,7 +53,10 @@ class SellerScreen extends StatelessWidget {
                       Container(
                         width: 100,
                         height: 100,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.amber),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.amber,
+                        ),
                       ),
                       width15,
                       Expanded(

@@ -1,6 +1,7 @@
-import 'package:fastcampusmarket/core/common/const/const.dart';
+import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -49,9 +50,80 @@ class ProductDetailsScreen extends StatelessWidget {
                             icon: Icon(Icons.more_vert, size: 30),
                           ),
                       menuChildren: [
-                        MenuItemButton(child: Text('상품 삭제'), onPressed: () {}),
-                        MenuItemButton(child: Text('상품 삭제'), onPressed: () {}),
-                        MenuItemButton(child: Text('상품 삭제'), onPressed: () {}),
+                        MenuItemButton(
+                          child: Text('리뷰 등록'),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => AlertDialog(
+                                    title: Text('타이틀'),
+                                    content: Text('컨텐츠'),
+                                    actions: [
+                                      ElevatedButton(onPressed: () {}, child: Text('코드 미완성')),
+                                    ],
+                                  ),
+                            );
+                          },
+                        ),
+                        MenuItemButton(
+                          child: Text('alert dialog'),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => AlertDialog(
+                                    title: Text('타이틀'),
+                                    content: Text('컨텐트'),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () => context.pop(),
+                                        child: Text('elevated'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => context.pop(),
+                                        child: Text('text'),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () => context.pop(),
+                                        child: Text('outlined'),
+                                      ),
+                                    ],
+                                  ),
+                            );
+                          },
+                        ),
+                        MenuItemButton(
+                          child: Text('modal bottom sheet'),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder:
+                                  (context) => Container(
+                                    height: 200,
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Modal Bottom Sheet',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text('여기에 모달 바텀 시트 내용을 작성하세요.'),
+                                        ElevatedButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text('닫기'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ],
@@ -101,6 +173,16 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ).pSymmetric(h: 15),
+            InkWell(
+              onTap: () {},
+              child: Ink(
+                height: 50 + context.bottomPadding,
+                color: Colors.orange,
+                child: Center(
+                  child: '장바구니'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
