@@ -1,32 +1,58 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class CommaTextInputFormatter extends TextInputFormatter {
-  final NumberFormat _formatter;
+// 숫자에 콤마 붙여주는 formatter
+// ! 백엔드 전송 전 아래와 같이 콤마 제하는 로직 구현 필수
+//  * final textNum = numTextController.text.replaceAll(',', '');
+//  * final num = int.parse(price);
+class AddCommaToIntTextInputFormatter extends TextInputFormatter {
+  final NumberFormat formatter;
   final int maxValue;
 
-  CommaTextInputFormatter({String locale = 'ko_KR', this.maxValue = 10000000000})
-    : _formatter = NumberFormat.decimalPattern(locale);
+  AddCommaToIntTextInputFormatter({String locale = 'ko_KR', this.maxValue = 9999999})
+    : formatter = NumberFormat.decimalPattern(locale);
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    // 1. 입력값에서 숫자만 추출
     String digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
     if (digits.isEmpty) return newValue.copyWith(text: '');
 
-    // TODO: 최대값 제한 로직 다시 구현하기. 디버그 콘솔에 여전히 에러 뜸.
-    // 최대값 제한
-    int value = int.tryParse(digits) ?? 0;
-    if (value > maxValue) {
-      value = maxValue;
-    }
-    // 2. 콤마 추가
-    String newText = _formatter.format(int.parse(digits));
+    BigInt value = BigInt.parse(digits);
+    BigInt max = BigInt.from(maxValue);
 
-    // 3. 커서 위치를 항상 맨 뒤로 이동
+    if (value > max) value = max;
+
+    String newText = formatter.format(value.toInt());
+
     return TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
+// 최댓값 제한 formatter
+class SetMaxValueTextInputFormatter extends TextInputFormatter {
+  final int maxValue;
+
+  SetMaxValueTextInputFormatter(this.maxValue);
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return newValue.copyWith(text: '');
+
+    int value = int.tryParse(digits) ?? 0;
+    if (value > maxValue) value = maxValue;
+
+    final text = value.toString();
+
+    // 변경된 값과 커서 위치 반환
+    return TextEditingValue(
+      text: text.toString(),
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }
