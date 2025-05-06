@@ -31,7 +31,6 @@ class HomeScreen extends ConsumerWidget {
             ),
             IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
           ],
-          //
         ),
         body: navigationShell.p(10),
         bottomNavigationBar: NavigationBar(
