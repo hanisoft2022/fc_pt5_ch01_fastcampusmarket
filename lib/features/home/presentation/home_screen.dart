@@ -32,6 +32,8 @@ class HomeScreen extends ConsumerWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
           ],
         ),
+
+        // for commit, practicing firestore
         body: navigationShell.p(10),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (value) => navigationShell.goBranch(value),
