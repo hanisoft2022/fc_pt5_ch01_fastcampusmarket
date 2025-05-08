@@ -33,7 +33,6 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
 
-        // for commit
         body: navigationShell.p(10),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (value) => navigationShell.goBranch(value),
