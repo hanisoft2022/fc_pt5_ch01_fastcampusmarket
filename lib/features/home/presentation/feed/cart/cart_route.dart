@@ -5,12 +5,12 @@ import '../../../../../core/router/router.dart';
 
 abstract class CartRoute {
   static const name = 'cart';
-  static const path = '/cart';
+  static const path = '/cart/:uid';
 
   static GoRoute route = GoRoute(
     name: name,
     path: path,
-    builder: (context, state) => CartScreen(),
+    builder: (context, state) => CartScreen(uid: state.pathParameters['uid'] ?? ''),
     parentNavigatorKey: GoRouterKeys.rootNavigatorKey,
   );
 }

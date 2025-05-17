@@ -6,12 +6,20 @@ class LoginRoute {
   static const name = 'login';
   static const path = '/login';
 
-  static GoRoute route = GoRoute(name: name, path: path, builder: (context, state) => LoginScreen());
+  static GoRoute route = GoRoute(
+    name: name,
+    path: path,
+    builder: (context, state) => LoginScreen(),
+  );
 }
 
 class SignUpRoute {
   static const name = 'signUp';
-  static const path = '/signUp';
+  static const path = '/sign-up';
 
-  static GoRoute route = GoRoute(name: name, path: path, builder: (context, state) => SignUpScreen());
+  static GoRoute route = GoRoute(
+    name: name,
+    path: path,
+    builder: (context, state) => SignUpScreen(),
+  );
 }

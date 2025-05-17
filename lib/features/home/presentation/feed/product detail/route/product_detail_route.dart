@@ -3,8 +3,8 @@ import 'package:fastcampusmarket/features/home/presentation/feed/product%20detai
 import 'package:go_router/go_router.dart';
 
 abstract class ProductDetailRoute {
-  static const name = 'product_detail';
-  static const path = '/product_detail';
+  static const name = 'productDetail';
+  static const path = '/product-detail';
 
   static GoRoute route = GoRoute(
     name: name,
