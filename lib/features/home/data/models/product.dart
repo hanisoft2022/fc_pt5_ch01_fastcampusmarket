@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,6 +8,8 @@ part 'product.g.dart';
 
 @freezed
 abstract class Product with _$Product {
+  const Product._();
+
   const factory Product({
     required String id,
     required String title,
@@ -23,6 +26,8 @@ abstract class Product with _$Product {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) => Product.fromJson(snapshot.data() ?? {});
+
+  Map<String, dynamic> toFirestore() => toJson();
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);
 }

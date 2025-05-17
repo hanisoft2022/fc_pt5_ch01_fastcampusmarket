@@ -14,7 +14,7 @@ part of 'product.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Product {
+mixin _$Product implements DiagnosticableTreeMixin {
 
  String get id; String get title; String get description; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl; int? get timeStamp;
 /// Create a copy of Product
@@ -26,6 +26,12 @@ $ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as
   /// Serializes this Product to a JSON map.
   Map<String, dynamic> toJson();
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'Product'))
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('description', description))..add(DiagnosticsProperty('price', price))..add(DiagnosticsProperty('isSale', isSale))..add(DiagnosticsProperty('stock', stock))..add(DiagnosticsProperty('saleRate', saleRate))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('timeStamp', timeStamp));
+}
 
 @override
 bool operator ==(Object other) {
@@ -37,7 +43,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,id,title,description,price,isSale,stock,saleRate,imageUrl,timeStamp);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'Product(id: $id, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl, timeStamp: $timeStamp)';
 }
 
@@ -87,8 +93,8 @@ as int?,
 /// @nodoc
 @JsonSerializable()
 
-class _Product implements Product {
-  const _Product({required this.id, required this.title, required this.description, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl, this.timeStamp});
+class _Product extends Product with DiagnosticableTreeMixin {
+  const _Product({required this.id, required this.title, required this.description, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl, this.timeStamp}): super._();
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
 @override final  String id;
@@ -111,6 +117,12 @@ _$ProductCopyWith<_Product> get copyWith => __$ProductCopyWithImpl<_Product>(thi
 Map<String, dynamic> toJson() {
   return _$ProductToJson(this, );
 }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'Product'))
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('description', description))..add(DiagnosticsProperty('price', price))..add(DiagnosticsProperty('isSale', isSale))..add(DiagnosticsProperty('stock', stock))..add(DiagnosticsProperty('saleRate', saleRate))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('timeStamp', timeStamp));
+}
 
 @override
 bool operator ==(Object other) {
@@ -122,7 +134,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,id,title,description,price,isSale,stock,saleRate,imageUrl,timeStamp);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'Product(id: $id, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl, timeStamp: $timeStamp)';
 }
 
