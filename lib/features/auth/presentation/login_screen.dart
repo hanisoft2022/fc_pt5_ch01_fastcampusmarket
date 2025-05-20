@@ -50,6 +50,7 @@ class LoginScreen extends HookConsumerWidget {
     // 로그인 버튼 실시간 활성화를 위한 유효 체크 변수
     final isEmailValid = useState(false);
     final isPasswordValid = useState(false);
+    // final isAllValid = useMemoized(() => isEmailValid.value && isPasswordValid.value);
 
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +110,7 @@ class LoginScreen extends HookConsumerWidget {
                     height20,
                     ElevatedButton(
                       onPressed:
-                          (isEmailValid.value && isPasswordValid.value)
+                          isEmailValid.value && isPasswordValid.value
                               ? () {
                                 if (formKey.currentState?.validate() == true) {
                                   ref.read(isLoggedInProvider.notifier).state = true;

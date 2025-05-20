@@ -1,7 +1,6 @@
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed/feed_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -32,10 +31,8 @@ class SignUpScreen extends HookConsumerWidget {
     final obscurePwd = useState(true);
     final obscurePwdConfirm = useState(true);
 
-    // 에러 메시지
-    final emailError = useState<String?>(null);
-    final passwordError = useState<String?>(null);
-    final confirmPasswordError = useState<String?>(null);
+    // Form 상태를 위한 key
+    final formKey = useMemoized(() => GlobalKey<FormState>());
 
     // 이메일 검증
     String? validateEmail(String? value) {
@@ -61,25 +58,19 @@ class SignUpScreen extends HookConsumerWidget {
     }
 
     // 비밀번호 재확인 검증
-    String? validateConfirmPassword(String? value, String original) {
+    String? validateConfirmPassword(String original, String? value) {
       if (value == null || value.isEmpty) return '재확인 비밀번호를 입력해주세요.';
       if (value != original) return '비밀번호가 일치하지 않습니다.';
       return null;
     }
 
-    // 실시간 검증 핸들러
-    void handleEmailChange(String value) => emailError.value = validateEmail(value);
-    void handlePasswordChange(String value) => passwordError.value = validatePassword(value);
-    void handleConfirmPasswordChange(String value) =>
-        confirmPasswordError.value = validateConfirmPassword(value, pwdTextController.text);
-
-    final isAllValid =
-        emailError.value == null &&
-        passwordError.value == null &&
-        confirmPasswordError.value == null &&
-        emailTextController.text.isNotEmpty &&
-        pwdTextController.text.isNotEmpty &&
-        confirmPwdTextController.text.isNotEmpty;
+    // 회원가입 버튼 실시간 활성화를 위한 유효 체크 변수
+    final isEmailValid = useState(false);
+    final isPasswordValid = useState(false);
+    final isPasswordConfirmValid = useState(false);
+    // final isAllValid = useMemoized(
+    //   () => isEmailValid.value && isPasswordValid.value && isPasswordConfirmValid.value,
+    // );
 
     return Scaffold(
       appBar: AppBar(),
@@ -92,67 +83,76 @@ class SignUpScreen extends HookConsumerWidget {
               height30,
               '선생님의 회원가입을 환영합니다'.text.size(20).make(),
               height30,
-              Column(
-                children: [
-                  TextFormField(
-                    controller: emailTextController,
-                    decoration: InputDecoration(
-                      labelText: '이메일',
-                      border: OutlineInputBorder(),
-                      errorText: emailError.value,
-                    ),
-                    onChanged: handleEmailChange,
-                  ),
-                  height20,
-                  TextFormField(
-                    controller: pwdTextController,
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: obscurePwd.value,
-                    decoration: InputDecoration(
-                      labelText: '비밀번호',
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(obscurePwd.value ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () => obscurePwd.value = !obscurePwd.value,
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: emailTextController,
+                      decoration: InputDecoration(
+                        labelText: '이메일',
+                        border: OutlineInputBorder(),
                       ),
-                      errorText: passwordError.value,
-                      helperText: '대문자, 숫자, 특수문자 1개 이상',
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      validator: validateEmail,
+                      onChanged: (value) => isEmailValid.value = validateEmail(value) == null,
                     ),
-                    onChanged: (value) {
-                      handlePasswordChange(value);
-                      handleConfirmPasswordChange(confirmPwdTextController.text);
-                    },
-                  ),
-                  height20,
-                  TextFormField(
-                    controller: confirmPwdTextController,
-                    decoration: InputDecoration(
-                      labelText: '비밀번호 재확인',
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          obscurePwdConfirm.value ? Icons.visibility_off : Icons.visibility,
+                    height20,
+                    TextFormField(
+                      controller: pwdTextController,
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: obscurePwd.value,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(obscurePwd.value ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () => obscurePwd.value = !obscurePwd.value,
                         ),
-                        onPressed: () => obscurePwdConfirm.value = !obscurePwdConfirm.value,
+                        helperText: '대문자, 숫자, 특수문자 1개 이상',
                       ),
-                      errorText: confirmPasswordError.value,
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      validator: validatePassword,
+                      onChanged: (value) => isPasswordValid.value = validatePassword(value) == null,
                     ),
-                    obscureText: obscurePwdConfirm.value,
-                    onChanged: handleConfirmPasswordChange,
-                  ),
-                  height20,
-                  ElevatedButton(
-                    onPressed:
-                        isAllValid
-                            ? () {
-                              ref.read(isLoggedInProvider.notifier).state = true;
-                              context.goNamed(FeedRoute.name);
-                            }
-                            : null,
-                    style: buttonStyle,
-                    child: '회원가입'.text.make(),
-                  ),
-                ],
+                    height20,
+                    TextFormField(
+                      controller: confirmPwdTextController,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호 재확인',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscurePwdConfirm.value ? Icons.visibility_off : Icons.visibility,
+                          ),
+                          onPressed: () => obscurePwdConfirm.value = !obscurePwdConfirm.value,
+                        ),
+                      ),
+                      obscureText: obscurePwdConfirm.value,
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      validator: (value) => validateConfirmPassword(pwdTextController.text, value),
+                      onChanged:
+                          (value) =>
+                              isPasswordConfirmValid.value =
+                                  validateConfirmPassword(value, pwdTextController.text) == null,
+                    ),
+                    height20,
+                    ElevatedButton(
+                      onPressed:
+                          isEmailValid.value &&
+                                  isPasswordValid.value &&
+                                  isPasswordConfirmValid.value
+                              ? () {
+                                if (formKey.currentState?.validate() == true) {
+                                  context.goNamed(LoginRoute.name);
+                                }
+                              }
+                              : null,
+                      style: buttonStyle,
+                      child: '회원가입'.text.make(),
+                    ),
+                  ],
+                ),
               ),
               height15,
               const Divider(),
