@@ -47,6 +47,7 @@ class LoginScreen extends HookConsumerWidget {
       return null;
     }
 
+    // 로그인 버튼 실시간 활성화를 위한 유효 체크 변수
     final isEmailValid = useState(false);
     final isPasswordValid = useState(false);
 
