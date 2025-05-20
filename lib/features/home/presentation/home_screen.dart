@@ -1,3 +1,4 @@
+import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
 import 'package:fastcampusmarket/features/home/presentation/feed/cart/cart_route.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/product%20add/product_add_route.dart';
@@ -29,7 +30,13 @@ class HomeScreen extends ConsumerWidget {
               },
               icon: const Icon(Icons.brightness_6),
             ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.logout)),
+            IconButton(
+              onPressed: () {
+                ref.read(isLoggedInProvider.notifier).state = false;
+                // context.goNamed(LoginRoute.name);
+              },
+              icon: Icon(Icons.logout),
+            ),
           ],
         ),
 

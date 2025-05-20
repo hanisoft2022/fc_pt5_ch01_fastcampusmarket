@@ -38,7 +38,7 @@ final appRouterProvider = Provider<GoRouter>(
       ),
     ],
     redirect: (context, state) {
-      final isLoggedIn = ref.read(isLoggedInProvider);
+      final isLoggedIn = ref.watch(isLoggedInProvider);
       final currentPath = state.fullPath;
       final allowedPaths = [LoginRoute.path, SignUpRoute.path];
 

@@ -29,9 +29,8 @@ class LoginScreen extends HookConsumerWidget {
     // 비밀번호 가리기
     final obscure = useState(true);
 
-    // 에러 메시지
-    final emailError = useState<String?>(null);
-    final passwordError = useState<String?>(null);
+    // Form 상태를 위한 key
+    final formKey = useMemoized(() => GlobalKey<FormState>());
 
     // 이메일 검증
     String? validateEmail(String? value) {
@@ -48,22 +47,8 @@ class LoginScreen extends HookConsumerWidget {
       return null;
     }
 
-    final isAllValid = useState(false);
-
-    void validateForm() {
-      isAllValid.value =
-          emailTextController.text.trim().isNotEmpty && pwdTextController.text.trim().isNotEmpty;
-    }
-
-    void handleEmailChange(String value) {
-      emailError.value = validateEmail(value);
-      validateForm();
-    }
-
-    void handlePasswordChange(String value) {
-      passwordError.value = validatePassword(value);
-      validateForm();
-    }
+    final isEmailValid = useState(false);
+    final isPasswordValid = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -76,91 +61,101 @@ class LoginScreen extends HookConsumerWidget {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
-              height30,
-              Column(
-                children: [
-                  TextFormField(
-                    controller: emailTextController,
-                    decoration: InputDecoration(
-                      labelText: '이메일',
-                      border: OutlineInputBorder(),
-                      errorText: emailError.value,
-                    ),
-                    onChanged: handleEmailChange,
-                    textInputAction: TextInputAction.next, // 다음 필드로 포커스 이동
-                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  ),
-                  height20,
-                  TextFormField(
-                    controller: pwdTextController,
-                    decoration: InputDecoration(
-                      labelText: '비밀번호',
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () {
-                          obscure.value = !obscure.value;
-                        },
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
+                height30,
+                Column(
+                  children: [
+                    TextFormField(
+                      controller: emailTextController,
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      decoration: InputDecoration(
+                        labelText: '이메일',
+                        border: OutlineInputBorder(),
                       ),
-                      errorText: passwordError.value,
+                      validator: validateEmail,
+                      onChanged: (value) {
+                        isEmailValid.value = validateEmail(value) == null;
+                      },
+                      textInputAction: TextInputAction.next, // 다음 필드로 포커스 이동
+                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                     ),
-                    onChanged: handlePasswordChange,
-                    obscureText: obscure.value,
-                    keyboardType: TextInputType.visiblePassword,
-                  ),
-                  height20,
-                  ElevatedButton(
-                    onPressed:
-                        isAllValid.value
-                            ? () {
-                              // TODO: 로그인 기능 구현
-                              // final email = emailTextController.text.trim();
-                              // final password = pwdTextController.text;
-                              ref.read(isLoggedInProvider.notifier).state = true;
-                              context.goNamed(FeedRoute.name);
-                            }
-                            : null,
-                    style: buttonStyle,
-                    child: '로그인'.text.make(),
-                  ),
-                ],
-              ),
-              height15,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(),
-                    onPressed: () => context.pushNamed(SignUpRoute.name),
-                    child: '계정이 없나요? 회원가입'.text.make(),
-                  ),
-                ],
-              ),
-              height15,
-              const Divider(),
-              height15,
-              GestureDetector(
-                onTap: () {},
-                child: Image.asset(
-                  isLight
-                      ? 'assets/images/logo/google/light/google_light.png'
-                      : 'assets/images/logo/google/dark/google_dark.png',
-                  width: 100,
+                    height20,
+                    TextFormField(
+                      controller: pwdTextController,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () {
+                            obscure.value = !obscure.value;
+                          },
+                        ),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: validatePassword,
+                      obscureText: obscure.value,
+                      onChanged: (value) {
+                        isPasswordValid.value = validatePassword(value) == null;
+                      },
+                      keyboardType: TextInputType.visiblePassword,
+                    ),
+                    height20,
+                    ElevatedButton(
+                      onPressed:
+                          (isEmailValid.value && isPasswordValid.value)
+                              ? () {
+                                if (formKey.currentState?.validate() == true) {
+                                  ref.read(isLoggedInProvider.notifier).state = true;
+                                  context.goNamed(FeedRoute.name);
+                                }
+                              }
+                              : null,
+
+                      style: buttonStyle,
+                      child: '로그인'.text.make(),
+                    ),
+                  ],
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  ref.read(isLoggedInProvider.notifier).state = true;
-                  context.goNamed(FeedRoute.name);
-                },
-                icon: Icon(Icons.forward),
-              ),
-            ],
-          ).p(20),
+                height15,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(),
+                      onPressed: () => context.pushNamed(SignUpRoute.name),
+                      child: '계정이 없나요? 회원가입'.text.make(),
+                    ),
+                  ],
+                ),
+                height15,
+                const Divider(),
+                height15,
+                GestureDetector(
+                  onTap: () {},
+                  child: Image.asset(
+                    isLight
+                        ? 'assets/images/logo/google/light/google_light.png'
+                        : 'assets/images/logo/google/dark/google_dark.png',
+                    width: 100,
+                  ),
+                ),
+                TextButton.icon(
+                  label: '바로 로그인'.text.make(),
+                  onPressed: () {
+                    ref.read(isLoggedInProvider.notifier).state = true;
+                    context.goNamed(FeedRoute.name);
+                  },
+                  icon: Icon(Icons.forward),
+                ),
+              ],
+            ).p(20),
+          ),
         ),
       ),
     );
