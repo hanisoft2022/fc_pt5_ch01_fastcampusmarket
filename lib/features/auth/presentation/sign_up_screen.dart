@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
+import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -28,8 +31,8 @@ class SignUpScreen extends HookConsumerWidget {
     final confirmPwdTextController = useTextEditingController();
 
     // 비밀번호 가리기
-    final obscurePwd = useState(true);
-    final obscurePwdConfirm = useState(true);
+    final isPwdObscure = useState(true);
+    final isPwdConfirmObscure = useState(true);
 
     // Form 상태를 위한 key
     final formKey = useMemoized(() => GlobalKey<FormState>());
@@ -72,6 +75,44 @@ class SignUpScreen extends HookConsumerWidget {
     //   () => isEmailValid.value && isPasswordValid.value && isPasswordConfirmValid.value,
     // );
 
+    // 회원가입
+    Future<void> signUp(String email, String password) async {
+      try {
+        // Firebase Authentication 유저 생성
+        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        final user = userCredential.user;
+
+        // Firebase Firestore에 사용자 정보 삽입
+        if (user != null) {
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'email': email,
+            'createdAt': Timestamp.now(),
+          });
+        }
+
+        // 성공 스낵바
+        if (context.mounted) {
+          CustomSnackBar.successSnackBar(context, '회원가입을 축하드립니다!\n로그인을 해주세요.');
+          context.goNamed(LoginRoute.name);
+        }
+      } on FirebaseAuthException catch (e) {
+        String message = '알 수 없는 오류가 발생했습니다.';
+        if (e.code == 'weak-password') {
+          message = '비밀번호가 쉬운 약합니다.';
+        } else if (e.code == 'email-already-in-use') {
+          message = '이미 사용중인 이메일입니다.';
+        }
+        // 경고 스낵바
+        if (context.mounted) CustomSnackBar.alertSnackBar(context, message);
+      } catch (e) {
+        if (context.mounted) CustomSnackBar.failureSnackBar(context, '회원가입에 실패했습니다.\n다시 시도해보세요.');
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -101,13 +142,13 @@ class SignUpScreen extends HookConsumerWidget {
                     TextFormField(
                       controller: pwdTextController,
                       keyboardType: TextInputType.visiblePassword,
-                      obscureText: obscurePwd.value,
+                      obscureText: isPwdObscure.value,
                       decoration: InputDecoration(
                         labelText: '비밀번호',
                         border: OutlineInputBorder(),
                         suffixIcon: IconButton(
-                          icon: Icon(obscurePwd.value ? Icons.visibility_off : Icons.visibility),
-                          onPressed: () => obscurePwd.value = !obscurePwd.value,
+                          icon: Icon(isPwdObscure.value ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () => isPwdObscure.value = !isPwdObscure.value,
                         ),
                         helperText: '대문자, 숫자, 특수문자 1개 이상',
                       ),
@@ -123,12 +164,12 @@ class SignUpScreen extends HookConsumerWidget {
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            obscurePwdConfirm.value ? Icons.visibility_off : Icons.visibility,
+                            isPwdConfirmObscure.value ? Icons.visibility_off : Icons.visibility,
                           ),
-                          onPressed: () => obscurePwdConfirm.value = !obscurePwdConfirm.value,
+                          onPressed: () => isPwdConfirmObscure.value = !isPwdConfirmObscure.value,
                         ),
                       ),
-                      obscureText: obscurePwdConfirm.value,
+                      obscureText: isPwdConfirmObscure.value,
                       autovalidateMode: AutovalidateMode.onUnfocus,
                       validator: (value) => validateConfirmPassword(pwdTextController.text, value),
                       onChanged:
@@ -142,9 +183,12 @@ class SignUpScreen extends HookConsumerWidget {
                           isEmailValid.value &&
                                   isPasswordValid.value &&
                                   isPasswordConfirmValid.value
-                              ? () {
+                              ? () async {
                                 if (formKey.currentState?.validate() == true) {
-                                  context.goNamed(LoginRoute.name);
+                                  await signUp(
+                                    emailTextController.text.trim(),
+                                    pwdTextController.text.trim(),
+                                  );
                                 }
                               }
                               : null,

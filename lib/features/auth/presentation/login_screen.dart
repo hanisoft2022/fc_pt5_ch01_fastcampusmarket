@@ -29,7 +29,7 @@ class LoginScreen extends HookConsumerWidget {
     final pwdTextController = useTextEditingController();
 
     // 비밀번호 가리기
-    final obscure = useState(true);
+    final isObscure = useState(true);
 
     // Form 상태를 위한 key
     final formKey = useMemoized(() => GlobalKey<FormState>());
@@ -52,7 +52,6 @@ class LoginScreen extends HookConsumerWidget {
     // 로그인 버튼 실시간 활성화를 위한 유효 체크 변수
     final isEmailValid = useState(false);
     final isPasswordValid = useState(false);
-    // final isAllValid = useMemoized(() => isEmailValid.value && isPasswordValid.value);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,13 +70,20 @@ class LoginScreen extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton.icon(
-                  label: '스낵바 띄우기'.text.make(),
-                  onPressed: () {
-                    CustomSnackBar.successSnackBar(context, '실험용 스낵바 띄우기 ');
-                  },
-                  icon: Icon(Icons.check),
+                  label: '성공 스낵바 띄우기'.text.make(),
+                  onPressed: () => CustomSnackBar.successSnackBar(context, '실험용 스낵바 띄우기'),
+                  icon: Icon(Icons.check_circle),
                 ),
-
+                TextButton.icon(
+                  label: '실패 스낵바 띄우기'.text.make(),
+                  onPressed: () => CustomSnackBar.failureSnackBar(context, '실험용 스낵바 띄우기'),
+                  icon: Icon(Icons.cancel),
+                ),
+                TextButton.icon(
+                  label: '경고 스낵바 띄우기'.text.make(),
+                  onPressed: () => CustomSnackBar.alertSnackBar(context, '경고 스낵바 띄우기'),
+                  icon: Icon(Icons.warning),
+                ),
                 Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
                 height30,
                 Column(
@@ -103,18 +109,14 @@ class LoginScreen extends HookConsumerWidget {
                         labelText: '비밀번호',
                         border: OutlineInputBorder(),
                         suffixIcon: IconButton(
-                          icon: Icon(obscure.value ? Icons.visibility_off : Icons.visibility),
-                          onPressed: () {
-                            obscure.value = !obscure.value;
-                          },
+                          icon: Icon(isObscure.value ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () => isObscure.value = !isObscure.value,
                         ),
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: validatePassword,
-                      obscureText: obscure.value,
-                      onChanged: (value) {
-                        isPasswordValid.value = validatePassword(value) == null;
-                      },
+                      obscureText: isObscure.value,
+                      onChanged: (value) => isPasswordValid.value = validatePassword(value) == null,
                       keyboardType: TextInputType.visiblePassword,
                     ),
                     height20,
@@ -125,11 +127,10 @@ class LoginScreen extends HookConsumerWidget {
                                 if (formKey.currentState?.validate() == true) {
                                   ref.read(isLoggedInProvider.notifier).state = true;
                                   context.goNamed(FeedRoute.name);
-                                  CustomSnackBar.successSnackBar(context, '로그인');
+                                  CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
                                 }
                               }
                               : null,
-
                       style: buttonStyle,
                       child: '로그인'.text.make(),
                     ),
