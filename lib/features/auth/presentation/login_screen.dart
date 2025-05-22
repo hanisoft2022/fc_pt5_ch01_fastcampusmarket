@@ -1,11 +1,13 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
+import 'package:fastcampusmarket/core/router/router.dart';
+import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import '../../../core/theme/theme_mode_provider.dart';
 
 ButtonStyle get buttonStyle => ButtonStyle(
@@ -68,6 +70,14 @@ class LoginScreen extends HookConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                TextButton.icon(
+                  label: '스낵바 띄우기'.text.make(),
+                  onPressed: () {
+                    CustomSnackBar.successSnackBar(context, '실험용 스낵바 띄우기 ');
+                  },
+                  icon: Icon(Icons.check),
+                ),
+
                 Image.asset('assets/images/logo/indischool/indischool.png', height: 50),
                 height30,
                 Column(
@@ -115,6 +125,7 @@ class LoginScreen extends HookConsumerWidget {
                                 if (formKey.currentState?.validate() == true) {
                                   ref.read(isLoggedInProvider.notifier).state = true;
                                   context.goNamed(FeedRoute.name);
+                                  CustomSnackBar.successSnackBar(context, '로그인');
                                 }
                               }
                               : null,

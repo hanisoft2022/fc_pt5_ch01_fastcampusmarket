@@ -15,8 +15,10 @@ abstract class GoRouterKeys {
   static final sellerNavigatorKey = GlobalKey<NavigatorState>();
 }
 
-final appRouterProvider = Provider<GoRouter>(
-  (ref) => GoRouter(
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final isLoggedIn = ref.watch(isLoggedInProvider);
+
+  return GoRouter(
     navigatorKey: GoRouterKeys.rootNavigatorKey,
     initialLocation: '/',
     routes: [
@@ -38,7 +40,6 @@ final appRouterProvider = Provider<GoRouter>(
       ),
     ],
     redirect: (context, state) {
-      final isLoggedIn = ref.watch(isLoggedInProvider);
       final currentPath = state.fullPath;
       final allowedPaths = [LoginRoute.path, SignUpRoute.path];
 
@@ -50,5 +51,5 @@ final appRouterProvider = Provider<GoRouter>(
       }
       return null;
     },
-  ),
-);
+  );
+});

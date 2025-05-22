@@ -32,6 +32,7 @@ class FeedScreen extends HookWidget {
             count: 3,
             effect: JumpingDotEffect(dotWidth: 10, dotHeight: 10),
           ).pSymmetric(v: 10),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
