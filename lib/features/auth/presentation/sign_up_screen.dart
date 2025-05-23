@@ -185,10 +185,7 @@ class SignUpScreen extends HookConsumerWidget {
                                   isPasswordConfirmValid.value
                               ? () async {
                                 if (formKey.currentState?.validate() == true) {
-                                  await signUp(
-                                    emailTextController.text.trim(),
-                                    pwdTextController.text.trim(),
-                                  );
+                                  await signUp(emailTextController.text, pwdTextController.text);
                                 }
                               }
                               : null,

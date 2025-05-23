@@ -2,6 +2,7 @@ import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +53,35 @@ class LoginScreen extends HookConsumerWidget {
     // 로그인 버튼 실시간 활성화를 위한 유효 체크 변수
     final isEmailValid = useState(false);
     final isPasswordValid = useState(false);
+
+    // 로그인
+    Future<void> signIn(String email, String password) async {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        ref.read(isLoggedInProvider.notifier).state = true;
+        if (context.mounted) {
+          context.goNamed(FeedRoute.name);
+          CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          if (context.mounted) {
+            CustomSnackBar.alertSnackBar(context, '회원 정보를 찾을 수 없습니다.');
+          }
+        }
+        if (e.code == 'wrong-password') {
+          if (context.mounted) {
+            CustomSnackBar.alertSnackBar(context, '비밀번호가 틀렸습니다.');
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          CustomSnackBar.failureSnackBar(context, '로그인에 실패했습니다.');
+        }
+      }
+    }
+
+    Future<void> signInWithGoogle(BuildContext context) async {}
 
     return Scaffold(
       appBar: AppBar(
@@ -123,11 +153,9 @@ class LoginScreen extends HookConsumerWidget {
                     ElevatedButton(
                       onPressed:
                           isEmailValid.value && isPasswordValid.value
-                              ? () {
+                              ? () async {
                                 if (formKey.currentState?.validate() == true) {
-                                  ref.read(isLoggedInProvider.notifier).state = true;
-                                  context.goNamed(FeedRoute.name);
-                                  CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
+                                  await signIn(emailTextController.text, pwdTextController.text);
                                 }
                               }
                               : null,
@@ -151,7 +179,9 @@ class LoginScreen extends HookConsumerWidget {
                 const Divider(),
                 height15,
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    signInWithGoogle(context);
+                  },
                   child: Image.asset(
                     isLight
                         ? 'assets/images/logo/google/light/google_light.png'
