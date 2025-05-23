@@ -2,6 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+      		<string>com.googleusercontent.apps.355140441526-7vg7ci90d47b3kdpnpnsvkei2h56d7lq</string>
+    		</array>
+  		</dict>
+	</array>
+
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>앱이 로컬 네트워크에 접근하기 위해 필요합니다.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

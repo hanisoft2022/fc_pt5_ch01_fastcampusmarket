@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -81,7 +83,73 @@ class LoginScreen extends HookConsumerWidget {
       }
     }
 
-    Future<void> signInWithGoogle(BuildContext context) async {}
+    Future<void> signInWithGoogle(BuildContext context) async {
+      try {
+        // Google 로그인 플로우 시작
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          // 사용자가 로그인 창을 닫은 경우
+          if (context.mounted) {
+            CustomSnackBar.alertSnackBar(context, 'Google 로그인이 취소되었습니다.');
+          }
+          return;
+        }
+
+        // 인증 정보 가져오기
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+        // Firebase credential 생성
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        // Firebase에 credential로 로그인 시도
+        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+        final user = userCredential.user;
+
+        // Firestore에 사용자 정보 저장 (최초 로그인 시에만)
+        if (user != null) {
+          final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+          final docSnapshot = await userDoc.get();
+          if (!docSnapshot.exists) {
+            await userDoc.set({
+              'email': user.email,
+              'displayName': user.displayName,
+              'photoURL': user.photoURL,
+              'createdAt': Timestamp.now(),
+              'provider': 'google',
+            });
+          }
+        }
+
+        // 성공 메시지 스낵바
+        if (context.mounted) {
+          CustomSnackBar.successSnackBar(context, 'Google 로그인에 성공했습니다.');
+          ref.read(isLoggedInProvider.notifier).state = true;
+          context.goNamed(FeedRoute.name);
+        }
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'account-exists-with-different-credential') {
+          message = '이미 다른 인증 방식으로 가입된 계정입니다.';
+        } else if (e.code == 'invalid-credential') {
+          message = '인증 정보가 유효하지 않습니다. 다시 시도해주세요.';
+        } else {
+          message = 'Google 로그인 중 오류가 발생했습니다: ${e.message}';
+        }
+        if (context.mounted) {
+          CustomSnackBar.failureSnackBar(context, message);
+        }
+      } catch (e) {
+        // 기타 예외 처리
+        if (context.mounted) {
+          CustomSnackBar.failureSnackBar(context, '알 수 없는 오류가 발생했습니다: $e');
+        }
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -178,15 +246,20 @@ class LoginScreen extends HookConsumerWidget {
                 height15,
                 const Divider(),
                 height15,
-                GestureDetector(
-                  onTap: () {
-                    signInWithGoogle(context);
-                  },
-                  child: Image.asset(
-                    isLight
-                        ? 'assets/images/logo/google/light/google_light.png'
-                        : 'assets/images/logo/google/dark/google_dark.png',
-                    width: 100,
+                ClipOval(
+                  child: Material(
+                    child: Ink.image(
+                      height: 100,
+                      image: AssetImage(
+                        isLight
+                            ? 'assets/images/logo/google/light/google_light.png'
+                            : 'assets/images/logo/google/dark/google_dark.png',
+                      ),
+                      child: InkWell(
+                        onTap: () async => await signInWithGoogle(context),
+                        customBorder: const CircleBorder(),
+                      ),
+                    ),
                   ),
                 ),
                 TextButton.icon(
