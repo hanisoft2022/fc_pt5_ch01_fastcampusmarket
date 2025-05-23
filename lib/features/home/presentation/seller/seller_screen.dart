@@ -1,41 +1,117 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class SellerScreen extends StatelessWidget {
+Future<void> addCategory(BuildContext context, String category) async {
+  // 기존 카테고리에 존재 여부 확인
+  if (await FirebaseFirestore.instance
+      .collection('categories')
+      .doc(category)
+      .get()
+      .then((value) => value.exists)) {
+    if (context.mounted) {
+      context.pop();
+      CustomSnackBar.alertSnackBar(context, '$category는 이미 등록된 카테고리입니다.');
+    }
+    return;
+  }
+
+  // 카테고리 등록
+  await FirebaseFirestore.instance.collection('categories').doc(category).set({
+    'name': category,
+    'createdAt': Timestamp.now(),
+  });
+
+  if (context.mounted) {
+    context.pop();
+    CustomSnackBar.successSnackBar(context, '$category가 등록되었습니다.');
+  }
+}
+
+Future<List<String>> getCategories() async {
+  final docRef = FirebaseFirestore.instance.collection('categories');
+  final snapshot = await docRef.get();
+  final data = snapshot.docs.map((doc) => doc.data()).toList();
+  return data.map((item) => item['name'] as String).toList();
+}
+
+class SellerScreen extends HookWidget {
   const SellerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<String> items = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grapes'];
+    final categoryBatchTextEditingController = useTextEditingController();
+    final categoryTextEditingController = useTextEditingController();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SearchAnchor.bar(
-          suggestionsBuilder: (context, controller) {
+          suggestionsBuilder: (context, controller) async {
             final query = controller.text.toLowerCase();
-            final suggestions = items.where((item) => item.toLowerCase().contains(query)).toList();
+            final categories = await getCategories();
+            final suggestions =
+                categories.where((item) => item.toLowerCase().contains(query)).toList();
             return suggestions.map((suggestion) {
               return ListTile(
                 title: Text(suggestion),
                 onTap: () {
                   controller.closeView(suggestion);
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('선택: $suggestion')));
+                  CustomSnackBar.successSnackBar(context, '$suggestion 선택 완료!');
                 },
               );
             }).toList();
           },
+
+          isFullScreen: false,
         ),
         height15,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ElevatedButton(onPressed: () {}, child: '카테고리 일괄 등록'.text.make()),
+            ElevatedButton(
+              onPressed: () async {
+                await showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder:
+                      (context) => AlertDialog(
+                        title: Text('카테고리 일괄 등록'),
+                        content: TextField(controller: categoryBatchTextEditingController),
+                      ),
+                );
+              },
+              child: '카테고리 일괄 등록'.text.make(),
+            ),
             width20,
-            ElevatedButton(onPressed: () {}, child: '카테고리 등록'.text.make()),
+            ElevatedButton(
+              onPressed: () async {
+                await showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder:
+                      (context) => AlertDialog(
+                        title: Text('카테고리 등록'),
+                        content: TextField(controller: categoryTextEditingController),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              if (categoryTextEditingController.text.isNotEmpty) {
+                                await addCategory(context, categoryTextEditingController.text);
+                              }
+                            },
+                            child: Text('등록'),
+                          ),
+                        ],
+                      ),
+                );
+              },
+              child: '카테고리 등록'.text.make(),
+            ),
           ],
         ),
         height15,
