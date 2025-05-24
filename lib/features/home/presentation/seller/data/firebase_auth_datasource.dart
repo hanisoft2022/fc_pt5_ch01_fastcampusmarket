@@ -10,12 +10,12 @@ Future<bool> addCategory(BuildContext context, String category) async {
   }
 
   // 카테고리 등록
-  await docRef.set({'name': category, 'createdAt': FieldValue.serverTimestamp()});
+  await docRef.set({'name': category, 'createdAt': DateTime.now()});
 
   return true;
 }
 
-Future<List<String>> getCategories() async {
+Future<List<String>> fetchCategories() async {
   final docRef = FirebaseFirestore.instance.collection('categories');
   final snapshot = await docRef.get();
   final data = snapshot.docs.map((doc) => doc.data()).toList();
@@ -29,24 +29,26 @@ Future<bool> addProduct(BuildContext context, Product product) async {
   final productWithId = product.copyWith(id: docRef.id);
 
   // 상품 등록
-  await docRef
-      .withConverter<Product>(
-        fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
-        toFirestore: (product, options) => {...product.toJson()},
-      )
-      .set(productWithId);
+  await docRef.set({...productWithId.toJson(), 'createdAt': DateTime.now()});
   return true;
 }
 
-Future<List<Product>> getProducts() async {
-  final collectionRef = FirebaseFirestore.instance
-      .collection('products')
-      .withConverter<Product>(
-        fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
-        toFirestore: (product, options) => product.toJson(),
-      );
+Future<List<Product>> fetchProducts() async {
+  final collectionRef = FirebaseFirestore.instance.collection('products');
 
   final collectionsSnap = await collectionRef.get();
 
-  return collectionsSnap.docs.map((doc) => doc.data()).toList();
+  return collectionsSnap.docs.map((doc) => Product.fromJson(doc.data())).toList();
+}
+
+Stream<QuerySnapshot> watchProducts(String query) {
+  final db = FirebaseFirestore.instance;
+
+  if (query.isNotEmpty) {
+    return db.collection("products").orderBy("title").startAt([query]).endAt([
+      '$query\uf8ff',
+    ]).snapshots();
+  }
+
+  return db.collection("products").orderBy('createdAt').snapshots();
 }

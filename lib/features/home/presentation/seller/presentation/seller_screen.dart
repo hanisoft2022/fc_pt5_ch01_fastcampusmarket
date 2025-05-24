@@ -22,7 +22,7 @@ class SellerScreen extends HookWidget {
         SearchAnchor.bar(
           suggestionsBuilder: (context, controller) async {
             final query = controller.text.toLowerCase();
-            final products = await getProducts();
+            final products = await fetchProducts();
             final suggestions =
                 products.where((item) => item.name.toLowerCase().contains(query)).toList();
             return suggestions.map((suggestion) {
@@ -125,65 +125,74 @@ class SellerScreen extends HookWidget {
         '상품 목록'.text.bold.size(20).make(),
         height15,
         Expanded(
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder:
-                (context, index) => SizedBox(
-                  height: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.amber,
-                        ),
-                      ),
-                      width15,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+          child: FutureBuilder<List<Product>>(
+            future: fetchProducts(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, snapshot) {
+                    return SizedBox(
+                      height: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.amber,
+                            ),
+                          ),
+                          width15,
+                          Expanded(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                '상품명'.text.make(),
-                                MenuAnchor(
-                                  alignmentOffset: Offset(-50, 0),
-                                  builder: (context, controller, child) {
-                                    return InkWell(
-                                      borderRadius: BorderRadius.circular(8),
-                                      onTap: () {
-                                        if (controller.isOpen) {
-                                          controller.close();
-                                        } else {
-                                          controller.open();
-                                        }
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    '상품명'.text.make(),
+                                    MenuAnchor(
+                                      alignmentOffset: Offset(-50, 0),
+                                      builder: (context, controller, child) {
+                                        return InkWell(
+                                          borderRadius: BorderRadius.circular(8),
+                                          onTap: () {
+                                            if (controller.isOpen) {
+                                              controller.close();
+                                            } else {
+                                              controller.open();
+                                            }
+                                          },
+                                          child: Icon(Icons.more_vert),
+                                        );
                                       },
-                                      child: Icon(Icons.more_vert),
-                                    );
-                                  },
-                                  menuChildren: [
-                                    MenuItemButton(child: Text('d'), onPressed: () {}),
-                                    MenuItemButton(child: Text('f'), onPressed: () {}),
-                                    MenuItemButton(child: Text('f'), onPressed: () {}),
+                                      menuChildren: [
+                                        MenuItemButton(child: Text('d'), onPressed: () {}),
+                                        MenuItemButton(child: Text('f'), onPressed: () {}),
+                                        MenuItemButton(child: Text('f'), onPressed: () {}),
+                                      ],
+                                    ),
                                   ],
                                 ),
+                                height5,
+                                '상품가격'.text.make(),
+                                height5,
+                                '상품수량'.text.make(),
                               ],
-                            ),
-                            height5,
-                            '상품가격'.text.make(),
-                            height5,
-                            '상품수량'.text.make(),
-                          ],
-                        ).pOnly(left: 10),
+                            ).pOnly(left: 10),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ).pSymmetric(v: 10),
+                    ).pSymmetric(v: 10);
+                  },
+                );
+              }
+              return Center(child: CircularProgressIndicator());
+            },
           ),
         ),
       ],

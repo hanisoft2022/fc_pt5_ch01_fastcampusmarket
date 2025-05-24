@@ -1,5 +1,3 @@
-import 'package:fastcampusmarket/core/common/utils/converters.dart';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product.freezed.dart';
@@ -13,7 +11,7 @@ abstract class Product with _$Product {
     required String id,
     required String name,
     required String description,
-    @TimestampConverter() DateTime? createdAt,
+    DateTime? createdAt,
     int? price,
     bool? isSale,
     int? stock,
