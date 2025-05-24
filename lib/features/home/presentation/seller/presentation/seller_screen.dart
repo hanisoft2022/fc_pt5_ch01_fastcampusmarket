@@ -22,7 +22,7 @@ class SellerScreen extends HookWidget {
         SearchAnchor.bar(
           suggestionsBuilder: (context, controller) async {
             final query = controller.text.toLowerCase();
-            final products = await fetchProducts();
+            final products = await ProductApi.fetchProducts();
             final suggestions =
                 products.where((item) => item.name.toLowerCase().contains(query)).toList();
             return suggestions.map((suggestion) {
@@ -57,7 +57,7 @@ class SellerScreen extends HookWidget {
                               if (productTextEditingController.text.isNotEmpty) {
                                 final uuid = Uuid();
 
-                                final result = await addProduct(
+                                final result = await ProductApi.addProduct(
                                   context,
                                   Product(
                                     id: uuid.v4(),
@@ -97,7 +97,7 @@ class SellerScreen extends HookWidget {
                           TextButton(
                             onPressed: () async {
                               if (categoryTextEditingController.text.isNotEmpty) {
-                                final result = await addCategory(
+                                final result = await CategoryApi.addCategory(
                                   context,
                                   categoryTextEditingController.text,
                                 );
@@ -126,7 +126,7 @@ class SellerScreen extends HookWidget {
         height15,
         Expanded(
           child: FutureBuilder<List<Product>>(
-            future: fetchProducts(),
+            future: ProductApi.fetchProducts(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
