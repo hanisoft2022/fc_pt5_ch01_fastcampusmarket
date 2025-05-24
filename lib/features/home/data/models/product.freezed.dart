@@ -14,9 +14,9 @@ part of 'product.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Product implements DiagnosticableTreeMixin {
+mixin _$Product {
 
- String get id; String get title; String get description; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl; int? get timeStamp;
+ String get id; String get name; String get description;@TimestampConverter() DateTime? get createdAt; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,25 +26,19 @@ $ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as
   /// Serializes this Product to a JSON map.
   Map<String, dynamic> toJson();
 
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'Product'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('description', description))..add(DiagnosticsProperty('price', price))..add(DiagnosticsProperty('isSale', isSale))..add(DiagnosticsProperty('stock', stock))..add(DiagnosticsProperty('saleRate', saleRate))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('timeStamp', timeStamp));
-}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.price, price) || other.price == price)&&(identical(other.isSale, isSale) || other.isSale == isSale)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.saleRate, saleRate) || other.saleRate == saleRate)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.timeStamp, timeStamp) || other.timeStamp == timeStamp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.price, price) || other.price == price)&&(identical(other.isSale, isSale) || other.isSale == isSale)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.saleRate, saleRate) || other.saleRate == saleRate)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,price,isSale,stock,saleRate,imageUrl,timeStamp);
+int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,price,isSale,stock,saleRate,imageUrl);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'Product(id: $id, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl, timeStamp: $timeStamp)';
+String toString() {
+  return 'Product(id: $id, name: $name, description: $description, createdAt: $createdAt, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl)';
 }
 
 
@@ -55,7 +49,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl, int? timeStamp
+ String id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 
@@ -72,18 +66,18 @@ class _$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,Object? timeStamp = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as int?,isSale: freezed == isSale ? _self.isSale : isSale // ignore: cast_nullable_to_non_nullable
 as bool?,stock: freezed == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as int?,saleRate: freezed == saleRate ? _self.saleRate : saleRate // ignore: cast_nullable_to_non_nullable
 as double?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,timeStamp: freezed == timeStamp ? _self.timeStamp : timeStamp // ignore: cast_nullable_to_non_nullable
-as int?,
+as String?,
   ));
 }
 
@@ -93,19 +87,19 @@ as int?,
 /// @nodoc
 @JsonSerializable()
 
-class _Product extends Product with DiagnosticableTreeMixin {
-  const _Product({required this.id, required this.title, required this.description, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl, this.timeStamp}): super._();
+class _Product extends Product {
+  const _Product({required this.id, required this.name, required this.description, @TimestampConverter() this.createdAt, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl}): super._();
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
 @override final  String id;
-@override final  String title;
+@override final  String name;
 @override final  String description;
+@override@TimestampConverter() final  DateTime? createdAt;
 @override final  int? price;
 @override final  bool? isSale;
 @override final  int? stock;
 @override final  double? saleRate;
 @override final  String? imageUrl;
-@override final  int? timeStamp;
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
@@ -117,25 +111,19 @@ _$ProductCopyWith<_Product> get copyWith => __$ProductCopyWithImpl<_Product>(thi
 Map<String, dynamic> toJson() {
   return _$ProductToJson(this, );
 }
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'Product'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('description', description))..add(DiagnosticsProperty('price', price))..add(DiagnosticsProperty('isSale', isSale))..add(DiagnosticsProperty('stock', stock))..add(DiagnosticsProperty('saleRate', saleRate))..add(DiagnosticsProperty('imageUrl', imageUrl))..add(DiagnosticsProperty('timeStamp', timeStamp));
-}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.price, price) || other.price == price)&&(identical(other.isSale, isSale) || other.isSale == isSale)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.saleRate, saleRate) || other.saleRate == saleRate)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.timeStamp, timeStamp) || other.timeStamp == timeStamp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.price, price) || other.price == price)&&(identical(other.isSale, isSale) || other.isSale == isSale)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.saleRate, saleRate) || other.saleRate == saleRate)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,price,isSale,stock,saleRate,imageUrl,timeStamp);
+int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,price,isSale,stock,saleRate,imageUrl);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'Product(id: $id, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl, timeStamp: $timeStamp)';
+String toString() {
+  return 'Product(id: $id, name: $name, description: $description, createdAt: $createdAt, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imageUrl: $imageUrl)';
 }
 
 
@@ -146,7 +134,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl, int? timeStamp
+ String id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 
@@ -163,18 +151,18 @@ class __$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,Object? timeStamp = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
   return _then(_Product(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as int?,isSale: freezed == isSale ? _self.isSale : isSale // ignore: cast_nullable_to_non_nullable
 as bool?,stock: freezed == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as int?,saleRate: freezed == saleRate ? _self.saleRate : saleRate // ignore: cast_nullable_to_non_nullable
 as double?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,timeStamp: freezed == timeStamp ? _self.timeStamp : timeStamp // ignore: cast_nullable_to_non_nullable
-as int?,
+as String?,
   ));
 }
 

@@ -1,9 +1,11 @@
 import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
 import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SellerScreen extends HookWidget {
@@ -11,7 +13,7 @@ class SellerScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryBatchTextEditingController = useTextEditingController();
+    final productTextEditingController = useTextEditingController();
     final categoryTextEditingController = useTextEditingController();
 
     return Column(
@@ -20,14 +22,14 @@ class SellerScreen extends HookWidget {
         SearchAnchor.bar(
           suggestionsBuilder: (context, controller) async {
             final query = controller.text.toLowerCase();
-            final categories = await getCategories();
+            final products = await getProducts();
             final suggestions =
-                categories.where((item) => item.toLowerCase().contains(query)).toList();
+                products.where((item) => item.name.toLowerCase().contains(query)).toList();
             return suggestions.map((suggestion) {
               return ListTile(
-                title: Text(suggestion),
+                title: Text(suggestion.name),
                 onTap: () {
-                  controller.closeView(suggestion);
+                  controller.closeView(suggestion.name);
                   CustomSnackBar.successSnackBar(context, '$suggestion 선택 완료!');
                 },
               );
@@ -47,12 +49,39 @@ class SellerScreen extends HookWidget {
                   context: context,
                   builder:
                       (context) => AlertDialog(
-                        title: Text('카테고리 일괄 등록'),
-                        content: TextField(controller: categoryBatchTextEditingController),
+                        title: Text('상품 등록'),
+                        content: TextField(controller: productTextEditingController),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              if (productTextEditingController.text.isNotEmpty) {
+                                final uuid = Uuid();
+
+                                final result = await addProduct(
+                                  context,
+                                  Product(
+                                    id: uuid.v4(),
+                                    name: productTextEditingController.text,
+                                    description: '',
+                                  ),
+                                );
+                                if (context.mounted) {
+                                  context.pop();
+                                  if (result) {
+                                    CustomSnackBar.successSnackBar(context, '상품 등록 성공!');
+                                  } else {
+                                    CustomSnackBar.alertSnackBar(context, '이미 등록된 상품입니다.');
+                                  }
+                                }
+                              }
+                            },
+                            child: Text('등록'),
+                          ),
+                        ],
                       ),
                 );
               },
-              child: '카테고리 일괄 등록'.text.make(),
+              child: '상품 등록'.text.make(),
             ),
             width20,
             ElevatedButton(
@@ -75,9 +104,9 @@ class SellerScreen extends HookWidget {
                                 if (context.mounted) {
                                   context.pop();
                                   if (result) {
-                                    CustomSnackBar.alertSnackBar(context, '이미 등록된 카테고리입니다.');
-                                  } else {
                                     CustomSnackBar.successSnackBar(context, '카테고리 등록 성공!');
+                                  } else {
+                                    CustomSnackBar.alertSnackBar(context, '이미 등록된 카테고리입니다.');
                                   }
                                 }
                               }
