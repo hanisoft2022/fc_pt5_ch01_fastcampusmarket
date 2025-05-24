@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'seller_screen.dart';
-import 'product add/product_add_route.dart';
+import 'product_add_route.dart';
 
 abstract class SellerRoute {
   static const name = 'seller';

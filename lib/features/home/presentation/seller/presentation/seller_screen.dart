@@ -1,43 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
 import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
-
-Future<void> addCategory(BuildContext context, String category) async {
-  // 기존 카테고리에 존재 여부 확인
-  if (await FirebaseFirestore.instance
-      .collection('categories')
-      .doc(category)
-      .get()
-      .then((value) => value.exists)) {
-    if (context.mounted) {
-      context.pop();
-      CustomSnackBar.alertSnackBar(context, '$category는 이미 등록된 카테고리입니다.');
-    }
-    return;
-  }
-
-  // 카테고리 등록
-  await FirebaseFirestore.instance.collection('categories').doc(category).set({
-    'name': category,
-    'createdAt': Timestamp.now(),
-  });
-
-  if (context.mounted) {
-    context.pop();
-    CustomSnackBar.successSnackBar(context, '$category가 등록되었습니다.');
-  }
-}
-
-Future<List<String>> getCategories() async {
-  final docRef = FirebaseFirestore.instance.collection('categories');
-  final snapshot = await docRef.get();
-  final data = snapshot.docs.map((doc) => doc.data()).toList();
-  return data.map((item) => item['name'] as String).toList();
-}
 
 class SellerScreen extends HookWidget {
   const SellerScreen({super.key});
@@ -66,8 +33,8 @@ class SellerScreen extends HookWidget {
               );
             }).toList();
           },
-
           isFullScreen: false,
+          barHintText: '상품명 입력',
         ),
         height15,
         Row(
@@ -101,7 +68,18 @@ class SellerScreen extends HookWidget {
                           TextButton(
                             onPressed: () async {
                               if (categoryTextEditingController.text.isNotEmpty) {
-                                await addCategory(context, categoryTextEditingController.text);
+                                final result = await addCategory(
+                                  context,
+                                  categoryTextEditingController.text,
+                                );
+                                if (context.mounted) {
+                                  context.pop();
+                                  if (result) {
+                                    CustomSnackBar.alertSnackBar(context, '이미 등록된 카테고리입니다.');
+                                  } else {
+                                    CustomSnackBar.successSnackBar(context, '카테고리 등록 성공!');
+                                  }
+                                }
                               }
                             },
                             child: Text('등록'),

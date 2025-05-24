@@ -1,7 +1,7 @@
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
 import 'package:fastcampusmarket/features/home/presentation/feed/cart/cart_route.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/product%20add/product_add_route.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/presentation/product_add_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
