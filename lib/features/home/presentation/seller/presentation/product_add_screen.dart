@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:image_picker/image_picker.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -48,7 +49,9 @@ class AddProductScreen extends HookWidget {
             children: [
               InkWell(
                 borderRadius: BorderRadius.circular(20),
-                onTap: () {},
+                onTap: () {
+                  final ImagePicker imagePicker = ImagePicker();
+                },
                 child: Ink(
                   height: context.screenWidth * 0.6,
                   width: context.screenWidth * 0.6,
