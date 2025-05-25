@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Product {
 
- String get id; String get name; String get description;@TimestampConverter() DateTime? get createdAt; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl;
+ String? get id; String get name; String get description;@TimestampConverter() DateTime? get createdAt; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
+ String? id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 
@@ -66,10 +66,10 @@ class _$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
@@ -88,10 +88,10 @@ as String?,
 @JsonSerializable()
 
 class _Product implements Product {
-  const _Product({required this.id, required this.name, required this.description, @TimestampConverter() this.createdAt, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl});
+  const _Product({this.id, required this.name, required this.description, @TimestampConverter() this.createdAt, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl});
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
-@override final  String id;
+@override final  String? id;
 @override final  String name;
 @override final  String description;
 @override@TimestampConverter() final  DateTime? createdAt;
@@ -134,7 +134,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
+ String? id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 
@@ -151,10 +151,10 @@ class __$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? description = null,Object? createdAt = freezed,Object? price = freezed,Object? isSale = freezed,Object? stock = freezed,Object? saleRate = freezed,Object? imageUrl = freezed,}) {
   return _then(_Product(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,price: freezed == price ? _self.price : price // ignore: cast_nullable_to_non_nullable

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/extensions/num_extensions.dart';
 import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
 import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 
 class SellerScreen extends HookWidget {
@@ -15,6 +16,7 @@ class SellerScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final searchBarTextEditingController = useTextEditingController();
     final productTextEditingController = useTextEditingController();
     final categoryTextEditingController = useTextEditingController();
     final searchQuery = useState('');
@@ -24,14 +26,13 @@ class SellerScreen extends HookWidget {
       children: [
         SearchBar(
           hintText: '상품명 입력',
-          controller: categoryTextEditingController,
+          controller: searchBarTextEditingController,
           onChanged: (value) {
             searchQuery.value = value;
           },
           leading: const Icon(Icons.search).pOnly(left: 10),
           trailing: [IconButton(onPressed: () {}, icon: const Icon(Icons.clear))],
         ),
-
         height15,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -49,15 +50,8 @@ class SellerScreen extends HookWidget {
                           TextButton(
                             onPressed: () async {
                               if (productTextEditingController.text.isNotEmpty) {
-                                final uuid = Uuid();
-
                                 final result = await ProductApi.addProduct(
-                                  context,
-                                  Product(
-                                    id: uuid.v4(),
-                                    name: productTextEditingController.text,
-                                    description: '',
-                                  ),
+                                  Product(name: productTextEditingController.text, description: ''),
                                 );
                                 if (context.mounted) {
                                   context.pop();
@@ -92,8 +86,7 @@ class SellerScreen extends HookWidget {
                             onPressed: () async {
                               if (categoryTextEditingController.text.isNotEmpty) {
                                 final result = await CategoryApi.addCategory(
-                                  context,
-                                  categoryTextEditingController.text,
+                                  Category(name: categoryTextEditingController.text),
                                 );
                                 if (context.mounted) {
                                   context.pop();

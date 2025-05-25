@@ -7,7 +7,7 @@ part of 'product.dart';
 // **************************************************************************
 
 _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
-  id: json['id'] as String,
+  id: json['id'] as String?,
   name: json['name'] as String,
   description: json['description'] as String,
   createdAt: const TimestampConverter().fromJson(

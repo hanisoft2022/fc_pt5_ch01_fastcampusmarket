@@ -9,7 +9,7 @@ part 'cart.g.dart';
 abstract class Cart with _$Cart {
   const Cart._();
 
-  factory Cart({
+  const factory Cart({
     String? id,
     String? uid,
     String? email,

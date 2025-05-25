@@ -81,7 +81,7 @@ as String?,
 @JsonSerializable()
 
 class _Category extends Category {
-  const _Category({this.id, this.name}): super._();
+  const _Category({this.id, required this.name}): super._();
   factory _Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 
 @override final  String? id;

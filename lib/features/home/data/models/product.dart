@@ -8,7 +8,7 @@ part 'product.g.dart';
 @freezed
 abstract class Product with _$Product {
   const factory Product({
-    required String id,
+    String? id,
     required String name,
     required String description,
     @TimestampConverter() DateTime? createdAt,

@@ -97,7 +97,7 @@ $ProductCopyWith<$Res>? get product {
 @JsonSerializable()
 
 class _Cart extends Cart {
-   _Cart({this.id, this.uid, this.email, this.timestamp, this.count, this.product}): super._();
+  const _Cart({this.id, this.uid, this.email, this.timestamp, this.count, this.product}): super._();
   factory _Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
 
 @override final  String? id;
