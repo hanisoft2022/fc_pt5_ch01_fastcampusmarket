@@ -8,7 +8,7 @@ part 'category.g.dart';
 abstract class Category with _$Category {
   const Category._();
 
-  const factory Category({String? id, required String? name}) = _Category;
+  const factory Category({String? id, required String name}) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 }

@@ -1,6 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/features/home/data/models/category.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +28,6 @@ class AddProductScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dropdownValue = useState<String?>(list.first);
-
     final isSale = useState<bool>(false);
 
     final titleController = useTextEditingController();
@@ -34,10 +36,40 @@ class AddProductScreen extends HookWidget {
     final stockController = useTextEditingController();
     final salePercentController = useTextEditingController();
 
+    final image = useState<XFile?>(null);
+
+    final categories = useState<List<Category>>([]);
+    final isLoading = useState<bool>(true);
+
+    useEffect(() {
+      CategoryApi.fetchCategories().then((result) {
+        categories.value = result;
+        isLoading.value = false;
+      });
+      return null;
+    }, []);
+
+    if (isLoading.value) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final dropdownValue = useState<String?>(
+      categories.value.isNotEmpty ? categories.value.first.name : null,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: '상품 추가'.text.make(),
         actions: [
+          IconButton(
+            onPressed: () async {
+              final picked = await ImagePicker().pickImage(source: ImageSource.camera);
+
+              if (picked != null) {
+                image.value = picked;
+              }
+            },
+            icon: Icon(Icons.camera_alt_outlined),
+          ),
           IconButton(onPressed: () {}, icon: Icon(Icons.batch_prediction)),
           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
         ],
@@ -49,21 +81,32 @@ class AddProductScreen extends HookWidget {
             children: [
               InkWell(
                 borderRadius: BorderRadius.circular(20),
-                onTap: () {
-                  final ImagePicker imagePicker = ImagePicker();
+                onTap: () async {
+                  image.value = await ImagePicker().pickImage(source: ImageSource.gallery);
                 },
-                child: Ink(
-                  height: context.screenWidth * 0.6,
-                  width: context.screenWidth * 0.6,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: context.appColors.imageBoxBackgroundColor,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.add), '제품 이미지 추가'.text.make()],
-                  ),
-                ),
+                child:
+                    image.value == null
+                        ? Ink(
+                          height: context.screenWidth * 0.6,
+                          width: context.screenWidth * 0.6,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: context.appColors.imageBoxBackgroundColor,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Icon(Icons.add), '제품 이미지 추가'.text.make()],
+                          ),
+                        )
+                        : ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            File(image.value!.path),
+                            height: context.screenWidth * 0.6,
+                            width: context.screenWidth * 0.6,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
               ),
               height20,
               Form(
@@ -80,10 +123,12 @@ class AddProductScreen extends HookWidget {
                         dropdownValue.value = value;
                       },
                       dropdownMenuEntries:
-                          list
+                          categories.value
                               .map(
-                                (String value) =>
-                                    DropdownMenuEntry<String>(value: value, label: value),
+                                (Category category) => DropdownMenuEntry<String>(
+                                  value: category.name,
+                                  label: category.name,
+                                ),
                               )
                               .toList(),
                     ),

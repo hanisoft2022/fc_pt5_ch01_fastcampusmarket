@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 
+// * CATEGORY
 class CategoryApi {
   // * CREATE
   static Future<bool> addCategory(Category category) async {
@@ -41,6 +42,7 @@ class CategoryApi {
   }
 }
 
+// * PRODUCT
 class ProductApi {
   // * CREATE
   static Future<bool> addProduct(Product product) async {
