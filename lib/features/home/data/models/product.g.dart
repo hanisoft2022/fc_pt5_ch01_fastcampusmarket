@@ -10,10 +10,9 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String,
-  createdAt:
-      json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
+  createdAt: const TimestampConverter().fromJson(
+    json['createdAt'] as Timestamp?,
+  ),
   price: (json['price'] as num?)?.toInt(),
   isSale: json['isSale'] as bool?,
   stock: (json['stock'] as num?)?.toInt(),
@@ -25,7 +24,7 @@ Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'description': instance.description,
-  'createdAt': instance.createdAt?.toIso8601String(),
+  'createdAt': const TimestampConverter().toJson(instance.createdAt),
   'price': instance.price,
   'isSale': instance.isSale,
   'stock': instance.stock,

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastcampusmarket/core/common/extensions/num_extensions.dart';
 import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
@@ -15,29 +17,21 @@ class SellerScreen extends HookWidget {
   Widget build(BuildContext context) {
     final productTextEditingController = useTextEditingController();
     final categoryTextEditingController = useTextEditingController();
+    final searchQuery = useState('');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SearchAnchor.bar(
-          suggestionsBuilder: (context, controller) async {
-            final query = controller.text.toLowerCase();
-            final products = await ProductApi.fetchProducts();
-            final suggestions =
-                products.where((item) => item.name.toLowerCase().contains(query)).toList();
-            return suggestions.map((suggestion) {
-              return ListTile(
-                title: Text(suggestion.name),
-                onTap: () {
-                  controller.closeView(suggestion.name);
-                  CustomSnackBar.successSnackBar(context, '$suggestion 선택 완료!');
-                },
-              );
-            }).toList();
+        SearchBar(
+          hintText: '상품명 입력',
+          controller: categoryTextEditingController,
+          onChanged: (value) {
+            searchQuery.value = value;
           },
-          isFullScreen: false,
-          barHintText: '상품명 입력',
+          leading: const Icon(Icons.search).pOnly(left: 10),
+          trailing: [IconButton(onPressed: () {}, icon: const Icon(Icons.clear))],
         ),
+
         height15,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -125,14 +119,26 @@ class SellerScreen extends HookWidget {
         '상품 목록'.text.bold.size(20).make(),
         height15,
         Expanded(
-          child: FutureBuilder<List<Product>>(
-            future: ProductApi.fetchProducts(),
+          child: StreamBuilder<QuerySnapshot<Product>>(
+            stream: ProductApi.watchProducts(searchQuery.value),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, snapshot) {
-                    return SizedBox(
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('에러 발생: ${snapshot.error}'));
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('등록된 상품이 없습니다.'));
+              }
+              final productList = snapshot.data!.docs.toList();
+              return ListView.builder(
+                itemCount: productList.length,
+                itemBuilder: (context, index) {
+                  final Product product = productList[index].data();
+                  return InkWell(
+                    onTap: () => CustomSnackBar.successSnackBar(context, '상품 id: ${product.id}'),
+                    child: SizedBox(
                       height: 120,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,9 +146,10 @@ class SellerScreen extends HookWidget {
                           Container(
                             width: 100,
                             height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.amber,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                            child: Image.network(
+                              product.imageUrl ??
+                                  'https://cdn.pixabay.com/photo/2012/04/18/00/07/silhouette-of-a-man-36181_1280.png',
                             ),
                           ),
                           width15,
@@ -154,7 +161,7 @@ class SellerScreen extends HookWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    '상품명'.text.make(),
+                                    product.name.text.make(),
                                     MenuAnchor(
                                       alignmentOffset: Offset(-50, 0),
                                       builder: (context, controller, child) {
@@ -171,27 +178,33 @@ class SellerScreen extends HookWidget {
                                         );
                                       },
                                       menuChildren: [
-                                        MenuItemButton(child: Text('d'), onPressed: () {}),
-                                        MenuItemButton(child: Text('f'), onPressed: () {}),
-                                        MenuItemButton(child: Text('f'), onPressed: () {}),
+                                        MenuItemButton(
+                                          child: Text('삭제'),
+                                          onPressed: () => ProductApi.deleteProduct(product),
+                                        ),
+                                        MenuItemButton(child: Text('리뷰 보기'), onPressed: () {}),
                                       ],
                                     ),
                                   ],
                                 ),
                                 height5,
-                                '상품가격'.text.make(),
+                                (product.price?.toWon() ?? '상품가격').text.make(),
                                 height5,
-                                '상품수량'.text.make(),
+                                switch (product.isSale) {
+                                  true => '할인중',
+                                  false => '할인없음',
+                                  _ => '할인 여부 알 수 없음',
+                                }.text.make(),
+                                ('재고 수량: ${product.stock?.toCount()}').text.make(),
                               ],
                             ).pOnly(left: 10),
                           ),
                         ],
                       ),
-                    ).pSymmetric(v: 10);
-                  },
-                );
-              }
-              return Center(child: CircularProgressIndicator());
+                    ).pSymmetric(v: 10),
+                  );
+                },
+              );
             },
           ),
         ),

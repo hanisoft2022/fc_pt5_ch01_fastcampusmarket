@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -18,13 +17,6 @@ abstract class Cart with _$Cart {
     int? count,
     Product? product,
   }) = _Cart;
-
-  factory Cart.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) => Cart.fromJson(snapshot.data() ?? {});
-
-  Map<String, dynamic> toFirestore() => toJson();
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
 }

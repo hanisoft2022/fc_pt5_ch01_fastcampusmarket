@@ -14,6 +14,8 @@ extension IntExtensions on int {
 
   String toWon() => "${toComma()}원";
 
+  String toCount() => "${toComma()}개";
+
   String get withPlusMinus {
     if (this > 0) {
       return "+$this";
