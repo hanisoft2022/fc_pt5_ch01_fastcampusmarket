@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:io';
-
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
@@ -9,7 +7,7 @@ import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -37,6 +35,7 @@ class AddProductScreen extends HookWidget {
     final salePercentController = useTextEditingController();
 
     final image = useState<XFile?>(null);
+    final imageData = useState<Uint8List?>(null);
 
     final categories = useState<List<Category>>([]);
     final isLoading = useState<bool>(true);
@@ -52,8 +51,8 @@ class AddProductScreen extends HookWidget {
     if (isLoading.value) {
       return const Center(child: CircularProgressIndicator());
     }
-    final dropdownValue = useState<String?>(
-      categories.value.isNotEmpty ? categories.value.first.name : null,
+    final dropdownValue = useState<Category?>(
+      categories.value.isNotEmpty ? categories.value.first : null,
     );
 
     return Scaffold(
@@ -70,8 +69,7 @@ class AddProductScreen extends HookWidget {
             },
             icon: Icon(Icons.camera_alt_outlined),
           ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.batch_prediction)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+          TextButton.icon(label: '일괄등록'.text.make(), onPressed: () {}, icon: Icon(Icons.add)),
         ],
       ),
       body: SingleChildScrollView(
@@ -83,9 +81,10 @@ class AddProductScreen extends HookWidget {
                 borderRadius: BorderRadius.circular(20),
                 onTap: () async {
                   image.value = await ImagePicker().pickImage(source: ImageSource.gallery);
+                  imageData.value = await image.value!.readAsBytes();
                 },
                 child:
-                    image.value == null
+                    imageData.value == null
                         ? Ink(
                           height: context.screenWidth * 0.6,
                           width: context.screenWidth * 0.6,
@@ -100,8 +99,8 @@ class AddProductScreen extends HookWidget {
                         )
                         : ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.file(
-                            File(image.value!.path),
+                          child: Image.memory(
+                            imageData.value!,
                             height: context.screenWidth * 0.6,
                             width: context.screenWidth * 0.6,
                             fit: BoxFit.cover,
@@ -116,22 +115,24 @@ class AddProductScreen extends HookWidget {
                   children: [
                     '카테고리 선택'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                     height25,
-                    DropdownMenu<String>(
-                      expandedInsets: EdgeInsets.zero,
-                      initialSelection: dropdownValue.value,
-                      onSelected: (String? value) {
-                        dropdownValue.value = value;
-                      },
-                      dropdownMenuEntries:
-                          categories.value
-                              .map(
-                                (Category category) => DropdownMenuEntry<String>(
-                                  value: category.name,
-                                  label: category.name,
-                                ),
-                              )
-                              .toList(),
-                    ),
+                    categories.value.isNotEmpty
+                        ? DropdownMenu<Category>(
+                          expandedInsets: EdgeInsets.zero,
+                          initialSelection: dropdownValue.value,
+                          onSelected: (Category? value) {
+                            dropdownValue.value = value;
+                          },
+                          dropdownMenuEntries:
+                              categories.value
+                                  .map(
+                                    (Category category) => DropdownMenuEntry<Category>(
+                                      value: category,
+                                      label: category.name,
+                                    ),
+                                  )
+                                  .toList(),
+                        )
+                        : '선택할 수 있는 카테고리 없음.'.text.make(),
                     height25,
                     // 제품명
                     '제품 정보'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
@@ -205,16 +206,7 @@ class AddProductScreen extends HookWidget {
                       ),
                     height15,
                     // 제품 추가
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        minimumSize: Size(double.infinity, 50),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) context.pop();
-                      },
-                      child: '제품 추가'.text.make(),
-                    ),
+                    InkWell(child: '제품 추가'.text.make(), onTap: () {}),
                     // Bottom Padding
                     context.bottomPaddingGap,
                   ],

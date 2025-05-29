@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
+import 'package:flutter/services.dart';
 
 // * CATEGORY
 class CategoryApi {
@@ -55,6 +59,53 @@ class ProductApi {
     final docRef = collectionRef.doc();
     final productWithId = product.copyWith(id: docRef.id);
     await docRef.set(productWithId);
+    return true;
+  } // * CREATE
+
+  static Future<bool> addProductTesting(Product product) async {
+    final String? imageUrl = product.imageUrl;
+
+    if (imageUrl != null) {
+      Uint8List bytes = Uint8List.fromList(utf8.encode(imageUrl));
+      final storageRef = FirebaseStorage.instance.ref();
+      final imageRef = storageRef.child(
+        '${DateTime.now().millisecondsSinceEpoch}_${product.name}.jpg',
+      );
+
+      await imageRef.putData(bytes);
+    }
+
+    final collectionRef = FirebaseFirestore.instance
+        .collection('products')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+    final docRef = collectionRef.doc();
+    final productWithId = product.copyWith(id: docRef.id);
+    await docRef.set(productWithId);
+    return true;
+  }
+
+  // * CREATE
+  static Future<bool> addProducts(List<Product> products) async {
+    final collectionRef = FirebaseFirestore.instance
+        .collection('products')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (Product product in products) {
+      final docRef = collectionRef.doc();
+      final productWithId = product.copyWith(id: docRef.id);
+      batch.set(docRef, productWithId);
+    }
+
+    await batch.commit();
+
     return true;
   }
 
