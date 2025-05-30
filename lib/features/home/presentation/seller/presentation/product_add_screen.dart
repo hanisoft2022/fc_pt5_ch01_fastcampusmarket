@@ -55,7 +55,7 @@ class AddProductScreen extends HookWidget {
     if (isLoading.value) {
       return const Center(child: CircularProgressIndicator());
     }
-    final dropdownValue = useState<Category?>(
+    final selectedCategory = useState<Category?>(
       categories.value.isNotEmpty ? categories.value.first : null,
     );
 
@@ -124,9 +124,9 @@ class AddProductScreen extends HookWidget {
                         categories.value.isNotEmpty
                             ? DropdownMenu<Category>(
                               expandedInsets: EdgeInsets.zero,
-                              initialSelection: dropdownValue.value,
+                              initialSelection: selectedCategory.value,
                               onSelected: (Category? value) {
-                                dropdownValue.value = value;
+                                selectedCategory.value = value;
                               },
                               dropdownMenuEntries:
                                   categories.value
@@ -229,6 +229,7 @@ class AddProductScreen extends HookWidget {
                         id: null,
                         name: nameController.text,
                         description: descriptionController.text,
+                        category: selectedCategory.value!,
                         price: int.parse(priceController.text),
                         isSale: isSale.value,
                         saleRate: isSale.value ? double.parse(salePercentController.text) : null,

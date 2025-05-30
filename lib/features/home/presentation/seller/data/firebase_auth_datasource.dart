@@ -75,6 +75,7 @@ class ProductApi {
     final updatedProduct = product.copyWith(id: productDocRef.id, imageUrl: imageUrl);
 
     await productDocRef.set(updatedProduct);
+    await productDocRef.collection('category').doc().set({'category': product.category});
 
     return true;
   }

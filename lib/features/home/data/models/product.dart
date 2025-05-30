@@ -1,4 +1,5 @@
 import 'package:fastcampusmarket/core/common/utils/converters.dart';
+import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product.freezed.dart';
@@ -10,9 +11,10 @@ abstract class Product with _$Product {
     String? id,
     required String name,
     required String description,
-    int? price,
-    int? stock,
-    bool? isSale,
+    required Category category,
+    required int price,
+    required int stock,
+    required bool isSale,
     double? saleRate,
     String? imageUrl,
     @CreatedAtField() DateTime? createdAt,

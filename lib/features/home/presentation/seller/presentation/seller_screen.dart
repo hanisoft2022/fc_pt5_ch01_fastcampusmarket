@@ -56,13 +56,12 @@ class SellerScreen extends HookWidget {
                                   Category(name: categoryTextEditingController.text),
                                 );
                                 if (context.mounted) {
-                                  context.pop();
-
                                   if (result) {
                                     CustomSnackBar.successSnackBar(context, '카테고리 등록 성공!');
                                   } else {
                                     CustomSnackBar.alertSnackBar(context, '이미 등록된 카테고리입니다.');
                                   }
+                                  context.pop();
                                 }
                               }
 
