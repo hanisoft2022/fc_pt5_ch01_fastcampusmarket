@@ -63,19 +63,16 @@ class ProductApi {
   }
 
   // * CREATE
-  static Future<bool> addProductTesting(Product product) async {
-    final String? imageUrl = product.imageUrl;
+  static Future<bool> addProductTesting(Product product, bytes) async {
+    final storageRef = FirebaseStorage.instance.ref();
 
-    if (imageUrl != null) {
-      Uint8List bytes = Uint8List.fromList(utf8.encode(imageUrl));
-      final storageRef = FirebaseStorage.instance.ref();
-      final imageRef = storageRef.child(
-        '${DateTime.now().millisecondsSinceEpoch}_${product.name}.jpg',
-      );
+    final imageRef = storageRef.child(
+      '${DateTime.now().millisecondsSinceEpoch}_${product.name}.jpg',
+    );
 
-      await imageRef.putData(bytes);
-      final downloadLink = await imageRef.getDownloadURL();
-    }
+    await imageRef.putData(bytes);
+
+    final downloadLink = await imageRef.getDownloadURL();
 
     final collectionRef = FirebaseFirestore.instance
         .collection('products')
@@ -83,9 +80,13 @@ class ProductApi {
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
+
     final docRef = collectionRef.doc();
-    final productWithId = product.copyWith(id: docRef.id);
-    await docRef.set(productWithId);
+
+    final productWithIdAndImage = product.copyWith(id: docRef.id, imageUrl: downloadLink);
+
+    await docRef.set(productWithIdAndImage);
+
     return true;
   }
 

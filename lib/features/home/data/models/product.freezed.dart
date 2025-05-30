@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Product {
 
- String? get id; String get name; String get description;@TimestampConverter() DateTime? get createdAt; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl;
+ String? get id; String get name; String get description;@CreatedAtField() DateTime? get createdAt; int? get price; bool? get isSale; int? get stock; double? get saleRate; String? get imageUrl;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
- String? id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
+ String? id, String name, String description,@CreatedAtField() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 
@@ -88,13 +88,13 @@ as String?,
 @JsonSerializable()
 
 class _Product implements Product {
-  const _Product({this.id, required this.name, required this.description, @TimestampConverter() this.createdAt, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl});
+  const _Product({this.id, required this.name, required this.description, @CreatedAtField() this.createdAt, this.price, this.isSale, this.stock, this.saleRate, this.imageUrl});
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
 @override final  String? id;
 @override final  String name;
 @override final  String description;
-@override@TimestampConverter() final  DateTime? createdAt;
+@override@CreatedAtField() final  DateTime? createdAt;
 @override final  int? price;
 @override final  bool? isSale;
 @override final  int? stock;
@@ -134,7 +134,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String name, String description,@TimestampConverter() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
+ String? id, String name, String description,@CreatedAtField() DateTime? createdAt, int? price, bool? isSale, int? stock, double? saleRate, String? imageUrl
 });
 
 

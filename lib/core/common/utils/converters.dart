@@ -1,12 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class TimestampConverter implements JsonConverter<DateTime?, Timestamp?> {
-  const TimestampConverter();
-
-  @override
-  DateTime? fromJson(Timestamp? timestamp) => timestamp?.toDate();
+class CreatedAtField implements JsonConverter<DateTime?, dynamic> {
+  const CreatedAtField();
 
   @override
-  Timestamp? toJson(DateTime? date) => date == null ? null : Timestamp.fromDate(date);
+  DateTime? fromJson(dynamic timestamp) {
+    if (timestamp is Timestamp) {
+      return timestamp.toDate();
+    }
+    return null;
+  }
+
+  @override
+  dynamic toJson(DateTime? dateTime) {
+    // dateTime이 null이면 serverTimestamp()를 반환
+    if (dateTime == null) return FieldValue.serverTimestamp();
+    return Timestamp.fromDate(dateTime);
+  }
 }

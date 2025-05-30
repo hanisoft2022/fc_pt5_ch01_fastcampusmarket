@@ -29,7 +29,7 @@ class AddProductScreen extends HookWidget {
   Widget build(BuildContext context) {
     final isSale = useState<bool>(false);
 
-    final titleController = useTextEditingController();
+    final nameController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final priceController = useTextEditingController();
     final stockController = useTextEditingController();
@@ -140,7 +140,7 @@ class AddProductScreen extends HookWidget {
                     height25,
                     // 제품명
                     TextFormField(
-                      controller: titleController,
+                      controller: nameController,
                       decoration: decoration('제품명'),
                       validator: (value) => Validators.requiredValidator(value, '제품명'),
                       textInputAction: TextInputAction.next,
@@ -210,18 +210,21 @@ class AddProductScreen extends HookWidget {
                     InkWell(
                       child: '제품 추가'.text.make(),
                       onTap: () {
-                        ProductApi.addProductTesting(
-                          Product(
-                            name: 'test',
-                            description: 'description',
-                            createdAt: DateTime.now(),
-                            imageUrl: 'imageUrl',
-                            isSale: true,
-                            price: 234,
-                            saleRate: 20,
-                            stock: 1,
-                          ),
-                        );
+                        if (imageData.value != null) {
+                          ProductApi.addProductTesting(
+                            Product(
+                              name: nameController.text,
+                              description: descriptionController.text,
+
+                              isSale: isSale.value,
+                              price: int.parse(priceController.text),
+                              saleRate:
+                                  isSale.value ? double.parse(salePercentController.text) : null,
+                              stock: int.parse(stockController.text),
+                            ),
+                            imageData.value,
+                          );
+                        }
                       },
                     ),
                     // Bottom Padding

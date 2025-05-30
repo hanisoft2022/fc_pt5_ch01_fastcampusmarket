@@ -1,6 +1,5 @@
 import 'package:fastcampusmarket/core/common/utils/converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'product.freezed.dart';
 part 'product.g.dart';
@@ -11,7 +10,7 @@ abstract class Product with _$Product {
     String? id,
     required String name,
     required String description,
-    @TimestampConverter() DateTime? createdAt,
+    @CreatedAtField() DateTime? createdAt,
     int? price,
     bool? isSale,
     int? stock,
