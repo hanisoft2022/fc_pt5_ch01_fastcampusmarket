@@ -2,6 +2,7 @@
 
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
+import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
 
 import 'package:flutter/material.dart';
@@ -206,7 +207,23 @@ class AddProductScreen extends HookWidget {
                       ),
                     height15,
                     // 제품 추가
-                    InkWell(child: '제품 추가'.text.make(), onTap: () {}),
+                    InkWell(
+                      child: '제품 추가'.text.make(),
+                      onTap: () {
+                        ProductApi.addProductTesting(
+                          Product(
+                            name: 'test',
+                            description: 'description',
+                            createdAt: DateTime.now(),
+                            imageUrl: 'imageUrl',
+                            isSale: true,
+                            price: 234,
+                            saleRate: 20,
+                            stock: 1,
+                          ),
+                        );
+                      },
+                    ),
                     // Bottom Padding
                     context.bottomPaddingGap,
                   ],

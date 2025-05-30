@@ -60,8 +60,9 @@ class ProductApi {
     final productWithId = product.copyWith(id: docRef.id);
     await docRef.set(productWithId);
     return true;
-  } // * CREATE
+  }
 
+  // * CREATE
   static Future<bool> addProductTesting(Product product) async {
     final String? imageUrl = product.imageUrl;
 
@@ -73,6 +74,7 @@ class ProductApi {
       );
 
       await imageRef.putData(bytes);
+      final downloadLink = await imageRef.getDownloadURL();
     }
 
     final collectionRef = FirebaseFirestore.instance
