@@ -1,10 +1,10 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastcampusmarket/core/common/utils/image_compresser.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:flutter/services.dart';
 
 // * CATEGORY
 class CategoryApi {
@@ -49,43 +49,32 @@ class CategoryApi {
 // * PRODUCT
 class ProductApi {
   // * CREATE
-  static Future<bool> addProduct(Product product) async {
-    final collectionRef = FirebaseFirestore.instance
-        .collection('products')
-        .withConverter(
-          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
-          toFirestore: (value, options) => value.toJson(),
-        );
-    final docRef = collectionRef.doc();
-    final productWithId = product.copyWith(id: docRef.id);
-    await docRef.set(productWithId);
-    return true;
-  }
-
-  // * CREATE
-  static Future<bool> addProductTesting(Product product, bytes) async {
+  static Future<bool> addProduct(Product product, Uint8List imageData) async {
+    // image를 Storage에 저장
     final storageRef = FirebaseStorage.instance.ref();
-
     final imageRef = storageRef.child(
       '${DateTime.now().millisecondsSinceEpoch}_${product.name}.jpg',
     );
+    final compressedImageData = await compressImageWithUint8List(imageData);
+    await imageRef.putData(compressedImageData);
 
-    await imageRef.putData(bytes);
+    // imageUrl 가져오기
+    final imageUrl = await imageRef.getDownloadURL();
 
-    final downloadLink = await imageRef.getDownloadURL();
-
-    final collectionRef = FirebaseFirestore.instance
+    // Product 업데이트하여 Firestore에 저장
+    final productsCollectionRef = FirebaseFirestore.instance
         .collection('products')
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
 
-    final docRef = collectionRef.doc();
+    final productDocRef = productsCollectionRef.doc();
+    // ID , ImageUrl, CreatedAt 업데이트
+    // CreatedAt은 null이기 때문에 CreatedAtField Json Converter에 의해 Firebase 서버 시간으로 자동 업데이트됨.
+    final updatedProduct = product.copyWith(id: productDocRef.id, imageUrl: imageUrl);
 
-    final productWithIdAndImage = product.copyWith(id: docRef.id, imageUrl: downloadLink);
-
-    await docRef.set(productWithIdAndImage);
+    await productDocRef.set(updatedProduct);
 
     return true;
   }

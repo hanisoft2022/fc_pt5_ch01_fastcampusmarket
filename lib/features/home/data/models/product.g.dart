@@ -10,22 +10,22 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   id: json['id'] as String?,
   name: json['name'] as String,
   description: json['description'] as String,
-  createdAt: const CreatedAtField().fromJson(json['createdAt']),
   price: (json['price'] as num?)?.toInt(),
-  isSale: json['isSale'] as bool?,
   stock: (json['stock'] as num?)?.toInt(),
+  isSale: json['isSale'] as bool?,
   saleRate: (json['saleRate'] as num?)?.toDouble(),
   imageUrl: json['imageUrl'] as String?,
+  createdAt: const CreatedAtField().fromJson(json['createdAt']),
 );
 
 Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'description': instance.description,
-  'createdAt': const CreatedAtField().toJson(instance.createdAt),
   'price': instance.price,
-  'isSale': instance.isSale,
   'stock': instance.stock,
+  'isSale': instance.isSale,
   'saleRate': instance.saleRate,
   'imageUrl': instance.imageUrl,
+  'createdAt': const CreatedAtField().toJson(instance.createdAt),
 };

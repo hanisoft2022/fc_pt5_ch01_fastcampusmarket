@@ -17,7 +17,7 @@ class SellerScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final searchBarTextEditingController = useTextEditingController();
-    final productTextEditingController = useTextEditingController();
+
     final categoryTextEditingController = useTextEditingController();
     final searchQuery = useState('');
 
@@ -37,43 +37,10 @@ class SellerScreen extends HookWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ElevatedButton(
-              onPressed: () async {
-                await showDialog(
-                  barrierDismissible: true,
-                  context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: Text('상품 등록'),
-                        content: TextField(controller: productTextEditingController),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              if (productTextEditingController.text.isNotEmpty) {
-                                final result = await ProductApi.addProduct(
-                                  Product(name: productTextEditingController.text, description: ''),
-                                );
-                                if (context.mounted) {
-                                  context.pop();
-                                  if (result) {
-                                    CustomSnackBar.successSnackBar(context, '상품 등록 성공!');
-                                  } else {
-                                    CustomSnackBar.alertSnackBar(context, '이미 등록된 상품입니다.');
-                                  }
-                                }
-                              }
-                            },
-                            child: Text('등록'),
-                          ),
-                        ],
-                      ),
-                );
-              },
-              child: '상품 등록'.text.make(),
-            ),
             width20,
             ElevatedButton(
               onPressed: () async {
+                categoryTextEditingController.clear();
                 await showDialog(
                   barrierDismissible: true,
                   context: context,
@@ -90,12 +57,18 @@ class SellerScreen extends HookWidget {
                                 );
                                 if (context.mounted) {
                                   context.pop();
+
                                   if (result) {
                                     CustomSnackBar.successSnackBar(context, '카테고리 등록 성공!');
                                   } else {
                                     CustomSnackBar.alertSnackBar(context, '이미 등록된 카테고리입니다.');
                                   }
                                 }
+                              }
+
+                              if (context.mounted) {
+                                context.pop();
+                                CustomSnackBar.alertSnackBar(context, '카테고리가 등록되지 않았습니다.');
                               }
                             },
                             child: Text('등록'),
@@ -136,13 +109,17 @@ class SellerScreen extends HookWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                            child: Image.network(
-                              product.imageUrl ??
-                                  'https://cdn.pixabay.com/photo/2012/04/18/00/07/silhouette-of-a-man-36181_1280.png',
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                              child: Image.network(
+                                product.imageUrl ??
+                                    'https://cdn.pixabay.com/photo/2012/04/18/00/07/silhouette-of-a-man-36181_1280.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           width15,

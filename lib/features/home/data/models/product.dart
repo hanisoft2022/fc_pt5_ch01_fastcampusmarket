@@ -10,12 +10,12 @@ abstract class Product with _$Product {
     String? id,
     required String name,
     required String description,
-    @CreatedAtField() DateTime? createdAt,
     int? price,
-    bool? isSale,
     int? stock,
+    bool? isSale,
     double? saleRate,
     String? imageUrl,
+    @CreatedAtField() DateTime? createdAt,
   }) = _Product;
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);
