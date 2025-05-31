@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:fastcampusmarket/core/common/utils/converters.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -7,6 +9,7 @@ part 'product.g.dart';
 
 @freezed
 abstract class Product with _$Product {
+  @JsonSerializable(explicitToJson: true)
   const factory Product({
     String? id,
     required String name,

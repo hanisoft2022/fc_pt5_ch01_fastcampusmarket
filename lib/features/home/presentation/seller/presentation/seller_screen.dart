@@ -63,6 +63,8 @@ class SellerScreen extends HookWidget {
                                   }
                                   context.pop();
                                 }
+
+                                return;
                               }
 
                               if (context.mounted) {
@@ -157,14 +159,13 @@ class SellerScreen extends HookWidget {
                                   ],
                                 ),
                                 height5,
-                                (product.price?.toWon() ?? '상품가격').text.make(),
+                                (product.price.toWon()).text.make(),
                                 height5,
                                 switch (product.isSale) {
                                   true => '할인중',
                                   false => '할인없음',
-                                  _ => '할인 여부 알 수 없음',
                                 }.text.make(),
-                                ('재고 수량: ${product.stock?.toCount()}').text.make(),
+                                ('재고 수량: ${product.stock.toCount()}').text.make(),
                               ],
                             ).pOnly(left: 10),
                           ),

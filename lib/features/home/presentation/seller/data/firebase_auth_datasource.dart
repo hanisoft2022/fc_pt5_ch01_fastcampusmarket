@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fastcampusmarket/core/common/utils/image_compresser.dart';
+import 'package:fastcampusmarket/core/common/utils/image_compressor.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
@@ -75,8 +75,30 @@ class ProductApi {
     final updatedProduct = product.copyWith(id: productDocRef.id, imageUrl: imageUrl);
 
     await productDocRef.set(updatedProduct);
-    await productDocRef.collection('category').doc().set({'category': product.category});
 
+    // Product 도큐먼트의 Category 서브컬렉션에 Category 객체 자체를 저장 (withConverter)
+    final categorySubCollectionRef = productDocRef
+        .collection('category')
+        .withConverter<Category>(
+          fromFirestore: (snapshot, _) => Category.fromJson(snapshot.data()!),
+          toFirestore: (category, _) => category.toJson(),
+        );
+
+    // 도큐먼트 id를 category.id로 지정하고 category 객체 저장
+    await categorySubCollectionRef.doc(product.category.id).set(product.category);
+
+    // 도큐먼트 id를 자동 생성하고 싶은 경우 아래 코드 사용
+    // await categoryCollectionRef.add(product.category);
+
+    // Category 도큐먼트의(서브컬렉션 아님) Product 서브컬렉션에 Product 객체 자체를 저장 (withConverter)
+    final categoryCollectionRef = FirebaseFirestore.instance
+        .collection('categories')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    categoryCollectionRef.doc(product.id).set(product);
     return true;
   }
 

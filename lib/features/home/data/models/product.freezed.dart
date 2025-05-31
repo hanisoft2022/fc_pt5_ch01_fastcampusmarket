@@ -95,8 +95,8 @@ $CategoryCopyWith<$Res> get category {
 
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(explicitToJson: true)
 class _Product implements Product {
   const _Product({this.id, required this.name, required this.description, required this.category, required this.price, required this.stock, required this.isSale, this.saleRate, this.imageUrl, @CreatedAtField() this.createdAt});
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
