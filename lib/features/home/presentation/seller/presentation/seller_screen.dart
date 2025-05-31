@@ -31,7 +31,15 @@ class SellerScreen extends HookWidget {
             searchQuery.value = value;
           },
           leading: const Icon(Icons.search).pOnly(left: 10),
-          trailing: [IconButton(onPressed: () {}, icon: const Icon(Icons.clear))],
+          trailing: [
+            IconButton(
+              onPressed: () {
+                searchBarTextEditingController.clear();
+                searchQuery.value = '';
+              },
+              icon: const Icon(Icons.clear),
+            ),
+          ],
         ),
         height15,
         Row(

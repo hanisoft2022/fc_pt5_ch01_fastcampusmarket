@@ -85,7 +85,7 @@ class ProductApi {
         );
 
     // 도큐먼트 id를 category.id로 지정하고 category 객체 저장
-    await categorySubCollectionRef.doc(product.category.id).set(product.category);
+    await categorySubCollectionRef.doc(updatedProduct.category.id).set(updatedProduct.category);
 
     // 도큐먼트 id를 자동 생성하고 싶은 경우 아래 코드 사용
     // await categoryCollectionRef.add(product.category);
@@ -93,12 +93,15 @@ class ProductApi {
     // Category 도큐먼트의(서브컬렉션 아님) Product 서브컬렉션에 Product 객체 자체를 저장 (withConverter)
     final categoryCollectionRef = FirebaseFirestore.instance
         .collection('categories')
+        .doc(updatedProduct.category.id);
+
+    final productSubCollectionRef = categoryCollectionRef
+        .collection('product')
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
-
-    categoryCollectionRef.doc(product.id).set(product);
+    productSubCollectionRef.doc(updatedProduct.id).set(updatedProduct);
     return true;
   }
 
@@ -117,6 +120,53 @@ class ProductApi {
       final docRef = collectionRef.doc();
       final productWithId = product.copyWith(id: docRef.id);
       batch.set(docRef, productWithId);
+    }
+
+    await batch.commit();
+
+    return true;
+  }
+
+  // * CREATE
+  static Future<bool> addProductsTestingWithBatch(Product product, Uint8List imageData) async {
+    // image를 Storage에 저장
+    final storageRef = FirebaseStorage.instance.ref();
+    final imageRef = storageRef.child(
+      '${DateTime.now().millisecondsSinceEpoch}_${product.name}.jpg',
+    );
+    final compressedImageData = await compressImageWithUint8List(imageData);
+    await imageRef.putData(compressedImageData);
+
+    // imageUrl 가져오기
+    final imageUrl = await imageRef.getDownloadURL();
+
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (int i = 0; i < 10; i++) {
+      // Product 업데이트하여 Firestore에 저장
+      final productDocRef = FirebaseFirestore.instance.collection('products').doc();
+      // ID , ImageUrl, CreatedAt 업데이트
+      // CreatedAt은 null이기 때문에 CreatedAtField Json Converter에 의해 Firebase 서버 시간으로 자동 업데이트됨.
+      final updatedProduct = product.copyWith(
+        name: product.name + i.toString(),
+        id: productDocRef.id,
+        imageUrl: imageUrl,
+      );
+      batch.set(productDocRef, updatedProduct.toJson());
+
+      // Product 도큐먼트의 Category 서브컬렉션에 Category 객체 자체를 저장
+      final productCategoryDocRef = productDocRef
+          .collection('category')
+          .doc(updatedProduct.category.id);
+      batch.set(productCategoryDocRef, updatedProduct.category.toJson());
+
+      // Category 도큐먼트의(서브컬렉션 아님) Product 서브컬렉션에 Product 객체 자체를 저장
+      final categoryProductDocRef = FirebaseFirestore.instance
+          .collection('categories')
+          .doc(updatedProduct.category.id)
+          .collection('product')
+          .doc(updatedProduct.id);
+      batch.set(categoryProductDocRef, updatedProduct.toJson());
     }
 
     await batch.commit();
@@ -150,12 +200,19 @@ class ProductApi {
       return collectionRef.orderBy("name").startAt([query]).endAt(['$query\uf8ff']).snapshots();
     }
 
-    return collectionRef.orderBy('createdAt').snapshots();
+    return collectionRef.orderBy('name').snapshots();
   }
 
   // * DELETE
   static Future<bool> deleteProduct(Product product) async {
     final docRef = FirebaseFirestore.instance.collection('products').doc(product.id);
+    // 1. category 서브컬렉션의 모든 도큐먼트 삭제
+    final categoryDocs = await docRef.collection('category').get();
+    for (final doc in categoryDocs.docs) {
+      await doc.reference.delete();
+    }
+
+    // 2. 상위 product 도큐먼트 삭제
     await docRef.delete();
     return true;
   }

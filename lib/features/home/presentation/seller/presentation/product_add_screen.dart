@@ -73,7 +73,35 @@ class AddProductScreen extends HookWidget {
             },
             icon: Icon(Icons.camera_alt_outlined),
           ),
-          TextButton.icon(label: '일괄등록'.text.make(), onPressed: () {}, icon: Icon(Icons.add)),
+          TextButton.icon(
+            label: '일괄등록'.text.make(),
+            onPressed: () {
+              if (imageData.value == null) {
+                CustomSnackBar.alertSnackBar(context, '제품 이미지를 추가해주세요.');
+              }
+              if (imageData.value != null) {
+                ProductApi.addProductsTestingWithBatch(
+                  Product(
+                    id: null,
+                    name: nameController.text,
+                    description: descriptionController.text,
+                    category: selectedCategory.value!,
+                    price: int.parse(priceController.text),
+                    isSale: isSale.value,
+                    saleRate: isSale.value ? double.parse(salePercentController.text) : null,
+                    stock: int.parse(stockController.text),
+                    imageUrl: null,
+                    createdAt: null,
+                  ),
+                  imageData.value!,
+                );
+                if (context.mounted) {
+                  context.goNamed(SellerRoute.name);
+                }
+              }
+            },
+            icon: Icon(Icons.add),
+          ),
         ],
       ),
       body: SingleChildScrollView(
