@@ -4,6 +4,7 @@ import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/presentation/product_form_route.dart';
 import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -45,6 +46,13 @@ class SellerScreen extends HookWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                CategoryApi.addCategories();
+                CustomSnackBar.successSnackBar(context, '카테고리 일괄 등록 성공!');
+              },
+              child: '더미 카테고리 일괄 등록'.text.make(),
+            ),
             width20,
             ElevatedButton(
               onPressed: () async {
@@ -161,7 +169,12 @@ class SellerScreen extends HookWidget {
                                           child: Text('삭제'),
                                           onPressed: () => ProductApi.deleteProduct(product),
                                         ),
-                                        MenuItemButton(child: Text('리뷰 보기'), onPressed: () {}),
+                                        MenuItemButton(
+                                          child: Text('수정'),
+                                          onPressed: () {
+                                            context.goNamed(ProductFormRoute.name, extra: product);
+                                          },
+                                        ),
                                       ],
                                     ),
                                   ],

@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
@@ -25,28 +23,45 @@ const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 InputDecoration decoration(String name) =>
     InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요.', border: OutlineInputBorder());
 
-class AddProductScreen extends HookWidget {
-  const AddProductScreen({super.key});
+class ProductFormScreen extends HookWidget {
+  final Product? initialProduct;
+
+  const ProductFormScreen({super.key, this.initialProduct});
 
   @override
   Widget build(BuildContext context) {
-    final isSale = useState<bool>(false);
+    final nameController = useTextEditingController(text: initialProduct?.name ?? '');
+    final descriptionController = useTextEditingController(text: initialProduct?.description ?? '');
+    final priceController = useTextEditingController(text: initialProduct?.price.toString() ?? '');
+    final stockController = useTextEditingController(text: initialProduct?.stock.toString() ?? '');
+    final salePercentController = useTextEditingController(
+      text: initialProduct?.saleRate.toString() ?? '',
+    );
 
-    final nameController = useTextEditingController();
-    final descriptionController = useTextEditingController();
-    final priceController = useTextEditingController();
-    final stockController = useTextEditingController();
-    final salePercentController = useTextEditingController();
+    final isSale = useState<bool>(initialProduct?.isSale ?? false);
 
     final image = useState<XFile?>(null);
     final imageData = useState<Uint8List?>(null);
+    final String? imageUrl = initialProduct?.imageUrl;
 
     final categories = useState<List<Category>>([]);
     final isLoading = useState<bool>(true);
 
+    final selectedCategory = useState<Category?>(null);
+
     useEffect(() {
       CategoryApi.fetchCategories().then((result) {
         categories.value = result;
+
+        if (initialProduct?.category != null) {
+          // id로 비교하여 동일한 카테고리 객체를 찾아서 할당
+          selectedCategory.value = result.firstWhere(
+            (cat) => cat.id == initialProduct!.category.id,
+          );
+        } else {
+          selectedCategory.value = result.isNotEmpty ? result.first : null;
+        }
+
         isLoading.value = false;
       });
       return null;
@@ -55,9 +70,6 @@ class AddProductScreen extends HookWidget {
     if (isLoading.value) {
       return const Center(child: CircularProgressIndicator());
     }
-    final selectedCategory = useState<Category?>(
-      categories.value.isNotEmpty ? categories.value.first : null,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +92,7 @@ class AddProductScreen extends HookWidget {
                 CustomSnackBar.alertSnackBar(context, '제품 이미지를 추가해주세요.');
               }
               if (imageData.value != null) {
-                ProductApi.addProductsTestingWithBatch(
+                ProductApi.addProducts(
                   Product(
                     id: null,
                     name: nameController.text,
@@ -119,18 +131,28 @@ class AddProductScreen extends HookWidget {
                     },
                     child:
                         imageData.value == null
-                            ? Ink(
-                              height: context.screenWidth * 0.6,
-                              width: context.screenWidth * 0.6,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: context.appColors.imageBoxBackgroundColor,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [Icon(Icons.add), '제품 이미지 추가'.text.make()],
-                              ),
-                            )
+                            ? (imageUrl == null
+                                ? Ink(
+                                  height: context.screenWidth * 0.6,
+                                  width: context.screenWidth * 0.6,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: context.appColors.imageBoxBackgroundColor,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [Icon(Icons.add), '제품 이미지 추가'.text.make()],
+                                  ),
+                                )
+                                : ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    imageUrl,
+                                    height: context.screenWidth * 0.6,
+                                    width: context.screenWidth * 0.6,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ))
                             : ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.memory(
@@ -151,6 +173,7 @@ class AddProductScreen extends HookWidget {
                         height25,
                         categories.value.isNotEmpty
                             ? DropdownMenu<Category>(
+                              menuHeight: 300,
                               expandedInsets: EdgeInsets.zero,
                               initialSelection: selectedCategory.value,
                               onSelected: (Category? value) {
@@ -248,10 +271,12 @@ class AddProductScreen extends HookWidget {
               // 제품 추가
               InkWell(
                 onTap: () async {
-                  if (imageData.value == null) {
+                  if (imageData.value == null && imageUrl == null) {
                     CustomSnackBar.alertSnackBar(context, '제품 이미지를 추가해주세요.');
+                    return;
                   }
-                  if (imageData.value != null) {
+
+                  if (initialProduct == null) {
                     await ProductApi.addProduct(
                       Product(
                         id: null,
@@ -267,16 +292,31 @@ class AddProductScreen extends HookWidget {
                       ),
                       imageData.value!,
                     );
-                    if (context.mounted) {
-                      context.goNamed(SellerRoute.name);
-                    }
+                  } else {
+                    await ProductApi.updateProduct(
+                      initialProduct!.copyWith(
+                        name: nameController.text,
+                        description: descriptionController.text,
+                        category: selectedCategory.value!,
+                        price: int.parse(priceController.text),
+                        isSale: isSale.value,
+                        saleRate: isSale.value ? double.parse(salePercentController.text) : null,
+                        stock: int.parse(stockController.text),
+                      ),
+                    );
+                  }
+                  if (context.mounted) {
+                    context.goNamed(SellerRoute.name);
                   }
                 },
                 child: Ink(
                   height: 50 + context.bottomPadding,
                   color: Colors.orange,
                   child: Center(
-                    child: '제품 추가'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
+                    child:
+                        initialProduct == null
+                            ? '제품 추가'.text.bold.size(context.textTheme.titleLarge!.fontSize).make()
+                            : '제품 수정'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                   ),
                 ),
               ),
