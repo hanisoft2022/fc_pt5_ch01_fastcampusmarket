@@ -224,6 +224,21 @@ class ProductApi {
     return collectionRef.orderBy('name').snapshots();
   }
 
+  // * READ
+  static Future<List<Product>> fetchSaleProducts() async {
+    final collectionRef = FirebaseFirestore.instance
+        .collection('products')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    final querySnapshot =
+        await collectionRef.where('isSale', isEqualTo: true).orderBy('saleRate').get();
+
+    return querySnapshot.docs.map((doc) => doc.data()).toList();
+  }
+
   // * UPDATE
   static Future<bool> updateProduct(Product product) async {
     final docRef = FirebaseFirestore.instance.collection('products').doc(product.id);

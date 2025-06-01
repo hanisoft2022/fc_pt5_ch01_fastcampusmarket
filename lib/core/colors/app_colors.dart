@@ -11,4 +11,6 @@ abstract interface class AppColors {
 
   Color get ratingStarColor;
   Color get ratingStarEmptyColor;
+
+  Color get primaryColor;
 }

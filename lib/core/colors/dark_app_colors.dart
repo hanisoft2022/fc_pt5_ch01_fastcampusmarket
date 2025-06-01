@@ -15,4 +15,7 @@ class DarkAppColors implements AppColors {
 
   @override
   Color get ratingStarEmptyColor => Colors.grey.shade500;
+
+  @override
+  Color get primaryColor => Colors.blueAccent;
 }

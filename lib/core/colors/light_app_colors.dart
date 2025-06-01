@@ -12,6 +12,10 @@ class LightAppColors implements AppColors {
 
   @override
   Color get ratingStarColor => Colors.orange;
+
   @override
   Color get ratingStarEmptyColor => Colors.grey.shade400;
+
+  @override
+  Color get primaryColor => Colors.blueAccent.shade400;
 }
