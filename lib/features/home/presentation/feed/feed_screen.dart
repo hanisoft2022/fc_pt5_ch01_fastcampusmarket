@@ -1,4 +1,6 @@
 import 'package:fastcampusmarket/features/home/presentation/feed/product%20detail/route/product_detail_route.dart';
+import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
+import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -15,8 +17,7 @@ class FeedScreen extends HookWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            color: Colors.grey.shade400,
+          SizedBox(
             height: 140,
             child: PageView(
               controller: controller,
@@ -40,7 +41,37 @@ class FeedScreen extends HookWidget {
               TextButton(onPressed: () {}, child: '더보기'.text.make()),
             ],
           ),
-          Container(height: 150, color: Colors.red),
+          SizedBox(
+            height: 200,
+            child: FutureBuilder(
+              future: CategoryApi.fetchCategories(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final category = snapshot.data![index];
+                    return GestureDetector(
+                      onTap: () {
+                        CustomSnackBar.successSnackBar(context, category.name);
+                      },
+                      child: Column(
+                        children: [CircleAvatar(radius: 30), category.name.text.make()],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -62,16 +62,30 @@ class CategoryApi {
     return true;
   }
 
-  // * READ
-  static Future<List<Category>> fetchCategories() async {
+  // * READ(FUTURE)
+  static Future<List<Category>> fetchCategories() {
     final collectionRef = FirebaseFirestore.instance
         .collection('categories')
         .withConverter(
           fromFirestore: (snapshot, options) => Category.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
-    final snapshot = await collectionRef.get();
-    return snapshot.docs.map((doc) => doc.data()).toList();
+
+    return collectionRef.get().then((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
+  // * READ(STREAM)
+  static Stream<List<Category>> watchCategories() {
+    final collectionRef = FirebaseFirestore.instance
+        .collection('categories')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Category.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    return collectionRef.snapshots().map(
+      (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+    );
   }
 }
 
