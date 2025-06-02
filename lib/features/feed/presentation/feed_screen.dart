@@ -22,10 +22,8 @@ class FeedScreen extends HookConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await Future.wait([
-          ref.refresh(productsProvider.future),
-          ref.refresh(categoriesProvider.future),
-        ]);
+        final _ = await ref.refresh(productsProvider.future);
+        final _ = await ref.refresh(categoriesProvider.future);
       },
       child: ListView(
         children: [
@@ -93,8 +91,7 @@ class FeedScreen extends HookConsumerWidget {
               Spacer(),
               TextButton(
                 onPressed: () async {
-                  final _ = ref.refresh(productsProvider);
-                  await ref.read(productsProvider.future);
+                  final _ = await ref.refresh(productsProvider.future);
                 },
                 child: '새로고침'.text.make(),
               ),
