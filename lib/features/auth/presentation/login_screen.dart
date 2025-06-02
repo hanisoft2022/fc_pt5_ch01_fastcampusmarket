@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
-import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -24,7 +24,7 @@ class LoginScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 테마
-    final themeMode = ref.watch(themeModeProvider);
+    final themeMode = ref.watch(customThemeModeProvider);
     final isLight = themeMode == ThemeMode.light;
 
     // 텍스트 컨트롤러
@@ -155,7 +155,7 @@ class LoginScreen extends HookConsumerWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => ref.read(themeModeProvider.notifier).toggleTheme(),
+            onPressed: () => ref.read(customThemeModeProvider.notifier).toggleTheme(),
             icon: Icon(Icons.brightness_6),
           ),
         ],

@@ -1,6 +1,6 @@
-import 'package:fastcampusmarket/features/home/presentation/feed/cart/cart_route.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed/feed_screen.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed/product%20detail/route/product_detail_route.dart';
+import 'package:fastcampusmarket/features/cart/cart_route.dart';
+import 'package:fastcampusmarket/features/feed/presentation/feed_screen.dart';
+import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class FeedRoute {

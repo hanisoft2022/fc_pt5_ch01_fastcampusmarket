@@ -2,8 +2,8 @@ import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
-import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/features/seller/data/firebase_auth_datasource.dart';
+import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

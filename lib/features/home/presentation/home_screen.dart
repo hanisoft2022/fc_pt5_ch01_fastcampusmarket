@@ -1,7 +1,7 @@
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed/cart/cart_route.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/presentation/product_form_route.dart';
+import 'package:fastcampusmarket/features/cart/cart_route.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
             if (currentIndex == 0) IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
             IconButton(
               onPressed: () {
-                ref.watch(themeModeProvider.notifier).toggleTheme();
+                ref.watch(customThemeModeProvider.notifier).toggleTheme();
               },
               icon: const Icon(Icons.brightness_6),
             ),

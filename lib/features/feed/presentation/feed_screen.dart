@@ -1,9 +1,9 @@
 import 'package:fastcampusmarket/core/common/common.dart';
 import 'package:fastcampusmarket/core/common/extensions/context.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:fastcampusmarket/features/home/presentation/feed/product%20detail/route/product_detail_route.dart';
-import 'package:fastcampusmarket/features/home/presentation/seller/data/firebase_auth_datasource.dart';
-import 'package:fastcampusmarket/shared/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
+import 'package:fastcampusmarket/features/seller/data/firebase_auth_datasource.dart';
+import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -110,17 +110,14 @@ class FeedScreen extends HookWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
                 if (snapshot.hasError) {
                   return Center(child: Text(snapshot.error.toString()));
                 }
-
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     final item = snapshot.data![index];
-
                     return GestureDetector(
                       onTap: () => context.goNamed(ProductDetailRoute.name),
                       child: SizedBox(
