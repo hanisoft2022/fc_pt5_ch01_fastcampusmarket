@@ -91,8 +91,8 @@ $ProductCopyWith<$Res>? get product {
 
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(explicitToJson: true)
 class _CartItem extends CartItem {
   const _CartItem({this.product, this.quantity = 1, @CreatedAtField() this.createdAt}): super._();
   factory _CartItem.fromJson(Map<String, dynamic> json) => _$CartItemFromJson(json);
