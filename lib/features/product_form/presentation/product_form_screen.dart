@@ -1,5 +1,4 @@
 import 'package:fastcampusmarket/core/common/common.dart';
-import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
@@ -10,27 +9,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:fastcampusmarket/features/product_form/presentation/product_form_providers.dart';
 
 final _formKey = GlobalKey<FormState>();
 
 const int maxPrice = 9999999;
 const int maxCount = 999;
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-
 InputDecoration decoration(String name) =>
     InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요.', border: OutlineInputBorder());
 
-class ProductFormScreen extends HookWidget {
+class ProductFormScreen extends HookConsumerWidget {
   final Product? initialProduct;
 
   const ProductFormScreen({super.key, this.initialProduct});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categoryListAsync = ref.watch(categoryListProvider);
+
     final nameController = useTextEditingController(text: initialProduct?.name ?? '');
     final descriptionController = useTextEditingController(text: initialProduct?.description ?? '');
     final priceController = useTextEditingController(text: initialProduct?.price.toString() ?? '');
@@ -45,32 +47,7 @@ class ProductFormScreen extends HookWidget {
     final imageData = useState<Uint8List?>(null);
     final String? imageUrl = initialProduct?.imageUrl;
 
-    final categories = useState<List<Category>>([]);
-    final isLoading = useState<bool>(true);
-
     final selectedCategory = useState<Category?>(null);
-
-    useEffect(() {
-      CategoryApi.fetchCategories().then((result) {
-        categories.value = result;
-
-        if (initialProduct?.category != null) {
-          // id로 비교하여 동일한 카테고리 객체를 찾아서 할당
-          selectedCategory.value = result.firstWhere(
-            (cat) => cat.id == initialProduct!.category.id,
-          );
-        } else {
-          selectedCategory.value = result.isNotEmpty ? result.first : null;
-        }
-
-        isLoading.value = false;
-      });
-      return null;
-    }, []);
-
-    if (isLoading.value) {
-      return const Center(child: CircularProgressIndicator());
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -170,29 +147,42 @@ class ProductFormScreen extends HookWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        '카테고리 선택'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
-                        height25,
-                        categories.value.isNotEmpty
-                            ? DropdownMenu<Category>(
-                              menuHeight: 300,
-                              expandedInsets: EdgeInsets.zero,
-                              initialSelection: selectedCategory.value,
-                              onSelected: (Category? value) {
-                                selectedCategory.value = value;
-                              },
-                              dropdownMenuEntries:
-                                  categories.value
-                                      .map(
-                                        (Category category) => DropdownMenuEntry<Category>(
-                                          value: category,
-                                          label: category.name,
-                                        ),
+                        categoryListAsync.when(
+                          loading: () => Center(child: CircularProgressIndicator()),
+                          error: (error, stackTrace) => Center(child: Text(error.toString())),
+                          data:
+                              (categories) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  '카테고리 선택'.text.bold
+                                      .size(context.textTheme.titleLarge!.fontSize)
+                                      .make(),
+                                  height25,
+                                  categories.isNotEmpty
+                                      ? DropdownMenu<Category>(
+                                        menuHeight: 300,
+                                        expandedInsets: EdgeInsets.zero,
+                                        initialSelection: selectedCategory.value,
+                                        onSelected: (Category? value) {
+                                          selectedCategory.value = value;
+                                        },
+                                        dropdownMenuEntries:
+                                            categories
+                                                .map(
+                                                  (Category category) =>
+                                                      DropdownMenuEntry<Category>(
+                                                        value: category,
+                                                        label: category.name,
+                                                      ),
+                                                )
+                                                .toList(),
                                       )
-                                      .toList(),
-                            )
-                            : '선택할 수 있는 카테고리 없음.'.text.make(),
-                        height25,
-                        // 제품명
+                                      : '선택할 수 있는 카테고리 없음.'.text.make(),
+                                  height25,
+                                ],
+                              ),
+                        ),
+                        // 제품 정보
                         '제품 정보'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                         height25,
                         // 제품명
@@ -268,7 +258,6 @@ class ProductFormScreen extends HookWidget {
                   ),
                 ],
               ).pSymmetric(h: 20),
-
               // 제품 추가
               InkWell(
                 onTap: () async {
