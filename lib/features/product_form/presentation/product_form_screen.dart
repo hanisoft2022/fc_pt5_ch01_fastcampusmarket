@@ -1,9 +1,18 @@
-import 'package:fastcampusmarket/core/common/common.dart';
+import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/camera_button.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_category_dropdown.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_form_providers.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_image_picker.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_name_field.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_price_field.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_sale_field.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_stock_field.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_submit_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,14 +25,6 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:fastcampusmarket/features/product_form/presentation/product_form_providers.dart';
 
-final _formKey = GlobalKey<FormState>();
-
-const int maxPrice = 9999999;
-const int maxCount = 999;
-
-InputDecoration decoration(String name) =>
-    InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요.', border: OutlineInputBorder());
-
 class ProductFormScreen extends HookConsumerWidget {
   final Product? initialProduct;
 
@@ -31,8 +32,7 @@ class ProductFormScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoryListAsync = ref.watch(categoryListProvider);
-
+    // * 입력 컨트롤러
     final nameController = useTextEditingController(text: initialProduct?.name ?? '');
     final descriptionController = useTextEditingController(text: initialProduct?.description ?? '');
     final priceController = useTextEditingController(text: initialProduct?.price.toString() ?? '');
@@ -41,28 +41,23 @@ class ProductFormScreen extends HookConsumerWidget {
       text: initialProduct?.saleRate.toString() ?? '',
     );
 
+    // * UI 상태 변수
     final isSale = useState<bool>(initialProduct?.isSale ?? false);
+    final selectedCategory = useState<Category?>(null);
 
+    // * 이미지 관련 상태
     final image = useState<XFile?>(null);
     final imageData = useState<Uint8List?>(null);
     final String? imageUrl = initialProduct?.imageUrl;
 
-    final selectedCategory = useState<Category?>(null);
+    // * 카테고리 목록(비동기)
+    final categoryListAsync = ref.watch(categoryListProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: '상품 추가'.text.make(),
         actions: [
-          IconButton(
-            onPressed: () async {
-              final picked = await ImagePicker().pickImage(source: ImageSource.camera);
-
-              if (picked != null) {
-                image.value = picked;
-              }
-            },
-            icon: Icon(Icons.camera_alt_outlined),
-          ),
+          CameraButton(image: image, imageData: imageData),
           TextButton.icon(
             label: '일괄등록'.text.make(),
             onPressed: () {
@@ -99,173 +94,69 @@ class ProductFormScreen extends HookConsumerWidget {
           width: double.infinity,
           child: Column(
             children: [
+              // 이미지, 카테고리, 제품 정보 입력란
               Column(
                 children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () async {
-                      image.value = await ImagePicker().pickImage(source: ImageSource.gallery);
-                      imageData.value = await image.value!.readAsBytes();
-                    },
-                    child:
-                        imageData.value == null
-                            ? (imageUrl == null
-                                ? Ink(
-                                  height: context.screenWidth * 0.6,
-                                  width: context.screenWidth * 0.6,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: context.appColors.imageBoxBackgroundColor,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [Icon(Icons.add), '제품 이미지 추가'.text.make()],
-                                  ),
-                                )
-                                : ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    imageUrl,
-                                    height: context.screenWidth * 0.6,
-                                    width: context.screenWidth * 0.6,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ))
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.memory(
-                                imageData.value!,
-                                height: context.screenWidth * 0.6,
-                                width: context.screenWidth * 0.6,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                  ),
+                  // 이미지 선택
+                  ProductImagePicker(image: image, imageData: imageData, imageUrl: imageUrl),
                   height20,
+                  // 카테고리, 제품 정보 입력란
                   Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // 카테고리 선택
+                        '카테고리 선택'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
+                        height25,
                         categoryListAsync.when(
                           loading: () => Center(child: CircularProgressIndicator()),
                           error: (error, stackTrace) => Center(child: Text(error.toString())),
-                          data:
-                              (categories) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  '카테고리 선택'.text.bold
-                                      .size(context.textTheme.titleLarge!.fontSize)
-                                      .make(),
-                                  height25,
-                                  categories.isNotEmpty
-                                      ? DropdownMenu<Category>(
-                                        menuHeight: 300,
-                                        expandedInsets: EdgeInsets.zero,
-                                        initialSelection: selectedCategory.value,
-                                        onSelected: (Category? value) {
-                                          selectedCategory.value = value;
-                                        },
-                                        dropdownMenuEntries:
-                                            categories
-                                                .map(
-                                                  (Category category) =>
-                                                      DropdownMenuEntry<Category>(
-                                                        value: category,
-                                                        label: category.name,
-                                                      ),
-                                                )
-                                                .toList(),
-                                      )
-                                      : '선택할 수 있는 카테고리 없음.'.text.make(),
-                                  height25,
-                                ],
-                              ),
+                          data: (categories) {
+                            return ProductCategoryDropdown(
+                              categories: categories,
+                              selectedCategory: selectedCategory.value,
+                              onSelected: (Category? value) {
+                                selectedCategory.value = value;
+                              },
+                            );
+                          },
                         ),
+                        height25,
                         // 제품 정보
                         '제품 정보'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                         height25,
                         // 제품명
-                        TextFormField(
-                          controller: nameController,
-                          decoration: decoration('제품명'),
-                          validator: (value) => Validators.requiredValidator(value, '제품명'),
-                          textInputAction: TextInputAction.next,
-                        ),
+                        ProductNameField(nameController: nameController),
                         height15,
                         // 제품 설명
-                        TextFormField(
-                          controller: descriptionController,
-                          decoration: decoration('제품 설명').copyWith(alignLabelWithHint: true),
-                          validator: (value) => Validators.requiredValidator(value, '제품 설명'),
-                          minLines: 4,
-                          maxLines: null,
-                          maxLength: 255,
-                          keyboardType: TextInputType.multiline,
-                        ),
+                        ProductDescriptionField(descriptionController: descriptionController),
                         height15,
                         // 가격
-                        TextFormField(
-                          controller: priceController,
-                          decoration: decoration(
-                            '1개 가격',
-                          ).copyWith(suffix: '원'.text.make(), hintText: '최대 금액은 9,999,999원입니다.'),
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => Validators.maxNumberValidator(value, maxPrice),
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          textInputAction: TextInputAction.next,
-                        ),
+                        ProductPriceField(priceController: priceController),
                         height15,
                         // 수량
-                        TextFormField(
-                          controller: stockController,
-                          decoration: decoration(
-                            '수량',
-                          ).copyWith(suffix: '개'.text.make(), hintText: '최대 수량은 $maxCount개입니다.'),
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => Validators.maxNumberValidator(value, maxCount),
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          textInputAction: TextInputAction.next,
-                        ),
+                        ProductStockField(stockController: stockController),
                         height15,
-
-                        // 할인여부
-                        SwitchListTile.adaptive(
-                          contentPadding: EdgeInsets.zero,
-                          title: '할인 여부'.text.make(),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          value: isSale.value,
-                          onChanged: (value) => isSale.value = value,
+                        // 할인
+                        ProductSaleField(
+                          isSale: isSale.value,
+                          onSaleChanged: (value) => isSale.value = value,
+                          salePercentController: salePercentController,
                         ),
-                        height15,
-                        if (isSale.value)
-                          // 할인율
-                          TextFormField(
-                            controller: salePercentController,
-                            decoration: decoration(
-                              '할인율',
-                            ).copyWith(hintText: '최대 할인율은 100%입니다.', suffix: '%'.text.make()),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value) => Validators.maxNumberValidator(value, 100),
-                          ),
                         height15,
                       ],
                     ),
                   ),
                 ],
               ).pSymmetric(h: 20),
-              // 제품 추가
-              InkWell(
-                onTap: () async {
+              // 제품 추가 버튼
+              ProductSubmitButton(
+                onSubmit: () async {
                   if (imageData.value == null && imageUrl == null) {
                     CustomSnackBar.alertSnackBar(context, '제품 이미지를 추가해주세요.');
                     return;
                   }
-
                   if (initialProduct == null) {
                     await ProductApi.addProduct(
                       Product(
@@ -299,16 +190,7 @@ class ProductFormScreen extends HookConsumerWidget {
                     context.goNamed(SellerRoute.name);
                   }
                 },
-                child: Ink(
-                  height: 50 + context.bottomPadding,
-                  color: Colors.orange,
-                  child: Center(
-                    child:
-                        initialProduct == null
-                            ? '제품 추가'.text.bold.size(context.textTheme.titleLarge!.fontSize).make()
-                            : '제품 수정'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
-                  ),
-                ),
+                isEdit: initialProduct != null,
               ),
             ],
           ),
@@ -317,3 +199,11 @@ class ProductFormScreen extends HookConsumerWidget {
     );
   }
 }
+
+final _formKey = GlobalKey<FormState>();
+
+const int maxPrice = 9999999;
+const int maxCount = 999;
+
+InputDecoration decoration(String name) =>
+    InputDecoration(labelText: name, hintText: '$name을(를) 입력하세요.', border: OutlineInputBorder());

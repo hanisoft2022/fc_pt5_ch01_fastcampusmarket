@@ -2,7 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fastcampusmarket/core/common/utils/image_compressor.dart';
+import 'package:fastcampusmarket/common/utils/image_utils.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:firebase_storage/firebase_storage.dart';

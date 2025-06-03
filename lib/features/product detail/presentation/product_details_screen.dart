@@ -1,5 +1,5 @@
-import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
-import 'package:fastcampusmarket/core/common/extensions/extensions.dart';
+import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/core/extensions/context.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/review_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';

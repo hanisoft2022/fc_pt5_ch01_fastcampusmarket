@@ -1,5 +1,5 @@
-import 'package:fastcampusmarket/core/common/extensions/num_extensions.dart';
-import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
+import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
@@ -21,7 +21,6 @@ class SellerScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchBarTextEditingController = useTextEditingController();
     final categoryTextEditingController = useTextEditingController();
-
     final productListAsync = ref.watch(productListProvider);
 
     return Column(

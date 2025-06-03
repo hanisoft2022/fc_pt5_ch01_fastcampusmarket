@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/core/common/widgets/height_width_widgets.dart';
+import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:flutter/material.dart';
 
 abstract class CustomSnackBar {
