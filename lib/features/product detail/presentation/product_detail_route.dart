@@ -4,12 +4,15 @@ import 'package:go_router/go_router.dart';
 
 abstract class ProductDetailRoute {
   static const name = 'productDetail';
-  static const path = '/product-detail';
+  static const path = '/product-detail/:id';
 
   static GoRoute route = GoRoute(
     name: name,
     path: path,
     parentNavigatorKey: GoRouterKeys.rootNavigatorKey,
-    builder: (context, state) => ProductDetailsScreen(),
+    builder: (context, state) {
+      final String productId = state.pathParameters['id']!;
+      return ProductDetailsScreen(productId: productId);
+    },
   );
 }

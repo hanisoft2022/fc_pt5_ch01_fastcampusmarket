@@ -1,32 +1,46 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/extensions/context.dart';
+import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
+import 'package:fastcampusmarket/features/feed/presentation/products_provider.dart';
+import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/review_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+class ProductDetailsScreen extends ConsumerWidget {
+  const ProductDetailsScreen({super.key, required this.productId});
+
+  final String productId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsAsync = ref.watch(saleProductsProvider);
+    final Product product = productsAsync.value!.firstWhere((element) => element.id == productId);
+
     return Scaffold(
-      appBar: AppBar(title: 'Product Details'.text.make()),
+      appBar: AppBar(title: product.name.text.make()),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               width: double.infinity,
               height: 300,
-              decoration: BoxDecoration(color: Colors.orange),
-              child: Align(
-                alignment: Alignment(0, -0.85),
-                child: Container(
-                  width: 80,
-                  height: 40,
-                  color: Colors.red,
-                  child: Center(child: '할인중'.text.bold.color(Colors.white).make()),
-                ),
+              decoration: BoxDecoration(
+                image: DecorationImage(image: NetworkImage(product.imageUrl!), fit: BoxFit.cover),
               ),
+              child:
+                  product.isSale
+                      ? Align(
+                        alignment: Alignment(0, -0.85),
+                        child: Container(
+                          width: 80,
+                          height: 40,
+                          color: Colors.red,
+                          child: Center(child: '할인중'.text.bold.color(Colors.white).make()),
+                        ),
+                      )
+                      : null,
             ),
             height10,
             Column(
@@ -35,7 +49,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    '패캠 플러터'.text.bold.textStyle(context.textTheme.headlineMedium).make(),
+                    product.name.text.bold.textStyle(context.textTheme.headlineMedium).make(),
                     MenuAnchor(
                       alignmentOffset: Offset(-50, 0),
                       builder:
@@ -65,12 +79,12 @@ class ProductDetailsScreen extends StatelessWidget {
                 height15,
                 '제품 상세 정보'.text.bold.textStyle(context.textTheme.titleLarge).make(),
                 height10,
-                '상세 정보. 상세 정보. 상세 정보. 상세 정보. 상세 정보. 상세 정보. 상세 정보. 상세 정보. 상세 정보.'.text.make(),
+                product.description.text.make(),
                 height15,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    '1,000원'.text.bold.make(),
+                    product.price.toWon().text.bold.make(),
                     Row(
                       children: [
                         Icon(Icons.star, color: context.appColors.ratingStarColor),

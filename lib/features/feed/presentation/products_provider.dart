@@ -6,6 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'products_provider.g.dart';
 
 @riverpod
-Future<List<Product>> products(Ref ref) async {
-  return ProductApi.fetchProducts();
+Future<List<Product>> saleProducts(Ref ref) async {
+  return ProductApi.fetchSaleProducts();
 }

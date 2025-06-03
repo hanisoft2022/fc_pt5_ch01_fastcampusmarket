@@ -19,13 +19,13 @@ class FeedScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = usePageController(initialPage: 0);
-    final productsAsync = ref.watch(productsProvider);
     final categoryAsync = ref.watch(categoriesProvider);
+    final productsAsync = ref.watch(saleProductsProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
-        final _ = await ref.refresh(productsProvider.future);
         final _ = await ref.refresh(categoriesProvider.future);
+        final _ = await ref.refresh(saleProductsProvider.future);
       },
       child: ListView(
         children: [
@@ -93,7 +93,7 @@ class FeedScreen extends HookConsumerWidget {
               Spacer(),
               TextButton(
                 onPressed: () async {
-                  final _ = await ref.refresh(productsProvider.future);
+                  final _ = await ref.refresh(saleProductsProvider.future);
                 },
                 child: '새로고침'.text.make(),
               ),
@@ -110,7 +110,11 @@ class FeedScreen extends HookConsumerWidget {
                     itemBuilder: (context, index) {
                       final item = products[index];
                       return GestureDetector(
-                        onTap: () => context.goNamed(ProductDetailRoute.name),
+                        onTap:
+                            () => context.goNamed(
+                              ProductDetailRoute.name,
+                              pathParameters: {'id': item.id.toString()},
+                            ),
                         child: SizedBox(
                           width: 140,
                           child: Column(
