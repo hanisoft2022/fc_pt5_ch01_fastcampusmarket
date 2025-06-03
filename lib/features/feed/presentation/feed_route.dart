@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/features/cart/cart_route.dart';
+import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
 import 'package:fastcampusmarket/features/feed/presentation/feed_screen.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 import 'package:go_router/go_router.dart';

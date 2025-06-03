@@ -1,8 +1,9 @@
+import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/extensions/context.dart';
 import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
+import 'package:fastcampusmarket/features/cart/presentation/cart_controller.dart';
 import 'package:fastcampusmarket/features/feed/presentation/products_provider.dart';
-import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/review_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,7 +17,8 @@ class ProductDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(saleProductsProvider);
-    final Product product = productsAsync.value!.firstWhere((element) => element.id == productId);
+    final product = productsAsync.value!.firstWhere((element) => element.id == productId);
+    final cartState = ref.watch(cartControllerProvider);
 
     return Scaffold(
       appBar: AppBar(title: product.name.text.make()),
@@ -124,12 +126,36 @@ class ProductDetailsScreen extends ConsumerWidget {
               ],
             ).pSymmetric(h: 15),
             InkWell(
-              onTap: () {},
+              onTap:
+                  cartState.isLoading
+                      ? null
+                      : () async {
+                        try {
+                          await ref.read(cartControllerProvider.notifier).addToCart(product);
+
+                          if (context.mounted) {
+                            CustomSnackBar.successSnackBar(
+                              context,
+                              '${product.name}을 장바구니에 담았습니다.',
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            CustomSnackBar.failureSnackBar(
+                              context,
+                              '${product.name}을 장바구니 담지 못했습니다.',
+                            );
+                          }
+                        }
+                      },
               child: Ink(
                 height: 50 + context.bottomPadding,
                 color: Colors.orange,
                 child: Center(
-                  child: '장바구니'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
+                  child:
+                      cartState.isLoading
+                          ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                          : '장바구니 담기'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                 ),
               ),
             ),
