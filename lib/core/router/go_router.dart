@@ -1,3 +1,5 @@
+import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
+import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -38,6 +40,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+      CartRoute.route,
+      ProductDetailRoute.route,
     ],
     redirect: (context, state) {
       final currentPath = state.fullPath;

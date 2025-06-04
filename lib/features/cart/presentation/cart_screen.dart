@@ -1,60 +1,94 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/common/widgets/small_ink_well_icon_button_widget.dart';
 import 'package:fastcampusmarket/core/extensions/context.dart';
+import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
+import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
+import 'package:fastcampusmarket/features/cart/presentation/cart_controller.dart';
+import 'package:fastcampusmarket/features/cart/presentation/cart_items_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class CartScreen extends StatelessWidget {
-  final String uid;
-
-  const CartScreen({super.key, required this.uid});
+class CartScreen extends ConsumerWidget {
+  const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final User user = FirebaseAuth.instance.currentUser!;
+    final AsyncValue<List<CartItem>> cartItems = ref.watch(cartItemsProvider);
+
     return Scaffold(
-      appBar: AppBar(title: '장바구니'.text.make()),
+      appBar: AppBar(title: '${user.displayName}님의 장바구니'.text.make()),
       body: Column(
         children: [
           Expanded(
-            child: ListView.separated(
-              itemCount: 10,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  height: 100,
-                  child: Row(
-                    children: [
-                      Container(width: 100, height: 100, color: Colors.redAccent),
-                      width20,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            child: cartItems.when(
+              data:
+                  (data) => ListView.separated(
+                    itemCount: data.length,
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemBuilder: (context, index) {
+                      final CartItem item = data[index];
+                      return SizedBox(
+                        height: 100,
+                        child: Row(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                '상품 이름'.text.make(),
-                                smallInkWellIconButtonWidget(Icons.delete),
-                              ],
-                            ),
-                            '100000'.text.make(),
-                            Spacer(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                smallInkWellIconButtonWidget(Icons.remove_circle_outline),
-                                '1'.text.make().pSymmetric(h: 10),
-                                smallInkWellIconButtonWidget(Icons.add_circle_outline),
-                              ],
+                            Container(width: 100, height: 100, color: Colors.redAccent),
+                            width20,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      item.product!.name.text.make(),
+                                      SmallInkWellIconButtonWidget(
+                                        Icons.delete,
+                                        onTap: () async {
+                                          await ref
+                                              .read(cartControllerProvider.notifier)
+                                              .removeFromCart(item.product!);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  item.product!.price.toWon().text.make(),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      SmallInkWellIconButtonWidget(
+                                        Icons.remove_circle_outline,
+                                        onTap: () async {
+                                          await ref
+                                              .read(cartControllerProvider.notifier)
+                                              .decreaseQuantity(item.product!);
+                                        },
+                                      ),
+                                      item.quantity!.text.make().pSymmetric(h: 10),
+                                      SmallInkWellIconButtonWidget(
+                                        Icons.add_circle_outline,
+                                        onTap: () async {
+                                          await ref
+                                              .read(cartControllerProvider.notifier)
+                                              .increaseQuantity(item.product!);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      ).p(10);
+                    },
                   ),
-                ).p(10);
-              },
+              error: (error, stackTrace) => Center(child: error.toString().text.make()),
+              loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ),
           Container(

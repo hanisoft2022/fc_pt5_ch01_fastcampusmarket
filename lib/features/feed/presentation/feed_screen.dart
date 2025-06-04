@@ -111,7 +111,7 @@ class FeedScreen extends HookConsumerWidget {
                       final item = products[index];
                       return GestureDetector(
                         onTap:
-                            () => context.goNamed(
+                            () => context.pushNamed(
                               ProductDetailRoute.name,
                               pathParameters: {'id': item.id.toString()},
                             ),

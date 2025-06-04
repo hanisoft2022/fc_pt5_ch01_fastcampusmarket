@@ -131,13 +131,21 @@ class ProductDetailsScreen extends ConsumerWidget {
                       ? null
                       : () async {
                         try {
-                          await ref.read(cartControllerProvider.notifier).addToCart(product);
+                          final bool isAdded = await ref
+                              .read(cartControllerProvider.notifier)
+                              .addToCart(product);
 
-                          if (context.mounted) {
-                            CustomSnackBar.successSnackBar(
-                              context,
-                              '${product.name}을 장바구니에 담았습니다.',
-                            );
+                          if (isAdded) {
+                            if (context.mounted) {
+                              CustomSnackBar.successSnackBar(
+                                context,
+                                '${product.name}을 장바구니에 담았습니다.',
+                              );
+                            }
+                          } else {
+                            if (context.mounted) {
+                              CustomSnackBar.alertSnackBar(context, '이미 장바구니에 상품이 있습니다.');
+                            }
                           }
                         } catch (e) {
                           if (context.mounted) {

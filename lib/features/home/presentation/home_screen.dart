@@ -1,7 +1,9 @@
 import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
+import 'package:fastcampusmarket/features/auth/presentation/auth_route.dart';
 import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
 import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -51,11 +53,17 @@ class HomeScreen extends ConsumerWidget {
         ),
         floatingActionButton: switch (currentIndex) {
           0 => FloatingActionButton(
-            onPressed: () => context.goNamed(CartRoute.name),
+            onPressed: () {
+              if (FirebaseAuth.instance.currentUser == null) {
+                context.goNamed(LoginRoute.name);
+                return;
+              }
+              context.pushNamed(CartRoute.name);
+            },
             child: Icon(Icons.shopping_cart),
           ),
           1 => FloatingActionButton(
-            onPressed: () => context.goNamed(ProductFormRoute.name),
+            onPressed: () => context.pushNamed(ProductFormRoute.name),
             child: Icon(Icons.add),
           ),
           _ => FloatingActionButton(onPressed: () {}, child: null),
