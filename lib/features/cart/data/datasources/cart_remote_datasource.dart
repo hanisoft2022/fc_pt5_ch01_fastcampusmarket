@@ -66,8 +66,12 @@ class CartApi {
       final snapshot = await transaction.get(cartItemRef);
 
       final existing = snapshot.data()!;
-      final updated = existing.copyWith(quantity: (existing.quantity ?? 1) + 1);
-      transaction.set(cartItemRef, updated);
+
+      final cartItem = snapshot.data()!;
+      if (cartItem.quantity! < 99) {
+        final updated = existing.copyWith(quantity: existing.quantity! + 1);
+        transaction.set(cartItemRef, updated);
+      }
     });
   }
 
@@ -92,7 +96,7 @@ class CartApi {
       final cartItem = snapshot.data()!;
       if (cartItem.quantity != 1) {
         final existing = snapshot.data()!;
-        final updated = existing.copyWith(quantity: (existing.quantity ?? 1) - 1);
+        final updated = existing.copyWith(quantity: existing.quantity! - 1);
         transaction.set(cartItemRef, updated);
       } else {
         return;

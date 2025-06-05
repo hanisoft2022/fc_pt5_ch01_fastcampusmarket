@@ -25,3 +25,13 @@ abstract class Product with _$Product {
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);
 }
+
+extension ProductExtension on Product {
+  double get salePrice {
+    if (isSale && saleRate != null) {
+      // 할인율이 0.2라면 20% 할인
+      return price * (1 - saleRate!);
+    }
+    return price.toDouble();
+  }
+}

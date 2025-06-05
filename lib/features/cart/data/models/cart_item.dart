@@ -19,4 +19,18 @@ abstract class CartItem with _$CartItem {
   }) = _CartItem;
 
   factory CartItem.fromJson(Map<String, dynamic> json) => _$CartItemFromJson(json);
+
+  double get totalPrice {
+    // product가 null일 수 있으니 null 체크
+    if (product == null) return 0;
+    return product!.salePrice * (quantity ?? 1);
+  }
+}
+
+extension CartItemExtension on CartItem {
+  double get totalPrice {
+    // product가 null일 수 있으니 null 체크
+    if (product == null) return 0;
+    return product!.salePrice * (quantity ?? 1);
+  }
 }
