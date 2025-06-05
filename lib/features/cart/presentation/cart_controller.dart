@@ -7,7 +7,7 @@ part 'cart_controller.g.dart';
 @riverpod
 class CartController extends _$CartController {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build() async {}
 
   // * CREATE
   Future<bool> addToCart(Product product) async {
@@ -37,5 +37,5 @@ class CartController extends _$CartController {
     await CartApi.removeFromCart(product);
   }
 
-  // // * DELETE
+  // * DELETE
 }

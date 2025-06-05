@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/features/cart/presentation/cart_screen.dart';
+import 'package:fastcampusmarket/features/cart/presentation/screen/cart_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/router.dart';

@@ -23,14 +23,7 @@ abstract class CartItem with _$CartItem {
   double get totalPrice {
     // product가 null일 수 있으니 null 체크
     if (product == null) return 0;
-    return product!.salePrice * (quantity ?? 1);
-  }
-}
-
-extension CartItemExtension on CartItem {
-  double get totalPrice {
-    // product가 null일 수 있으니 null 체크
-    if (product == null) return 0;
+    if (product!.isSale == false) return product!.price * (quantity ?? 1);
     return product!.salePrice * (quantity ?? 1);
   }
 }

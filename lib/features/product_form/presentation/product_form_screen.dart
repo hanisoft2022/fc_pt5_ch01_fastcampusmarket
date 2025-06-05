@@ -38,7 +38,7 @@ class ProductFormScreen extends HookConsumerWidget {
     final priceController = useTextEditingController(text: initialProduct?.price.toString() ?? '');
     final stockController = useTextEditingController(text: initialProduct?.stock.toString() ?? '');
     final salePercentController = useTextEditingController(
-      text: initialProduct?.saleRate.toString() ?? '',
+      text: initialProduct?.discountRate.toString() ?? '',
     );
 
     // * UI 상태 변수
@@ -71,9 +71,9 @@ class ProductFormScreen extends HookConsumerWidget {
                     name: nameController.text,
                     description: descriptionController.text,
                     category: selectedCategory.value!,
-                    price: int.parse(priceController.text),
+                    price: double.parse(priceController.text),
                     isSale: isSale.value,
-                    saleRate: isSale.value ? double.parse(salePercentController.text) : null,
+                    discountRate: isSale.value ? double.parse(salePercentController.text) : null,
                     stock: int.parse(stockController.text),
                     imageUrl: null,
                     createdAt: null,
@@ -164,9 +164,10 @@ class ProductFormScreen extends HookConsumerWidget {
                         name: nameController.text,
                         description: descriptionController.text,
                         category: selectedCategory.value!,
-                        price: int.parse(priceController.text),
+                        price: double.parse(priceController.text),
                         isSale: isSale.value,
-                        saleRate: isSale.value ? double.parse(salePercentController.text) : null,
+                        discountRate:
+                            isSale.value ? double.parse(salePercentController.text) : null,
                         stock: int.parse(stockController.text),
                         imageUrl: null,
                         createdAt: null,
@@ -179,9 +180,10 @@ class ProductFormScreen extends HookConsumerWidget {
                         name: nameController.text,
                         description: descriptionController.text,
                         category: selectedCategory.value!,
-                        price: int.parse(priceController.text),
+                        price: double.parse(priceController.text),
                         isSale: isSale.value,
-                        saleRate: isSale.value ? double.parse(salePercentController.text) : null,
+                        discountRate:
+                            isSale.value ? double.parse(salePercentController.text) : null,
                         stock: int.parse(stockController.text),
                       ),
                     );

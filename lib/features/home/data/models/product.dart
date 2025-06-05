@@ -9,28 +9,28 @@ part 'product.g.dart';
 
 @freezed
 abstract class Product with _$Product {
+  const Product._();
+
   @JsonSerializable(explicitToJson: true)
   const factory Product({
     String? id,
     required String name,
     required String description,
     required Category category,
-    required int price,
+    required double price,
     required int stock,
     required bool isSale,
-    double? saleRate,
+    double? discountRate,
     String? imageUrl,
     @CreatedAtField() DateTime? createdAt,
   }) = _Product;
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);
-}
 
-extension ProductExtension on Product {
   double get salePrice {
-    if (isSale && saleRate != null) {
+    if (isSale && discountRate != null) {
       // 할인율이 0.2라면 20% 할인
-      return price * (1 - saleRate!);
+      return price * (1 - discountRate! / 100);
     }
     return price.toDouble();
   }

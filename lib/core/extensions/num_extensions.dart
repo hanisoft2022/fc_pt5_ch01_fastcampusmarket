@@ -31,4 +31,6 @@ extension DoubleExtensions on double {
   String toComma() {
     return decimalFormat.format(this);
   }
+
+  String toWon() => "${toComma()}원";
 }
