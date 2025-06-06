@@ -40,7 +40,7 @@ class CartItemTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.product!.name),
+                    item.product!.name.text.make(),
                     IconButton(icon: Icon(Icons.delete), onPressed: onRemove),
                   ],
                 ),

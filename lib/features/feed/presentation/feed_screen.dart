@@ -131,7 +131,7 @@ class FeedScreen extends HookConsumerWidget {
                               ),
                               height5,
                               '상품명: ${item.name}'.text.bold.ellipsis.make(),
-                              '할인율: ${item.discountRate!}%'.text.ellipsis.make(),
+                              '할인율: ${item.discountRate}%'.text.ellipsis.make(),
                               '할인 전 가격: ${item.price.toWon()}'.text.lineThrough.ellipsis.make(),
                               '할인가: ${(item.price * (1 - item.discountRate! / 100)).toInt().toWon()}'
                                   .text

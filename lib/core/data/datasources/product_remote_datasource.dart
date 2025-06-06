@@ -151,7 +151,7 @@ class ProductApi {
         );
 
     final querySnapshot =
-        await collectionRef.where('isSale', isEqualTo: true).orderBy('saleRate').get();
+        await collectionRef.where('isSale', isEqualTo: true).orderBy('discountRate').get();
 
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
