@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
 import 'package:fastcampusmarket/common/utils/image_utils.dart';
-import 'package:fastcampusmarket/features/home/data/models/category.dart';
-import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:fastcampusmarket/features/home/data/models/product_field.dart';
+import 'package:fastcampusmarket/features/home/models/category.dart';
+import 'package:fastcampusmarket/features/home/models/product.dart';
+import 'package:fastcampusmarket/features/home/models/product_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductApi {

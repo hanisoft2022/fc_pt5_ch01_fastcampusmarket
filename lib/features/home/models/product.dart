@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:fastcampusmarket/common/utils/converters.dart';
-import 'package:fastcampusmarket/features/home/data/models/category.dart';
+import 'package:fastcampusmarket/features/home/models/category.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product.freezed.dart';

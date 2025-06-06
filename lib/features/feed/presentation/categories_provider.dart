@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
-import 'package:fastcampusmarket/features/home/data/models/category.dart';
+import 'package:fastcampusmarket/features/home/models/category.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,6 +1,6 @@
 // * CATEGORY
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fastcampusmarket/features/home/data/models/category.dart';
+import 'package:fastcampusmarket/features/home/models/category.dart';
 
 class CategoryApi {
   // * CREATE

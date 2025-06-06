@@ -16,15 +16,19 @@ class AuthNotifier extends _$AuthNotifier {
   // * 이메일-비밀번호 로그인
   Future<AuthResult> signInWithEmailAndPassword(email, password) async {
     final AuthResult authResult = await AuthApi.signInWithEmailAndPassword(email, password);
-    state = true;
+    if (authResult.isSuccess) {
+      state = true;
+    }
     return authResult;
   }
 
   // * 구글 로그인
-  Future<(String, bool)> signInWithGoogle() async {
-    final (String, bool) messageWithBool = await AuthApi.signInWithGoogle();
-    state = true;
-    return messageWithBool;
+  Future<AuthResult> signInWithGoogle() async {
+    final AuthResult authResult = await AuthApi.signInWithGoogle();
+    if (authResult.isSuccess) {
+      state = true;
+    }
+    return authResult;
   }
 
   // * 로그아웃

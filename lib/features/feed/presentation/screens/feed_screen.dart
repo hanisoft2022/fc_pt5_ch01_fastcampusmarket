@@ -3,7 +3,7 @@ import 'package:fastcampusmarket/core/extensions/context.dart';
 import 'package:fastcampusmarket/features/feed/presentation/categories_provider.dart';
 import 'package:fastcampusmarket/features/feed/presentation/products_provider.dart';
 import 'package:fastcampusmarket/features/feed/presentation/widgets/feed_sale_item_tile.dart';
-import 'package:fastcampusmarket/features/home/data/models/product.dart';
+import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';

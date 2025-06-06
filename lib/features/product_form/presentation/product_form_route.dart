@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/router/router.dart';
-import 'package:fastcampusmarket/features/home/data/models/product.dart';
+import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:fastcampusmarket/features/product_form/presentation/product_form_screen.dart';
 import 'package:go_router/go_router.dart';
 

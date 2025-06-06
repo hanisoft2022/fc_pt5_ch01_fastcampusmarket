@@ -161,10 +161,10 @@ class LoginScreen extends HookConsumerWidget {
                       ),
                       child: InkWell(
                         onTap: () async {
-                          final (String, bool) messageWithBool =
+                          final AuthResult authResult =
                               await ref.watch(authNotifierProvider.notifier).signInWithGoogle();
 
-                          if (messageWithBool.$2) {
+                          if (authResult.isSuccess) {
                             if (context.mounted) {
                               CustomSnackBar.successSnackBar(context, 'Google 로그인에 성공했습니다.');
 

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
+import 'package:fastcampusmarket/features/auth/models/app_user.dart';
 import 'package:fastcampusmarket/features/auth/models/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,62 +28,76 @@ class AuthApi {
   }
 
   // * 구글 로그인
-  static Future<(String, bool)> signInWithGoogle() async {
+  static Future<AuthResult> signInWithGoogle() async {
     try {
-      // Google 로그인 플로우 시작
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        // 사용자가 로그인 창을 닫은 경우
-
-        return ('사용자가 창 그냥 닫음', false);
+        return const AuthResult(
+          isSuccess: false,
+          message: '사용자가 로그인 창을 닫았습니다.',
+          errorCode: 'sign_in_cancelled',
+        );
       }
 
-      // 인증 정보 가져오기
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      // Firebase credential 생성
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-
-      // Firebase에 credential로 로그인 시도
       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
       final user = userCredential.user;
 
-      // Firestore에 사용자 정보 저장 (최초 로그인 시에만)
       if (user != null) {
-        final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final userDoc = FirebaseFirestore.instance
+            .collection(FirestoreCollections.users)
+            .withConverter(
+              fromFirestore: (snapshot, options) => AppUser.fromJson(snapshot.data()!),
+              toFirestore: (value, options) => value.toJson(),
+            )
+            .doc(user.uid);
 
+        // 읽기
         final docSnapshot = await userDoc.get();
+
+        // 쓰기 (최초 생성 시)
         if (!docSnapshot.exists) {
-          await userDoc.set({
-            'email': user.email,
-            'displayName': user.displayName,
-            'photoURL': user.photoURL,
-            'createdAt': Timestamp.now(),
-            'provider': 'google',
-          });
+          await userDoc.set(
+            AppUser(
+              uid: user.uid,
+              email: user.email ?? '',
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              createdAt: DateTime.now(),
+              provider: 'google',
+            ),
+          );
         }
       }
 
-      return ('로그인 성공', true);
+      return AuthResult(isSuccess: true, message: '로그인 성공');
     } on FirebaseAuthException catch (e) {
-      String message;
-      if (e.code == 'account-exists-with-different-credential') {
-        message = '이미 다른 인증 방식으로 가입된 계정입니다.';
-        return (message, false);
-      } else if (e.code == 'invalid-credential') {
-        message = '인증 정보가 유효하지 않습니다. 다시 시도해주세요.';
-        return (message, false);
-      } else {
-        message = 'Google 로그인 중 오류가 발생했습니다: ${e.message}';
-        return (message, false);
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          return const AuthResult(
+            isSuccess: false,
+            message: '이미 다른 인증 방식으로 가입된 계정입니다.',
+            errorCode: 'account-exists-with-different-credential',
+          );
+        case 'invalid-credential':
+          return const AuthResult(
+            isSuccess: false,
+            message: '인증 정보가 유효하지 않습니다. 다시 시도해주세요.',
+            errorCode: 'invalid-credential',
+          );
+        default:
+          return AuthResult(
+            isSuccess: false,
+            message: 'Google 로그인 중 오류가 발생했습니다: ${e.message}',
+            errorCode: e.code,
+          );
       }
     } catch (e) {
-      // 기타 예외 처리
-      return ('로그인 중 오류가 발생했습니다', false);
+      return const AuthResult(isSuccess: false, message: '로그인 중 알 수 없는 오류가 발생했습니다.');
     }
   }
 

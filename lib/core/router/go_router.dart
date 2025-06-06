@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
+import 'package:fastcampusmarket/features/home/views/home_screen.dart';
 
 import 'package:fastcampusmarket/core/router/router.dart';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
+import 'package:riverpod/riverpod.dart';
 
 abstract class GoRouterKeys {
   static final rootNavigatorKey = GlobalKey<NavigatorState>();

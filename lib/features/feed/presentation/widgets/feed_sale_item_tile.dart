@@ -1,6 +1,6 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
-import 'package:fastcampusmarket/features/home/data/models/product.dart';
+import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
