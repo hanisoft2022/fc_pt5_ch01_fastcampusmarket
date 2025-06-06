@@ -1,12 +1,14 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
+import 'package:fastcampusmarket/features/feed/presentation/category_controller.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
 import 'package:fastcampusmarket/features/seller/presentation/seller_providers.dart';
+import 'package:fastcampusmarket/features/seller/widget/product_search_bar.dart';
 import 'package:fastcampusmarket/features/seller/widget/seller_item_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -27,22 +29,13 @@ class SellerScreen extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SearchBar(
-          hintText: '상품명 입력',
-          controller: searchBarTextEditingController,
-          onChanged: (value) {
-            ref.read(searchQueryProvider.notifier).set(value);
+        ProductSearchBar(
+          searchBarTextEditingController: searchBarTextEditingController,
+          onChanged: (value) => ref.read(searchQueryProvider.notifier).set(value),
+          onClear: () {
+            searchBarTextEditingController.clear();
+            ref.read(searchQueryProvider.notifier).clear();
           },
-          leading: const Icon(Icons.search).pOnly(left: 10),
-          trailing: [
-            IconButton(
-              onPressed: () {
-                searchBarTextEditingController.clear();
-                ref.read(searchQueryProvider.notifier).clear();
-              },
-              icon: const Icon(Icons.clear),
-            ),
-          ],
         ),
         height15,
         Row(
@@ -70,9 +63,12 @@ class SellerScreen extends HookConsumerWidget {
                           TextButton(
                             onPressed: () async {
                               if (categoryTextEditingController.text.isNotEmpty) {
-                                final result = await CategoryApi.addCategory(
-                                  Category(name: categoryTextEditingController.text),
-                                );
+                                final result = await ref
+                                    .read(categoryControllerProvider.notifier)
+                                    .addCategory(
+                                      Category(name: categoryTextEditingController.text),
+                                    );
+
                                 if (context.mounted) {
                                   if (result) {
                                     CustomSnackBar.successSnackBar(context, '카테고리 등록 성공!');

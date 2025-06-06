@@ -9,3 +9,8 @@ part 'products_provider.g.dart';
 Future<List<Product>> saleProducts(Ref ref) async {
   return ProductApi.fetchSaleProducts();
 }
+
+@riverpod
+Future<List<Product>> products(Ref ref) async {
+  return ProductApi.fetchProducts();
+}

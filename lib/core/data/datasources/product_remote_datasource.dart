@@ -130,21 +130,6 @@ class ProductApi {
   }
 
   // * READ
-  static Stream<QuerySnapshot<Product>> watchProducts(String query) {
-    final collectionRef = FirebaseFirestore.instance
-        .collection("products")
-        .withConverter<Product>(
-          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
-          toFirestore: (value, options) => value.toJson(),
-        );
-    if (query.isNotEmpty) {
-      return collectionRef.orderBy("name").startAt([query]).endAt(['$query\uf8ff']).snapshots();
-    }
-
-    return collectionRef.orderBy(ProductField.name.value).snapshots();
-  }
-
-  // * READ
   static Future<List<Product>> fetchSaleProducts() async {
     final collectionRef = FirebaseFirestore.instance
         .collection(FirestoreCollections.products)
@@ -160,6 +145,21 @@ class ProductApi {
             .get();
 
     return querySnapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  // * READ
+  static Stream<QuerySnapshot<Product>> watchProducts(String query) {
+    final collectionRef = FirebaseFirestore.instance
+        .collection("products")
+        .withConverter<Product>(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+    if (query.isNotEmpty) {
+      return collectionRef.orderBy("name").startAt([query]).endAt(['$query\uf8ff']).snapshots();
+    }
+
+    return collectionRef.orderBy(ProductField.name.value).snapshots();
   }
 
   // * UPDATE
