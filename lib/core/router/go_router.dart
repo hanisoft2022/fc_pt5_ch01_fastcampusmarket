@@ -1,5 +1,6 @@
 import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
+import 'package:fastcampusmarket/features/auth/presentation/sign_up/sign_up_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
