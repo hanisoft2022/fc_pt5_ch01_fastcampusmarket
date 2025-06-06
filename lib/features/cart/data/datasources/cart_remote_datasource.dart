@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
@@ -10,7 +11,7 @@ class CartApi {
     if (user == null) throw Exception('로그인이 필요합니다.');
 
     final cartItemRef = FirebaseFirestore.instance
-        .collection('carts')
+        .collection(FirestoreCollections.carts)
         .doc(user.uid)
         .collection('items')
         .doc(product.id)
@@ -53,7 +54,7 @@ class CartApi {
     if (user == null) throw Exception('로그인이 필요합니다.');
 
     final cartItemRef = FirebaseFirestore.instance
-        .collection('carts')
+        .collection(FirestoreCollections.carts)
         .doc(user.uid)
         .collection('items')
         .doc(product.id)

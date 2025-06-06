@@ -45,7 +45,7 @@ class CartItemTile extends StatelessWidget {
                     cartItem.product!.name.text.make(),
                     cartItem.product!.isSale
                         ? '할인중'.text.bold.color(Colors.red).make()
-                        : Container(),
+                        : '할인 안 함 ㅅㄱ'.text.bold.color(Colors.red).make(),
                     IconButton(icon: Icon(Icons.delete), onPressed: onRemove),
                   ],
                 ),
