@@ -8,6 +8,7 @@ class CustomThemeMode extends _$CustomThemeMode {
   @override
   ThemeMode build() => ThemeMode.light;
 
+  // * UPDATE
   void toggleTheme() {
     state = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
   }

@@ -1,6 +1,5 @@
-import 'package:fastcampusmarket/core/router/auth_provider.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
-import 'package:fastcampusmarket/features/auth/presentation/login/login_route.dart';
+import 'package:fastcampusmarket/features/auth/views/login_route.dart';
 import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
 import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,10 +32,7 @@ class HomeScreen extends ConsumerWidget {
               icon: const Icon(Icons.brightness_6),
             ),
             IconButton(
-              onPressed: () {
-                ref.read(isLoggedInProvider.notifier).state = false;
-                // context.goNamed(LoginRoute.name);
-              },
+              onPressed: () async => await FirebaseAuth.instance.signOut(),
               icon: Icon(Icons.logout),
             ),
           ],

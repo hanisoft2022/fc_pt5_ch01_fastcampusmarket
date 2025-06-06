@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../../../../core/theme/theme_mode_provider.dart';
+import '../../../core/theme/theme_mode_provider.dart';
 
 ButtonStyle get buttonStyle => ButtonStyle(
   minimumSize: WidgetStateProperty.all(const Size.fromHeight(50)),

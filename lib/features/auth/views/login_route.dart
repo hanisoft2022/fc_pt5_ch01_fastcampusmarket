@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/features/auth/presentation/login/login_screen.dart';
+import 'package:fastcampusmarket/features/auth/views/login_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginRoute {

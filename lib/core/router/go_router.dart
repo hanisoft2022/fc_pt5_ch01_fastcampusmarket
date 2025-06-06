@@ -1,6 +1,6 @@
 import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
-import 'package:fastcampusmarket/features/auth/presentation/sign_up/sign_up_route.dart';
+import 'package:fastcampusmarket/features/auth/views/sign_up_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -10,7 +10,7 @@ import 'package:fastcampusmarket/features/home/presentation/home_screen.dart';
 import 'package:fastcampusmarket/core/router/router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:fastcampusmarket/core/router/auth_provider.dart';
+import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
 
 abstract class GoRouterKeys {
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -19,7 +19,7 @@ abstract class GoRouterKeys {
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final isLoggedIn = ref.watch(isLoggedInProvider);
+  final bool isLoggedIn = ref.watch(authNotifierProvider);
 
   return GoRouter(
     navigatorKey: GoRouterKeys.rootNavigatorKey,
