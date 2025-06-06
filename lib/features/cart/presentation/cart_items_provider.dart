@@ -5,7 +5,6 @@ import 'package:fastcampusmarket/features/cart/data/datasources/cart_remote_data
 
 part 'cart_items_provider.g.dart';
 
-// 함수형 Provider로 생성 (코드 생성 사용)
 @riverpod
 Stream<List<CartItem>> cartItems(Ref ref) {
   return CartApi.watchCartItems();

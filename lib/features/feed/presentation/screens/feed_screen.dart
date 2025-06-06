@@ -1,8 +1,9 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/extensions/context.dart';
-import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
 import 'package:fastcampusmarket/features/feed/presentation/categories_provider.dart';
 import 'package:fastcampusmarket/features/feed/presentation/products_provider.dart';
+import 'package:fastcampusmarket/features/feed/presentation/widgets/feed_sale_item_tile.dart';
+import 'package:fastcampusmarket/features/home/data/models/product.dart';
 import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
 
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
@@ -108,39 +109,48 @@ class FeedScreen extends HookConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: products.length,
                     itemBuilder: (context, index) {
-                      final item = products[index];
-                      return GestureDetector(
+                      final Product product = products[index];
+                      return FeedSaleItemTile(
                         onTap:
                             () => context.pushNamed(
                               ProductDetailRoute.name,
-                              pathParameters: {'id': item.id.toString()},
+                              pathParameters: {'id': product.id as String},
                             ),
-                        child: SizedBox(
-                          width: 140,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  item.imageUrl!,
-                                  fit: BoxFit.cover,
-                                  width: 140,
-                                  height: 140,
-                                ),
-                              ),
-                              height5,
-                              '상품명: ${item.name}'.text.bold.ellipsis.make(),
-                              '할인율: ${item.discountRate}%'.text.ellipsis.make(),
-                              '할인 전 가격: ${item.price.toWon()}'.text.lineThrough.ellipsis.make(),
-                              '할인가: ${(item.price * (1 - item.discountRate! / 100)).toInt().toWon()}'
-                                  .text
-                                  .ellipsis
-                                  .make(),
-                            ],
-                          ).pOnly(right: 10),
-                        ),
+                        item: product,
                       );
+
+                      // GestureDetector(
+                      //   onTap:
+                      //       () => context.pushNamed(
+                      //         ProductDetailRoute.name,
+                      //         pathParameters: {'id': item.id.toString()},
+                      //       ),
+                      //   child: SizedBox(
+                      //     width: 140,
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         ClipRRect(
+                      //           borderRadius: BorderRadius.circular(10),
+                      //           child: Image.network(
+                      //             item.imageUrl!,
+                      //             fit: BoxFit.cover,
+                      //             width: 140,
+                      //             height: 140,
+                      //           ),
+                      //         ),
+                      //         height5,
+                      //         '상품명: ${item.name}'.text.bold.ellipsis.make(),
+                      //         '할인율: ${item.discountRate}%'.text.ellipsis.make(),
+                      //         '할인 전 가격: ${item.price.toWon()}'.text.lineThrough.ellipsis.make(),
+                      //         '할인가: ${(item.price * (1 - item.discountRate! / 100)).toInt().toWon()}'
+                      //             .text
+                      //             .ellipsis
+                      //             .make(),
+                      //       ],
+                      //     ).pOnly(right: 10),
+                      //   ),
+                      // );
                     },
                   ),
               loading: () => const Center(child: CircularProgressIndicator()),

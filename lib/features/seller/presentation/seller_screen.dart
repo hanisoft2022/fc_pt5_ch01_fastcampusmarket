@@ -1,12 +1,13 @@
-import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
+import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
 import 'package:fastcampusmarket/features/seller/presentation/seller_providers.dart';
+import 'package:fastcampusmarket/features/seller/widget/seller_item_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -109,83 +110,17 @@ class SellerScreen extends HookConsumerWidget {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     final Product product = data[index];
-                    return InkWell(
-                      onTap: () => CustomSnackBar.successSnackBar(context, '상품 id: ${product.id}'),
-                      child: SizedBox(
-                        height: 120,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                                child: Image.network(
-                                  product.imageUrl ??
-                                      'https://cdn.pixabay.com/photo/2012/04/18/00/07/silhouette-of-a-man-36181_1280.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                    return SellerItemTile(
+                      product: product,
+                      onTap:
+                          () => (
+                            context.pushNamed(
+                              ProductDetailRoute.name,
+                              pathParameters: {'id': product.id as String},
                             ),
-                            width15,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      product.name.text.make(),
-                                      MenuAnchor(
-                                        alignmentOffset: Offset(-50, 0),
-                                        builder: (context, controller, child) {
-                                          return InkWell(
-                                            borderRadius: BorderRadius.circular(8),
-                                            onTap: () {
-                                              if (controller.isOpen) {
-                                                controller.close();
-                                              } else {
-                                                controller.open();
-                                              }
-                                            },
-                                            child: Icon(Icons.more_vert),
-                                          );
-                                        },
-                                        menuChildren: [
-                                          MenuItemButton(
-                                            child: Text('삭제'),
-                                            onPressed: () => ProductApi.deleteProduct(product),
-                                          ),
-                                          MenuItemButton(
-                                            child: Text('수정'),
-                                            onPressed: () {
-                                              context.goNamed(
-                                                ProductFormRoute.name,
-                                                extra: product,
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  height5,
-                                  (product.price.toWon()).text.make(),
-                                  height5,
-                                  switch (product.isSale) {
-                                    true => '할인중',
-                                    false => '할인없음',
-                                  }.text.make(),
-                                  ('재고 수량: ${product.stock.toCount()}').text.make(),
-                                ],
-                              ).pOnly(left: 10),
-                            ),
-                          ],
-                        ),
-                      ).pSymmetric(v: 10),
+                          ),
+                      onDelete: () => ProductApi.deleteProduct(product),
+                      onEdit: () => context.goNamed(ProductFormRoute.name, extra: product),
                     );
                   },
                 ),

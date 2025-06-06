@@ -31,7 +31,7 @@ class CartScreen extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final CartItem item = data[index];
                       return CartItemTile(
-                        item: item,
+                        cartItem: item,
                         onRemove:
                             () async => await ref
                                 .read(cartControllerProvider.notifier)

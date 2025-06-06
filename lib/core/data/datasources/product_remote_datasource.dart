@@ -6,7 +6,7 @@ import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
 import 'package:fastcampusmarket/common/utils/image_utils.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
-import 'package:fastcampusmarket/features/home/data/models/product_field_enum.dart';
+import 'package:fastcampusmarket/features/home/data/models/product_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductApi {
