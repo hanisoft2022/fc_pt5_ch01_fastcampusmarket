@@ -2,9 +2,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
 import 'package:fastcampusmarket/common/utils/image_utils.dart';
 import 'package:fastcampusmarket/features/home/data/models/category.dart';
 import 'package:fastcampusmarket/features/home/data/models/product.dart';
+import 'package:fastcampusmarket/features/home/data/models/product_field_enum.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductApi {
@@ -23,7 +25,7 @@ class ProductApi {
 
     // Product 업데이트하여 Firestore에 저장
     final productsCollectionRef = FirebaseFirestore.instance
-        .collection('products')
+        .collection(FirestoreCollections.products)
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
@@ -38,7 +40,7 @@ class ProductApi {
 
     // Product 도큐먼트의 Category 서브컬렉션에 Category 객체 자체를 저장 (withConverter)
     final categorySubCollectionRef = productDocRef
-        .collection('category')
+        .collection(FirestoreCollections.category)
         .withConverter<Category>(
           fromFirestore: (snapshot, _) => Category.fromJson(snapshot.data()!),
           toFirestore: (category, _) => category.toJson(),
@@ -56,7 +58,7 @@ class ProductApi {
         .doc(updatedProduct.category.id);
 
     final productSubCollectionRef = categoryCollectionRef
-        .collection('products')
+        .collection(FirestoreCollections.products)
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
@@ -82,7 +84,8 @@ class ProductApi {
 
     for (int i = 0; i < 10; i++) {
       // Product 업데이트하여 Firestore에 저장
-      final productDocRef = FirebaseFirestore.instance.collection('products').doc();
+      final productDocRef =
+          FirebaseFirestore.instance.collection(FirestoreCollections.products).doc();
       // ID , ImageUrl, CreatedAt 업데이트
       // CreatedAt은 null이기 때문에 CreatedAtField Json Converter에 의해 Firebase 서버 시간으로 자동 업데이트됨.
       final updatedProduct = product.copyWith(
@@ -94,7 +97,7 @@ class ProductApi {
 
       // Product 도큐먼트의 Category 서브컬렉션에 Category 객체 자체를 저장
       final productCategoryDocRef = productDocRef
-          .collection('category')
+          .collection(FirestoreCollections.category)
           .doc(updatedProduct.category.id);
       batch.set(productCategoryDocRef, updatedProduct.category.toJson());
 
@@ -115,7 +118,7 @@ class ProductApi {
   // * READ
   static Future<List<Product>> fetchProducts() async {
     final collectionRef = FirebaseFirestore.instance
-        .collection('products')
+        .collection(FirestoreCollections.products)
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
@@ -138,27 +141,32 @@ class ProductApi {
       return collectionRef.orderBy("name").startAt([query]).endAt(['$query\uf8ff']).snapshots();
     }
 
-    return collectionRef.orderBy('name').snapshots();
+    return collectionRef.orderBy(ProductField.name.value).snapshots();
   }
 
   // * READ
   static Future<List<Product>> fetchSaleProducts() async {
     final collectionRef = FirebaseFirestore.instance
-        .collection('products')
+        .collection(FirestoreCollections.products)
         .withConverter(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
 
     final querySnapshot =
-        await collectionRef.where('isSale', isEqualTo: true).orderBy('discountRate').get();
+        await collectionRef
+            .where(ProductField.isSale.value, isEqualTo: true)
+            .orderBy(ProductField.discountRate.value)
+            .get();
 
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   }
 
   // * UPDATE
   static Future<bool> updateProduct(Product product) async {
-    final docRef = FirebaseFirestore.instance.collection('products').doc(product.id);
+    final docRef = FirebaseFirestore.instance
+        .collection(FirestoreCollections.products)
+        .doc(product.id);
 
     final updates = product.copyWith(id: product.id).toJson();
 
@@ -168,11 +176,13 @@ class ProductApi {
 
   // * DELETE
   static Future<bool> deleteProduct(Product product) async {
-    final docRef = FirebaseFirestore.instance.collection('products').doc(product.id);
+    final docRef = FirebaseFirestore.instance
+        .collection(FirestoreCollections.products)
+        .doc(product.id);
 
     final batch = FirebaseFirestore.instance.batch();
 
-    final categoryCollection = await docRef.collection('category').get();
+    final categoryCollection = await docRef.collection(FirestoreCollections.category).get();
 
     for (final doc in categoryCollection.docs) {
       // 1. 해당 product 도큐먼트 category 서브컬렉션의 모든 도큐먼트 삭제
@@ -184,7 +194,7 @@ class ProductApi {
       final categoryProductRef = FirebaseFirestore.instance
           .collection('categories')
           .doc(categoryId)
-          .collection('products')
+          .collection(FirestoreCollections.products)
           .doc(product.id);
 
       batch.delete(categoryProductRef);
