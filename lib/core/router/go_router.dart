@@ -24,6 +24,21 @@ GoRouter appRouter(Ref ref) {
   return GoRouter(
     navigatorKey: GoRouterKeys.rootNavigatorKey,
     initialLocation: '/',
+    redirect: (context, state) {
+      final currentPath = state.uri.path;
+      final isAllowed = AllowedPaths.allowedPaths.contains(currentPath);
+
+      // * 비로그인 상태에서 인증 경로(로그인/회원가입)가 아니면 로그인 페이지로
+      if (!isLoggedIn && !isAllowed) {
+        return LoginRoute.path;
+      }
+
+      // * 로그인 상태에서 로그인/회원가입 페이지 접근 시 피드로
+      if (isLoggedIn && isAllowed) {
+        return FeedRoute.path;
+      }
+      return null;
+    },
     routes: [
       GoRoute(path: '/', redirect: (context, state) => FeedRoute.path),
       LoginRoute.route,
@@ -44,20 +59,5 @@ GoRouter appRouter(Ref ref) {
       CartRoute.route,
       ProductDetailRoute.route,
     ],
-    redirect: (context, state) {
-      final currentPath = state.uri.path;
-      final isAllowed = AllowedPaths.allowedPaths.contains(currentPath);
-
-      // * 비로그인 상태에서 인증 경로(로그인/회원가입)가 아니면 로그인 페이지로
-      if (!isLoggedIn && !isAllowed) {
-        return LoginRoute.path;
-      }
-
-      // * 로그인 상태에서 로그인/회원가입 페이지 접근 시 피드로
-      if (isLoggedIn && isAllowed) {
-        return FeedRoute.path;
-      }
-      return null;
-    },
   );
 }
