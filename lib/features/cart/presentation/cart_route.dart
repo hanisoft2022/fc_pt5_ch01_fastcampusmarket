@@ -1,7 +1,6 @@
+import 'package:fastcampusmarket/core/router/constants/go_router_keys.dart';
 import 'package:fastcampusmarket/features/cart/presentation/screen/cart_screen.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../core/router/router.dart';
 
 abstract class CartRoute {
   static const name = 'carts';

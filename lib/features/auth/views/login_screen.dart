@@ -118,7 +118,7 @@ class LoginScreen extends HookConsumerWidget {
                                         emailTextController.text,
                                         pwdTextController.text,
                                       );
-                                  if (authResult.isSuccess) {
+                                  if (authResult.isLogin) {
                                     if (context.mounted) {
                                       CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
                                       context.goNamed(FeedRoute.name);
@@ -164,7 +164,7 @@ class LoginScreen extends HookConsumerWidget {
                           final AuthResult authResult =
                               await ref.watch(authNotifierProvider.notifier).signInWithGoogle();
 
-                          if (authResult.isSuccess) {
+                          if (authResult.isLogin) {
                             if (context.mounted) {
                               CustomSnackBar.successSnackBar(context, 'Google 로그인에 성공했습니다.');
 
@@ -172,12 +172,8 @@ class LoginScreen extends HookConsumerWidget {
                             }
                           } else {
                             if (context.mounted) {
-                              CustomSnackBar.successSnackBar(context, 'Google 로그인에 성공했습니다.');
-                              context.goNamed(FeedRoute.name);
+                              CustomSnackBar.alertSnackBar(context, 'Google 로그인이 취소되었습니다.');
                             }
-                          }
-                          if (context.mounted) {
-                            CustomSnackBar.alertSnackBar(context, 'Google 로그인이 취소되었습니다.');
                           }
                         },
                         customBorder: const CircleBorder(),
@@ -188,29 +184,17 @@ class LoginScreen extends HookConsumerWidget {
                 TextButton.icon(
                   label: '바로 로그인'.text.make(),
                   onPressed: () async {
-                    final AuthResult authResult = await ref
-                        .watch(authNotifierProvider.notifier)
-                        .signInWithEmailAndPassword(
-                          emailTextController.text,
-                          pwdTextController.text,
-                        );
+                    final AuthResult authResult =
+                        await ref.watch(authNotifierProvider.notifier).signInAnonymously();
 
-                    if (authResult.isSuccess) {
+                    if (authResult.isLogin) {
                       if (context.mounted) {
                         context.goNamed(FeedRoute.name);
-                        CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
+                        CustomSnackBar.successSnackBar(context, authResult.message);
                       }
                     } else {
                       if (context.mounted) {
-                        CustomSnackBar.alertSnackBar(context, '회원 정보를 찾을 수 없습니다.');
-                      }
-
-                      if (context.mounted) {
-                        CustomSnackBar.alertSnackBar(context, '비밀번호가 틀렸습니다.');
-                      }
-
-                      if (context.mounted) {
-                        CustomSnackBar.failureSnackBar(context, '로그인에 실패했습니다.');
+                        CustomSnackBar.failureSnackBar(context, '익명 로그인에 실패했습니다.');
                       }
                     }
                   },

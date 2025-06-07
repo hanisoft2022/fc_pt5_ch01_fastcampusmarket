@@ -10,20 +10,20 @@ class AuthApi {
   static Future<AuthResult> signInWithEmailAndPassword(String email, String password) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      return const AuthResult(isSuccess: true, message: '로그인 성공');
+      return const AuthResult(isLogin: true, message: '로그인 성공');
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          return AuthResult(isSuccess: false, message: '회원 정보를 찾을 수 없습니다');
+          return AuthResult(isLogin: false, message: '회원 정보를 찾을 수 없습니다');
         case 'wrong-password':
-          return AuthResult(isSuccess: false, message: '비밀번호가 틀렸습니다.');
+          return AuthResult(isLogin: false, message: '비밀번호가 틀렸습니다.');
         case 'invalid-email':
-          return AuthResult(isSuccess: false, message: '유효하지 않은 이메일 형식입니다.');
+          return AuthResult(isLogin: false, message: '유효하지 않은 이메일 형식입니다.');
         default:
-          return AuthResult(isSuccess: false, message: '인증 오류가 발생했습니다: ${e.message}');
+          return AuthResult(isLogin: false, message: '인증 오류가 발생했습니다: ${e.message}');
       }
     } catch (e) {
-      return const AuthResult(isSuccess: false, message: '알 수 없는 오류가 발생했습니다.');
+      return const AuthResult(isLogin: false, message: '알 수 없는 오류가 발생했습니다.');
     }
   }
 
@@ -33,7 +33,7 @@ class AuthApi {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
         return const AuthResult(
-          isSuccess: false,
+          isLogin: false,
           message: '사용자가 로그인 창을 닫았습니다.',
           errorCode: 'sign_in_cancelled',
         );
@@ -74,36 +74,49 @@ class AuthApi {
         }
       }
 
-      return AuthResult(isSuccess: true, message: '로그인 성공');
+      return AuthResult(isLogin: true, message: '구글 로그인 성공');
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'account-exists-with-different-credential':
           return const AuthResult(
-            isSuccess: false,
+            isLogin: false,
             message: '이미 다른 인증 방식으로 가입된 계정입니다.',
             errorCode: 'account-exists-with-different-credential',
           );
         case 'invalid-credential':
           return const AuthResult(
-            isSuccess: false,
+            isLogin: false,
             message: '인증 정보가 유효하지 않습니다. 다시 시도해주세요.',
             errorCode: 'invalid-credential',
           );
         default:
           return AuthResult(
-            isSuccess: false,
+            isLogin: false,
             message: 'Google 로그인 중 오류가 발생했습니다: ${e.message}',
             errorCode: e.code,
           );
       }
     } catch (e) {
-      return const AuthResult(isSuccess: false, message: '로그인 중 알 수 없는 오류가 발생했습니다.');
+      return const AuthResult(isLogin: false, message: '구글 로그인 중 알 수 없는 오류가 발생했습니다.');
+    }
+  }
+
+  // * 익명 로그인
+  static Future<AuthResult> signInAnonymously() async {
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      return const AuthResult(isLogin: true, message: '익명 로그인 성공');
+    } on FirebaseAuthException catch (e) {
+      return AuthResult(isLogin: false, message: '익명 로그인 중 오류가 발생했습니다: ${e.message}');
+    } catch (e) {
+      return const AuthResult(isLogin: false, message: '익명 로그인 중 알 수 없는 오류가 발생했습니다.');
     }
   }
 
   // * 로그아웃
-  static Future<void> signOut() async {
+  static Future<AuthResult> signOut() async {
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
+    return const AuthResult(isLogin: true, message: '로그아웃 성공');
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:fastcampusmarket/core/theme/theme_mode_provider.dart';
 import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
 import 'package:fastcampusmarket/features/auth/views/login_route.dart';
@@ -33,7 +34,11 @@ class HomeScreen extends ConsumerWidget {
               icon: const Icon(Icons.brightness_6),
             ),
             IconButton(
-              onPressed: () async => await ref.watch(authNotifierProvider.notifier).logout(),
+              onPressed: () async {
+                await ref.watch(authNotifierProvider.notifier).logout();
+
+                if (context.mounted) CustomSnackBar.successSnackBar(context, '로그아웃 되었습니다.');
+              },
               icon: Icon(Icons.logout),
             ),
           ],
