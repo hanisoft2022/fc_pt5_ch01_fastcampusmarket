@@ -16,6 +16,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router.g.dart';
 
+// go_router_builder 마이그레이션 예정
+
 @riverpod
 GoRouter appRouter(Ref ref) {
   final bool isLoggedIn = ref.watch(authNotifierProvider).isLogin;
