@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/core/router/constants/go_router_keys.dart';
-import 'package:fastcampusmarket/features/product%20detail/presentation/product_details_screen.dart';
+import 'package:fastcampusmarket/features/product%20detail/views/product_details_screen.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class ProductDetailRoute {

@@ -1,5 +1,5 @@
 import 'package:fastcampusmarket/common/utils/validators.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/product_form_screen.dart';
+import 'package:fastcampusmarket/features/product_form/views/product_form_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductNameField extends StatelessWidget {

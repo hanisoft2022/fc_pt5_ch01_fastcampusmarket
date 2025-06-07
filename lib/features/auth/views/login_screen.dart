@@ -1,9 +1,9 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/features/auth/models/auth_result.dart';
 import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
-import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:fastcampusmarket/features/auth/views/sign_up_route.dart';
+import 'package:fastcampusmarket/features/feed/views/feed_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';

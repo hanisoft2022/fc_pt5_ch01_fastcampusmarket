@@ -1,13 +1,13 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/category_remote_datasource.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
-import 'package:fastcampusmarket/features/feed/presentation/category_controller.dart';
+import 'package:fastcampusmarket/features/feed/providers/category_controller.dart';
 import 'package:fastcampusmarket/features/home/models/category.dart';
 import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
-import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/product_form_route.dart';
-import 'package:fastcampusmarket/features/seller/presentation/seller_providers.dart';
+import 'package:fastcampusmarket/features/product%20detail/views/product_detail_route.dart';
+import 'package:fastcampusmarket/features/product_form/views/product_form_route.dart';
+import 'package:fastcampusmarket/features/seller/views/seller_providers.dart';
 import 'package:fastcampusmarket/features/seller/widget/product_search_bar.dart';
 import 'package:fastcampusmarket/features/seller/widget/seller_item_tile.dart';
 import 'package:flutter/material.dart';

@@ -1,18 +1,18 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/core/data/datasources/product_remote_datasource.dart';
-import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/features/home/models/category.dart';
 import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/camera_button.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_category_dropdown.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_form_providers.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_image_picker.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_name_field.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_price_field.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_sale_field.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_stock_field.dart';
-import 'package:fastcampusmarket/features/product_form/presentation/widgets/product_submit_button.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/camera_button.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_category_dropdown.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_form_providers.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_image_picker.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_name_field.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_price_field.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_sale_field.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_stock_field.dart';
+import 'package:fastcampusmarket/features/product_form/widgets/product_submit_button.dart';
+import 'package:fastcampusmarket/features/seller/views/seller_route.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +23,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:fastcampusmarket/features/product_form/presentation/product_form_providers.dart';
+import 'package:fastcampusmarket/features/product_form/providers/product_form_providers.dart';
 
 class ProductFormScreen extends HookConsumerWidget {
   final Product? initialProduct;

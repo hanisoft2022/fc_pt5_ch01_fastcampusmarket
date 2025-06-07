@@ -1,9 +1,9 @@
 import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
-import 'package:fastcampusmarket/features/cart/presentation/cart_controller.dart';
-import 'package:fastcampusmarket/features/cart/presentation/cart_items_provider.dart';
-import 'package:fastcampusmarket/features/cart/presentation/widget/cart_item_tile.dart';
-import 'package:fastcampusmarket/features/cart/presentation/widget/delivery_button.dart';
-import 'package:fastcampusmarket/features/cart/presentation/widget/total_widget.dart';
+import 'package:fastcampusmarket/features/cart/providers/cart_controller.dart';
+import 'package:fastcampusmarket/features/cart/providers/cart_items_provider.dart';
+import 'package:fastcampusmarket/features/cart/widget/cart_item_tile.dart';
+import 'package:fastcampusmarket/features/cart/widget/delivery_button.dart';
+import 'package:fastcampusmarket/features/cart/widget/total_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

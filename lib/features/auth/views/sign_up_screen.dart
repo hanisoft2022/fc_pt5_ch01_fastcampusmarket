@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
-import 'package:fastcampusmarket/core/router/router.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
+import 'package:fastcampusmarket/features/auth/views/login_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

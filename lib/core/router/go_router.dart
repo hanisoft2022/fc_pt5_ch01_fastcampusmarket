@@ -1,22 +1,21 @@
 import 'package:fastcampusmarket/core/router/constants/go_router_keys.dart';
 import 'package:fastcampusmarket/core/router/constants/allowed_paths.dart';
-import 'package:fastcampusmarket/features/cart/presentation/cart_route.dart';
-import 'package:fastcampusmarket/features/product%20detail/presentation/product_detail_route.dart';
+import 'package:fastcampusmarket/features/auth/views/login_route.dart';
+import 'package:fastcampusmarket/features/cart/views/cart_route.dart';
+import 'package:fastcampusmarket/features/feed/views/feed_route.dart';
+import 'package:fastcampusmarket/features/product%20detail/views/product_detail_route.dart';
 import 'package:fastcampusmarket/features/auth/views/sign_up_route.dart';
+import 'package:fastcampusmarket/features/seller/views/seller_route.dart';
 
 import 'package:go_router/go_router.dart';
 
 import 'package:fastcampusmarket/features/home/views/home_screen.dart';
-
-import 'package:fastcampusmarket/core/router/router.dart';
 
 import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router.g.dart';
-
-// go_router_builder 마이그레이션 예정
 
 @riverpod
 GoRouter appRouter(Ref ref) {

@@ -1,4 +1,4 @@
-import 'package:fastcampusmarket/features/feed/presentation/screens/feed_screen.dart';
+import 'package:fastcampusmarket/features/feed/views/feed_screen.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class FeedRoute {
