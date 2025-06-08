@@ -1,7 +1,7 @@
 import 'package:fastcampusmarket/features/auth/views/login_screen.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginRoute {
+abstract class LoginRoute {
   static const name = 'login';
   static const path = '/login';
 

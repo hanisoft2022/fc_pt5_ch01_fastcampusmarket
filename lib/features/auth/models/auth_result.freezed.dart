@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthResult {
 
- bool get isLogin; String get message; String? get errorCode;
+ bool? get isLogin; String get message; String? get errorCode;
 /// Create a copy of AuthResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $AuthResultCopyWith<$Res>  {
   factory $AuthResultCopyWith(AuthResult value, $Res Function(AuthResult) _then) = _$AuthResultCopyWithImpl;
 @useResult
 $Res call({
- bool isLogin, String message, String? errorCode
+ bool? isLogin, String message, String? errorCode
 });
 
 
@@ -63,10 +63,10 @@ class _$AuthResultCopyWithImpl<$Res>
 
 /// Create a copy of AuthResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLogin = null,Object? message = null,Object? errorCode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLogin = freezed,Object? message = null,Object? errorCode = freezed,}) {
   return _then(_self.copyWith(
-isLogin: null == isLogin ? _self.isLogin : isLogin // ignore: cast_nullable_to_non_nullable
-as bool,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+isLogin: freezed == isLogin ? _self.isLogin : isLogin // ignore: cast_nullable_to_non_nullable
+as bool?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -82,7 +82,7 @@ class _AuthResult extends AuthResult {
   const _AuthResult({required this.isLogin, required this.message, this.errorCode}): super._();
   
 
-@override final  bool isLogin;
+@override final  bool? isLogin;
 @override final  String message;
 @override final  String? errorCode;
 
@@ -116,7 +116,7 @@ abstract mixin class _$AuthResultCopyWith<$Res> implements $AuthResultCopyWith<$
   factory _$AuthResultCopyWith(_AuthResult value, $Res Function(_AuthResult) _then) = __$AuthResultCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLogin, String message, String? errorCode
+ bool? isLogin, String message, String? errorCode
 });
 
 
@@ -133,10 +133,10 @@ class __$AuthResultCopyWithImpl<$Res>
 
 /// Create a copy of AuthResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLogin = null,Object? message = null,Object? errorCode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLogin = freezed,Object? message = null,Object? errorCode = freezed,}) {
   return _then(_AuthResult(
-isLogin: null == isLogin ? _self.isLogin : isLogin // ignore: cast_nullable_to_non_nullable
-as bool,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+isLogin: freezed == isLogin ? _self.isLogin : isLogin // ignore: cast_nullable_to_non_nullable
+as bool?,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

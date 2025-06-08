@@ -1,6 +1,6 @@
 import 'package:fastcampusmarket/common/widgets/height_width_widgets.dart';
 import 'package:fastcampusmarket/features/auth/models/auth_result.dart';
-import 'package:fastcampusmarket/features/auth/providers/auth_provider.dart';
+import 'package:fastcampusmarket/features/auth/providers/auth_controller.dart';
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
 import 'package:fastcampusmarket/features/auth/views/sign_up_route.dart';
 import 'package:fastcampusmarket/features/feed/views/feed_route.dart';
@@ -113,12 +113,12 @@ class LoginScreen extends HookConsumerWidget {
                               ? () async {
                                 if (formKey.currentState?.validate() == true) {
                                   final authResult = await ref
-                                      .watch(authNotifierProvider.notifier)
+                                      .watch(authControllerProvider.notifier)
                                       .signInWithEmailAndPassword(
                                         emailTextController.text,
                                         pwdTextController.text,
                                       );
-                                  if (authResult.isLogin) {
+                                  if (authResult.isLogin == true) {
                                     if (context.mounted) {
                                       CustomSnackBar.successSnackBar(context, '로그인에 성공했습니다.');
                                       context.goNamed(FeedRoute.name);
@@ -162,9 +162,9 @@ class LoginScreen extends HookConsumerWidget {
                       child: InkWell(
                         onTap: () async {
                           final AuthResult authResult =
-                              await ref.watch(authNotifierProvider.notifier).signInWithGoogle();
+                              await ref.watch(authControllerProvider.notifier).signInWithGoogle();
 
-                          if (authResult.isLogin) {
+                          if (authResult.isLogin == true) {
                             if (context.mounted) {
                               CustomSnackBar.successSnackBar(context, 'Google 로그인에 성공했습니다.');
 
@@ -185,9 +185,9 @@ class LoginScreen extends HookConsumerWidget {
                   label: '바로 로그인'.text.make(),
                   onPressed: () async {
                     final AuthResult authResult =
-                        await ref.watch(authNotifierProvider.notifier).signInAnonymously();
+                        await ref.watch(authControllerProvider.notifier).signInAnonymously();
 
-                    if (authResult.isLogin) {
+                    if (authResult.isLogin == true) {
                       if (context.mounted) {
                         context.goNamed(FeedRoute.name);
                         CustomSnackBar.successSnackBar(context, authResult.message);

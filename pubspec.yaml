@@ -16,6 +16,7 @@ dependencies:
   velocity_x: ^4.3.1
   smooth_page_indicator: ^1.2.1
   flutter_image_compress: ^2.4.0
+  flutter_native_splash: ^2.4.6
 
   # --- 상태 관리 및 라우팅 ---
   flutter_hooks: ^0.21.2
@@ -44,9 +45,6 @@ dependencies:
   shared_preferences: ^2.5.3
   timeago: ^3.2.2
   uuid: ^4.5.1
-
-
-
 
 dev_dependencies:
   # --- 테스트 및 린트 ---

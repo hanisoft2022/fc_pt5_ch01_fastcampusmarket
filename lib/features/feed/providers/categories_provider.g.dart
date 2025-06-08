@@ -6,11 +6,11 @@ part of 'categories_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$categoriesHash() => r'3207faa78756842ae8bca6fccd81759b495333ef';
+String _$categoriesHash() => r'c798a837e3cb119e823c460f43aafb022143bc27';
 
 /// See also [categories].
 @ProviderFor(categories)
-final categoriesProvider = AutoDisposeFutureProvider<List<Category>>.internal(
+final categoriesProvider = AutoDisposeStreamProvider<List<Category>>.internal(
   categories,
   name: r'categoriesProvider',
   debugGetCreateSourceHash:
@@ -21,6 +21,6 @@ final categoriesProvider = AutoDisposeFutureProvider<List<Category>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef CategoriesRef = AutoDisposeFutureProviderRef<List<Category>>;
+typedef CategoriesRef = AutoDisposeStreamProviderRef<List<Category>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

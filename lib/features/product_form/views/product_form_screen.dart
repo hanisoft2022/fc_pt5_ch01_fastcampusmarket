@@ -110,8 +110,6 @@ class ProductFormScreen extends HookConsumerWidget {
                         '카테고리 선택'.text.bold.size(context.textTheme.titleLarge!.fontSize).make(),
                         height25,
                         categoryListAsync.when(
-                          loading: () => Center(child: CircularProgressIndicator()),
-                          error: (error, stackTrace) => Center(child: Text(error.toString())),
                           data: (categories) {
                             return ProductCategoryDropdown(
                               categories: categories,
@@ -121,6 +119,8 @@ class ProductFormScreen extends HookConsumerWidget {
                               },
                             );
                           },
+                          loading: () => Center(child: CircularProgressIndicator()),
+                          error: (error, stackTrace) => Center(child: Text(error.toString())),
                         ),
                         height25,
                         // 제품 정보

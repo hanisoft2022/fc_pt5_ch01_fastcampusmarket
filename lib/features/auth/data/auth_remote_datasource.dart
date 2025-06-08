@@ -6,6 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthApi {
+  // * 로그인 상태 확인
+  static Stream<User?> firebaseAuthState() => FirebaseAuth.instance.authStateChanges();
+
   // * 이메일-비밀번호 로그인
   static Future<AuthResult> signInWithEmailAndPassword(String email, String password) async {
     try {
