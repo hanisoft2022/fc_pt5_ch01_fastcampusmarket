@@ -6,37 +6,62 @@ part of 'products_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saleProductsHash() => r'1fac01cad6a8a850e54bb895a1eed64cc37d8557';
+String _$fetchSaleProductsHash() => r'69e55d7bde141611eaedaf85fa569caf545e2244';
 
-/// See also [saleProducts].
-@ProviderFor(saleProducts)
-final saleProductsProvider = AutoDisposeFutureProvider<List<Product>>.internal(
-  saleProducts,
-  name: r'saleProductsProvider',
+/// See also [fetchSaleProducts].
+@ProviderFor(fetchSaleProducts)
+final fetchSaleProductsProvider =
+    AutoDisposeFutureProvider<List<Product>>.internal(
+      fetchSaleProducts,
+      name: r'fetchSaleProductsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fetchSaleProductsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FetchSaleProductsRef = AutoDisposeFutureProviderRef<List<Product>>;
+String _$watchSaleProductsHash() => r'c13fe178f9ae288430de547cec549f6658236111';
+
+/// See also [watchSaleProducts].
+@ProviderFor(watchSaleProducts)
+final watchSaleProductsProvider =
+    AutoDisposeStreamProvider<QuerySnapshot<Product>>.internal(
+      watchSaleProducts,
+      name: r'watchSaleProductsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$watchSaleProductsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef WatchSaleProductsRef =
+    AutoDisposeStreamProviderRef<QuerySnapshot<Product>>;
+String _$fetchProductsHash() => r'8f6d09f59c2feecc24a2f9950e195242caf1cb48';
+
+/// See also [fetchProducts].
+@ProviderFor(fetchProducts)
+final fetchProductsProvider = AutoDisposeFutureProvider<List<Product>>.internal(
+  fetchProducts,
+  name: r'fetchProductsProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$saleProductsHash,
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$fetchProductsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SaleProductsRef = AutoDisposeFutureProviderRef<List<Product>>;
-String _$productsHash() => r'a6f8a1bb18ded0b1e5555628790356f9f18190fe';
-
-/// See also [products].
-@ProviderFor(products)
-final productsProvider = AutoDisposeFutureProvider<List<Product>>.internal(
-  products,
-  name: r'productsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$productsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ProductsRef = AutoDisposeFutureProviderRef<List<Product>>;
+typedef FetchProductsRef = AutoDisposeFutureProviderRef<List<Product>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

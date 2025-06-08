@@ -6,6 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'categories_provider.g.dart';
 
 @riverpod
-Stream<List<Category>> categories(Ref ref) {
+Stream<List<Category>> watchCategories(Ref ref) {
   return CategoryApi.watchCategories();
+}
+
+@riverpod
+Future<List<Category>> fetchCategories(Ref ref) async {
+  return CategoryApi.fetchCategories();
 }

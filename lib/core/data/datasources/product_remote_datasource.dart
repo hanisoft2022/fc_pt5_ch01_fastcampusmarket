@@ -162,6 +162,21 @@ class ProductApi {
     return collectionRef.orderBy(ProductField.name.value).snapshots();
   }
 
+  // * READ
+  static Stream<QuerySnapshot<Product>> watchSaleProducts() {
+    final collectionRef = FirebaseFirestore.instance
+        .collection("products")
+        .withConverter<Product>(
+          fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    return collectionRef
+        .where(ProductField.isSale.value, isEqualTo: true)
+        .orderBy(ProductField.discountRate.value)
+        .snapshots();
+  }
+
   // * UPDATE
   static Future<bool> updateProduct(Product product) async {
     final docRef = FirebaseFirestore.instance

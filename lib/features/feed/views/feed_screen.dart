@@ -3,7 +3,6 @@ import 'package:fastcampusmarket/core/extensions/context.dart';
 import 'package:fastcampusmarket/features/feed/providers/categories_provider.dart';
 import 'package:fastcampusmarket/features/feed/providers/products_provider.dart';
 import 'package:fastcampusmarket/features/feed/widgets/feed_sale_item_tile.dart';
-import 'package:fastcampusmarket/features/home/models/product.dart';
 import 'package:fastcampusmarket/features/product%20detail/views/product_detail_route.dart';
 
 import 'package:fastcampusmarket/common/widgets/custom_snack_bar.dart';
@@ -20,13 +19,13 @@ class FeedScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = usePageController(initialPage: 0);
-    final categoryAsync = ref.watch(categoriesProvider);
-    final productsAsync = ref.watch(saleProductsProvider);
+    final categoryAsync = ref.watch(watchCategoriesProvider);
+    final productsAsync = ref.watch(watchSaleProductsProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
-        final _ = await ref.refresh(categoriesProvider.future);
-        final _ = await ref.refresh(saleProductsProvider.future);
+        final _ = ref.refresh(fetchProductsProvider.future);
+        final _ = ref.refresh(fetchSaleProductsProvider.future);
       },
       child: ListView(
         children: [
@@ -94,7 +93,7 @@ class FeedScreen extends HookConsumerWidget {
               Spacer(),
               TextButton(
                 onPressed: () async {
-                  final _ = await ref.refresh(saleProductsProvider.future);
+                  final _ = await ref.refresh(fetchSaleProductsProvider.future);
                 },
                 child: '새로고침'.text.make(),
               ),
@@ -107,9 +106,10 @@ class FeedScreen extends HookConsumerWidget {
               data:
                   (products) => ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: products.length,
+                    itemCount: products.size,
                     itemBuilder: (context, index) {
-                      final Product product = products[index];
+                      final product = products.docs[index].data();
+
                       return FeedSaleItemTile(
                         onTap:
                             () => context.pushNamed(
@@ -118,39 +118,6 @@ class FeedScreen extends HookConsumerWidget {
                             ),
                         item: product,
                       );
-
-                      // GestureDetector(
-                      //   onTap:
-                      //       () => context.pushNamed(
-                      //         ProductDetailRoute.name,
-                      //         pathParameters: {'id': item.id.toString()},
-                      //       ),
-                      //   child: SizedBox(
-                      //     width: 140,
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         ClipRRect(
-                      //           borderRadius: BorderRadius.circular(10),
-                      //           child: Image.network(
-                      //             item.imageUrl!,
-                      //             fit: BoxFit.cover,
-                      //             width: 140,
-                      //             height: 140,
-                      //           ),
-                      //         ),
-                      //         height5,
-                      //         '상품명: ${item.name}'.text.bold.ellipsis.make(),
-                      //         '할인율: ${item.discountRate}%'.text.ellipsis.make(),
-                      //         '할인 전 가격: ${item.price.toWon()}'.text.lineThrough.ellipsis.make(),
-                      //         '할인가: ${(item.price * (1 - item.discountRate! / 100)).toInt().toWon()}'
-                      //             .text
-                      //             .ellipsis
-                      //             .make(),
-                      //       ],
-                      //     ).pOnly(right: 10),
-                      //   ),
-                      // );
                     },
                   ),
               loading: () => const Center(child: CircularProgressIndicator()),

@@ -57,6 +57,18 @@ class CategoryApi {
     return true;
   }
 
+  // * READ(FUTURE)
+  static Future<List<Category>> fetchCategories() {
+    final collectionRef = FirebaseFirestore.instance
+        .collection('categories')
+        .withConverter(
+          fromFirestore: (snapshot, options) => Category.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        );
+
+    return collectionRef.get().then((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
   // * READ(STREAM)
   static Stream<List<Category>> watchCategories() {
     final collectionRef = FirebaseFirestore.instance

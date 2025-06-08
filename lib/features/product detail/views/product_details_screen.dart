@@ -16,7 +16,7 @@ class ProductDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(productsProvider);
+    final productsAsync = ref.watch(fetchProductsProvider);
 
     final cartState = ref.watch(cartControllerProvider);
 
