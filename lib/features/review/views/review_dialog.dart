@@ -60,10 +60,10 @@ class ReviewDialog extends HookConsumerWidget {
       actions: [
         TextButton(onPressed: () => context.pop(), child: Text('취소')),
         TextButton(
-          onPressed: () {
-            ref
+          onPressed: () async {
+            await ref
                 .watch(reviewControllerProvider.notifier)
-                .createReview(
+                .addReview(
                   Review(
                     userId: userId,
                     id: null,
@@ -73,7 +73,9 @@ class ReviewDialog extends HookConsumerWidget {
                     createdAt: null,
                   ),
                 );
-            context.pop();
+            if (context.mounted) {
+              context.pop();
+            }
           },
           child: Text('등록'),
         ),

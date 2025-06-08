@@ -1,7 +1,6 @@
 import 'package:fastcampusmarket/features/review/model/review.dart';
+import 'package:fastcampusmarket/features/review/providers/review_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../data/review_remote_datasource.dart';
 
 part 'review_controller.g.dart';
 
@@ -11,5 +10,8 @@ class ReviewController extends _$ReviewController {
   FutureOr<void> build() {}
 
   // * CREATE
-  Future<bool> createReview(Review review) async => ReviewApi.createReview(review);
+  Future<void> addReview(Review review) async {
+    final datasource = ref.read(reviewFirestoreDatasourceProvider);
+    return datasource.addReview(review);
+  }
 }

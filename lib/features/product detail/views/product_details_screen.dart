@@ -77,6 +77,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                               child: Text('리뷰 등록'),
                               onPressed:
                                   () => showDialog(
+                                    barrierDismissible: false,
                                     context: context,
                                     builder: (context) => ReviewDialog(productId),
                                   ),
