@@ -1,6 +1,6 @@
 import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
+import 'package:fastcampusmarket/features/cart/models/cart_item.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CartItemTile extends StatelessWidget {

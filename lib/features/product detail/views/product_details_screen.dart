@@ -4,7 +4,7 @@ import 'package:fastcampusmarket/core/extensions/context.dart';
 import 'package:fastcampusmarket/core/extensions/num_extensions.dart';
 import 'package:fastcampusmarket/features/cart/providers/cart_controller.dart';
 import 'package:fastcampusmarket/features/feed/providers/products_provider.dart';
-import 'package:fastcampusmarket/features/product%20detail/views/review_dialog.dart';
+import 'package:fastcampusmarket/features/review/views/review_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -78,7 +78,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                               onPressed:
                                   () => showDialog(
                                     context: context,
-                                    builder: (context) => ReviewDialog(),
+                                    builder: (context) => ReviewDialog(productId),
                                   ),
                             ),
                           ],

@@ -1,7 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
-import 'package:fastcampusmarket/features/cart/data/datasources/cart_remote_datasource.dart';
+import 'package:fastcampusmarket/features/cart/models/cart_item.dart';
+import 'package:fastcampusmarket/features/cart/data/cart_remote_datasource.dart';
 
 part 'cart_items_provider.g.dart';
 

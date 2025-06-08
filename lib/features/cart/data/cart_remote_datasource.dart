@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastcampusmarket/common/constants/firestore_collections.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fastcampusmarket/features/cart/data/models/cart_item.dart';
+import 'package:fastcampusmarket/features/cart/models/cart_item.dart';
 import 'package:fastcampusmarket/features/home/models/product.dart';
 
 class CartApi {
