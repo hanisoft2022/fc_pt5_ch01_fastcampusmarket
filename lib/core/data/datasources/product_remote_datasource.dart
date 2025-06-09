@@ -148,14 +148,14 @@ class ProductApi {
   }
 
   // * READ
-  static Stream<QuerySnapshot<Product>> watchProducts(String query) {
+  static Stream<QuerySnapshot<Product>> watchProducts(String? query) {
     final collectionRef = FirebaseFirestore.instance
         .collection("products")
         .withConverter<Product>(
           fromFirestore: (snapshot, options) => Product.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         );
-    if (query.isNotEmpty) {
+    if (query != null && query.isNotEmpty) {
       return collectionRef.orderBy("name").startAt([query]).endAt(['$query\uf8ff']).snapshots();
     }
 

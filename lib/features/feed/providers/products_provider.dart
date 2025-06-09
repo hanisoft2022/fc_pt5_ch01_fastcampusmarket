@@ -20,3 +20,8 @@ Stream<QuerySnapshot<Product>> watchSaleProducts(Ref ref) {
 Future<List<Product>> fetchProducts(Ref ref) async {
   return ProductApi.fetchProducts();
 }
+
+@riverpod
+Stream<QuerySnapshot<Product>> watchProducts(Ref ref, String? query) {
+  return ProductApi.watchProducts(query);
+}

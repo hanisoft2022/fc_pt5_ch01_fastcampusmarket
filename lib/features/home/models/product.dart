@@ -23,6 +23,8 @@ abstract class Product with _$Product {
     double? discountRate,
     String? imageUrl,
     @CreatedAtField() DateTime? createdAt,
+    double? rating,
+    int? reviewCount,
   }) = _Product;
 
   factory Product.fromJson(Map<String, Object?> json) => _$ProductFromJson(json);

@@ -17,6 +17,8 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   discountRate: (json['discountRate'] as num?)?.toDouble(),
   imageUrl: json['imageUrl'] as String?,
   createdAt: const CreatedAtField().fromJson(json['createdAt']),
+  rating: (json['rating'] as num?)?.toDouble(),
+  reviewCount: (json['reviewCount'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
@@ -30,4 +32,6 @@ Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'discountRate': instance.discountRate,
   'imageUrl': instance.imageUrl,
   'createdAt': const CreatedAtField().toJson(instance.createdAt),
+  'rating': instance.rating,
+  'reviewCount': instance.reviewCount,
 };
