@@ -14,12 +14,16 @@ class AuthController extends _$AuthController {
         .watch(authStateChangesProvider)
         .when(
           data: (result) {
+            print('data');
+            print(result);
             return result;
           },
           error: (_, __) {
+            print('error');
             return AuthResult(isLogin: false, message: '오류 발생');
           },
           loading: () {
+            print('loading');
             return AuthResult(isLogin: null, message: '로딩 중');
           },
         );

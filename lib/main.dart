@@ -13,7 +13,6 @@ import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   if (kDebugMode) {
@@ -24,9 +23,11 @@ Future<void> main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-void _setupFirebaseEmulators() {
+void _setupFirebaseEmulators() async {
   const host = 'localhost';
-  FirebaseAuth.instance.useAuthEmulator(host, 9099);
+  // await FirebaseAuth.instance.signOut();
+  await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+
   FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
   FirebaseStorage.instance.useStorageEmulator(host, 9199);
 }

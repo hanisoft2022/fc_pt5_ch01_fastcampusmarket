@@ -22,6 +22,7 @@ class ReviewFirestoreDatasource {
     await reviewDocRef.set(updatedReview);
   }
 
+  // * READ
   Stream<List<Review>> watchReviews(String productId) {
     return firestore
         .collection('products')

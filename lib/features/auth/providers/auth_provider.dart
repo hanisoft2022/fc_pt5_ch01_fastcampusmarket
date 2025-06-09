@@ -7,7 +7,9 @@ part 'auth_provider.g.dart';
 
 @riverpod
 Stream<AuthResult> authStateChanges(Ref ref) {
+  print('authStateChanges');
   return AuthApi.firebaseAuthState().asyncMap((user) async {
+    print(user);
     return user != null
         ? AuthResult(isLogin: true, message: '로그인됨')
         : AuthResult(isLogin: false, message: '로그아웃됨');
